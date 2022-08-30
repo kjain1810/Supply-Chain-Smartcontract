@@ -25,7 +25,7 @@ contract Marketplace {
     mapping (uint => Manufacturer) public manufacturers;
     mapping (uint => Customer) public customers;
     mapping (address => Bid[]) bidsTillNow;
-
+    
     
 
     address payable public owner;
@@ -44,12 +44,14 @@ contract Marketplace {
         AuctionState currentState;
         address wallet;
         uint maxBidders;
+        
     }
 
     struct Manufacturer {
         uint _tag;
         uint quantityA;
         uint quantityB;
+        uint cars;
         AuctionState currentState;
         address wallet;
         uint maxBidders;
@@ -63,45 +65,46 @@ contract Marketplace {
     // function makeBidSupplier(int index, ...) public {
     //     suppliers[index].auction.makeBid(...);
     // }
+    // Helpers
+    function minimum(uint a, uint b) public pure returns (uint) {
+    return a >= b ? b : a;
+    }
 
-
-    function supplierStartAuction (uint tag) public returns (bool) {
+    function supplierStartAuction (uint tag) public returns (uint) {
         // function for supplier to start their bidding process
         require(tag<=num_supplier,"User doesn't exist");
         require(suppliers[tag].currentState != AuctionState.RUNNING, "Auction in-progress already");
         suppliers[tag].currentState = AuctionState.RUNNING ;
         emit StartSupplierAuction (tag, block.timestamp);
-        return true; 
+        return block.timestamp;
     
     }
 
-    function supplierEndAuction (uint tag) public {
+    function supplierEndAuction (uint tag) public returns (uint){
         // function for suppilier to end their auction
         require(tag<=num_supplier,"User doesn't exist");
         require(suppliers[tag].currentState == AuctionState.RUNNING, "Auction Ended Already");
         suppliers[tag].currentState = AuctionState.FINISHED;
         emit EndSupplierAuction (tag, block.timestamp);
+        return block.timestamp;
     }
-    function testbid (Bid memory test_bid) public pure returns (Bid memory bid)
-    {
-        return test_bid;
-    }
+ 
 
-    function manufacturerPlacesBid(uint manufacturerID, uint supplierID , bytes32 price, bytes32 quant, uint limit) public { //should get all data needed for bid
+    function manufacturerPlacesBid(uint manufacturerID, uint supplierID , uint price, uint quant, uint limit) public beforeOnly(supplierEndAuction(supplierID)) afterOnly(supplierEndAuction(supplierID)){ //should get all data needed for bid
         // function for manufacturer to place a bid
+        //@please check price and quant hashing part
         require(num_manufacturer >= manufacturerID, "Manufacturer doesn't exist");
         require(num_supplier >= supplierID, "Supplier doesn't exist");
         Bid memory newbid;
         newbid.bidderAddress = payable(msg.sender);
         newbid.buyerID = manufacturerID;
         newbid.sellerID = supplierID;
-        newbid.blindBidPrice = price;
-        newbid.blindBidQuantity = quant;
+       // newbid.blindBidPrice = price;
+       // newbid.blindBidQuantity = quant;
         newbid.limitingResourceQuantity = limit;
-        //add this bid to suppliers address
         address supplieraddr = suppliers[supplierID].wallet;
         bidsTillNow[supplieraddr].push(newbid) ;
-        //testbid(newbid);
+        
         emit ManufacturerBids(supplierID, manufacturerID, newbid.blindBidPrice, newbid.blindBidQuantity);
 
     }
@@ -133,7 +136,7 @@ contract Marketplace {
 
     function addManufacturer(address payable addr, uint auctionBidders) public {
         num_manufacturer++;
-        manufacturers[num_manufacturer] = Manufacturer(num_manufacturer, 0, 0, AuctionState.NOT_STARTED, addr, auctionBidders);
+        manufacturers[num_manufacturer] = Manufacturer(num_manufacturer, 0, 0,0, AuctionState.NOT_STARTED, addr, auctionBidders);
     }
 
     function addCustomer(address payable addr) public {
@@ -142,9 +145,20 @@ contract Marketplace {
     }
 
     // Setter functions
-    function supplierAddQuantity(uint suppliedID, uint quantityToAdd) public view {
+    function supplierAddQuantity(uint suppliedID, uint quantityToAdd) public {
         require(suppliers[suppliedID].wallet == msg.sender);
+        require(num_supplier>=suppliedID);
         // increase the supplier quantity
+        suppliers[suppliedID].quantityAvailable+=quantityToAdd;
+    }
+
+    function Update_Manufacturer_Quantities(uint manufacturerID, uint quantityA , uint quantityB) private {
+        manufacturers[manufacturerID].quantityA+=quantityA;
+        manufacturers[manufacturerID].quantityB+=quantityB;
+        uint max_cars= minimum(quantityA, quantityB);
+        manufacturers[manufacturerID].quantityA-=max_cars;
+        manufacturers[manufacturerID].quantityB-=max_cars;
+        manufacturers[manufacturerID].cars+=max_cars;
     }
 
     event StartSupplierAuction(uint supplierID, uint startTime);
@@ -171,6 +185,8 @@ contract Marketplace {
             ret[i] = customers[i].wallet;
         return ret;        
     }
+
+   
 
     // all modifiers
     modifier beforeOnly(uint _time) { require(block.timestamp < _time); _; }

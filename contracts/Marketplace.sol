@@ -24,7 +24,9 @@ contract Marketplace {
     mapping (uint => Supplier) public suppliers;
     mapping (uint => Manufacturer) public manufacturers;
     mapping (uint => Customer) public customers;
-    mapping (address => Bid) bidsTillNow;
+    mapping (address => Bid[]) bidsTillNow;
+
+    
 
     address payable public owner;
 
@@ -62,16 +64,46 @@ contract Marketplace {
     //     suppliers[index].auction.makeBid(...);
     // }
 
-    function supplierStartAuction (uint tag) public {
+
+    function supplierStartAuction (uint tag) public returns (bool) {
         // function for supplier to start their bidding process
+        require(tag<=num_supplier,"User doesn't exist");
+        require(suppliers[tag].currentState != AuctionState.RUNNING, "Auction in-progress already");
+        suppliers[tag].currentState = AuctionState.RUNNING ;
+        emit StartSupplierAuction (tag, block.timestamp);
+        return true; 
+    
     }
 
     function supplierEndAuction (uint tag) public {
-        // function for supplier to end their auctin
+        // function for suppilier to end their auction
+        require(tag<=num_supplier,"User doesn't exist");
+        require(suppliers[tag].currentState == AuctionState.RUNNING, "Auction Ended Already");
+        suppliers[tag].currentState = AuctionState.FINISHED;
+        emit EndSupplierAuction (tag, block.timestamp);
+    }
+    function testbid (Bid memory test_bid) public pure returns (Bid memory bid)
+    {
+        return test_bid;
     }
 
-    function manufacturerPlacesBid(uint manufacturerID, uint supplierID) public {
+    function manufacturerPlacesBid(uint manufacturerID, uint supplierID , bytes32 price, bytes32 quant, uint limit) public { //should get all data needed for bid
         // function for manufacturer to place a bid
+        require(num_manufacturer >= manufacturerID, "Manufacturer doesn't exist");
+        require(num_supplier >= supplierID, "Supplier doesn't exist");
+        Bid memory newbid;
+        newbid.bidderAddress = payable(msg.sender);
+        newbid.buyerID = manufacturerID;
+        newbid.sellerID = supplierID;
+        newbid.blindBidPrice = price;
+        newbid.blindBidQuantity = quant;
+        newbid.limitingResourceQuantity = limit;
+        //add this bid to suppliers address
+        address supplieraddr = suppliers[supplierID].wallet;
+        bidsTillNow[supplieraddr].push(newbid) ;
+        //testbid(newbid);
+        emit ManufacturerBids(supplierID, manufacturerID, newbid.blindBidPrice, newbid.blindBidQuantity);
+
     }
 
     function customerPlacesBid(uint manufacturerID, uint supplierID) public {
@@ -115,19 +147,19 @@ contract Marketplace {
         // increase the supplier quantity
     }
 
-    event StartSupplierAuction(int supplierID, int endTime);
-    event EndSupplierAuction(int supplierID, int endTime);
+    event StartSupplierAuction(uint supplierID, uint startTime);
+    event EndSupplierAuction(uint supplierID, uint endTime);
 
-    event StartManufacturerAuction(int manufacturerID, int endTime);
-    event EndManufacturerAuction(int manufacturerID, int endTime);
+    event StartManufacturerAuction(uint manufacturerID, uint startTime);
+    event EndManufacturerAuction(uint manufacturerID, uint endTime);
     
     // Manufacturer places a bid to the supplier
-    event ManufacturerBids(int supplierID, int manufacturerID, bytes32 blindBid);
+    event ManufacturerBids(uint supplierID, uint manufacturerID, bytes32 blindBidPrice, bytes32 blindBidQuantity);
     // Manufacturer reveals it's bid to the supplier by providing the key
     event ManufacturerReveal();
     
     // Customer places a bid to the manufacturer
-    event CustomerBid(int manufacturerID, int customerID, bytes32 blindBid);
+    event CustomerBid(uint manufacturerID,uint customerID, bytes32 blindBid);
     event CustomerReveal();
 
 
@@ -139,4 +171,10 @@ contract Marketplace {
             ret[i] = customers[i].wallet;
         return ret;        
     }
+
+    // all modifiers
+    modifier beforeOnly(uint _time) { require(block.timestamp < _time); _; }
+    modifier afterOnly(uint _time) { require(block.timestamp > _time); _; }
+
+    
 }

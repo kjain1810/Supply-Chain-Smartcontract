@@ -227,6 +227,7 @@ contract Marketplace {
             i++
         ) {
             Bid memory bid = bidsTillNow[suppliers[tag].wallet][i];
+            if (bid.correctReveal == false) continue;
             uint256 allocatingHere = minimum(
                 suppliers[tag].quantityAvailable,
                 bid.valueQuantity
@@ -430,7 +431,7 @@ contract Marketplace {
 
                 uint256 effectivePrice = price * quantity;
                 require(
-                    effectivePrice >=
+                    effectivePrice <
                         bidsTillNow[suppliers[supplierID].wallet][i].moneySent,
                     "Insufficient funds sent -- keeping your money"
                 );
@@ -508,13 +509,16 @@ contract Marketplace {
                     carTags[carTagsIdx++] = newcar.tag;
                 }
                 transferMoney(
+                    manufacturers[manufacturerID].wallet,
+                    effective_price
+                );
+                transferMoney(
                     customers[
                         purchasesTillNow[manufacturers[manufacturerID].wallet][
                             i
                         ].buyerID
                     ].wallet,
-                    manufacturers[manufacturerID].wallet,
-                    effective_price
+                    refund_amount
                 );
                 // refundMoney(
                 // customers[purchasesTillNow[manufacturers[manufacturerID].wallet][i].buyerID].wallet,
@@ -533,6 +537,9 @@ contract Marketplace {
                 revert("Quantity not Available"); //gas to caller
             }
         }
+        while (
+            purchasesTillNow[manufacturers[manufacturerID].wallet].length > 0
+        ) purchasesTillNow[manufacturers[manufacturerID].wallet].pop();
     }
 
     function addSupplier(

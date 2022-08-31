@@ -5,12 +5,12 @@ mp0.addSupplier(1, 30, accounts[0], 1); mp0.addSupplier(1, 30, accounts[1], 1); 
 
 mp0.supplierStartAuction(1);mp0.supplierStartAuction(2);mp0.supplierStartAuction(3);
 
-mp0.manufacturerPlacesBid(1, 1, web3.utils.soliditySha3(22), web3.utils.soliditySha3(15), 1000, {value:1000000});
-mp0.manufacturerPlacesBid(2, 2, web3.utils.soliditySha3(22), web3.utils.soliditySha3(10), 1000, {value:1000000});
+mp0.manufacturerPlacesBid(1, 1, web3.utils.soliditySha3(22), web3.utils.soliditySha3(15), web3.utils.soliditySha3(42), 1000, {value:1000000});
+mp0.manufacturerPlacesBid(2, 2, web3.utils.soliditySha3(22), web3.utils.soliditySha3(10), web3.utils.soliditySha3(42), 1000, {value:1000000});
 
 mp0.supplierEndAuction(1); mp0.supplierEndAuction(2); 
 
-mp0.manufactuerRevealBid(1, 1, 22, 15); mp0.manufactuerRevealBid(2, 2, 22, 10);
+mp0.manufactuerRevealBid(1, 1, 22, 15, 42); mp0.manufactuerRevealBid(2, 2, 22, 10, 42);
 
 mp0.supplierEndReveal(1); mp0.supplierEndReveal(2); 
 

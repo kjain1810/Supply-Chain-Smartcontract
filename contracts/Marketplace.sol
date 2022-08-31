@@ -403,7 +403,7 @@ contract Marketplace {
                 require(
                     keccak256(abi.encodePacked(key)) ==
                         bidsTillNow[suppliers[supplierID].wallet][i]
-                            .blindBidPrice,
+                            .blindKey,
                     "Incorrect key -- keeping your money"
                 );
                 require(
@@ -738,7 +738,6 @@ contract Marketplace {
         }
         return data;
     }
-
     // all modifiers
     modifier beforeOnly(uint256 _time) {
         require(block.timestamp < _time);
@@ -748,7 +747,21 @@ contract Marketplace {
         require(block.timestamp > _time);
         _;
     }
-
+    function getsuppliers() public view returns(uint256)
+    {
+        return num_supplier;
+    }
+    function getmanufacturers() public view returns(uint256)
+    {
+        return num_manufacturer;
+    }
+    function getstatus(uint256 supplierID) public view returns(AuctionState)
+    {
+        return suppliers[supplierID].currentState;
+    }
+    function getbidcount(uint256 supID) public view  returns (uint len){
+        return bidsTillNow[suppliers[supID].wallet].length;
+    }
     //test only
     function set_cars(uint256 manfID, uint256 quant) public {
         manufacturers[manfID].cars = quant;

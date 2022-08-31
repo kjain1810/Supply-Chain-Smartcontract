@@ -30,18 +30,29 @@ contract Marketplace {
         uint256 quantity;
         address payable customeraddr;
         uint256 money;
+        
+    }
+
+    struct Product{
+        uint256 tag;
+        uint256 manufacturerID;
+        uint256 sellerA;  //wheels
+        uint256 sellerB;  //car_body
     }
 
     uint256 public num_supplier;
     uint256 public num_manufacturer;
     uint256 public num_customer;
+    uint256 public num_products;
+  
 
     mapping(uint256 => Supplier) public suppliers;
     mapping(uint256 => Manufacturer) public manufacturers;
     mapping(uint256 => Customer) public customers;
     mapping(address => Bid[]) bidsTillNow;
     mapping(address => Purchase[]) purchasesTillNow;
-
+    mapping(address => Product[]) productsTillNow;
+    
     address payable public owner;
 
     constructor() {
@@ -71,6 +82,17 @@ contract Marketplace {
         AuctionState currentState;
         address wallet;
         uint256 maxBidders;
+        uint256 QA_sellerID;
+        uint256 QB_sellerID;
+    }
+
+    mapping (uint256 => Car[]) carsBought;
+
+    struct Car {
+        uint256 tag;
+        uint256 manufacturerID;
+        uint256 sellerIDA;
+        uint256 sellerIDB;
     }
 
     struct Customer {
@@ -214,9 +236,9 @@ contract Marketplace {
                 );
                 //update all the manufacturers quanitites to make cars
                 if(suppliers[tag].partType == 0)
-                    update_Manufacturer_Quantities(i,allocatingQuantities[i] , 0);
+                    update_Manufacturer_Quantities(i,allocatingQuantities[i],0,tag,0);
                 else if (suppliers[tag].partType == 1)
-                    update_Manufacturer_Quantities(i, 0, allocatingQuantities[i]);
+                    update_Manufacturer_Quantities(i, 0, allocatingQuantities[i],0,tag);
                 else
                     revert();
             }
@@ -259,6 +281,7 @@ contract Marketplace {
             suppliers[supplierID].currentState == AuctionState.RUNNING,
             "Supplier isn't running an auction right now"
         );
+        require(supplierID == manufacturerID || supplierID == 3 , "Supplier doesnt sell you");
 
         // TODO: UNCOMMENT THE FOLLOWING TO ENSURE PEOPLE ARE ONLY PLACING BIDS FOR THEMSELVES
         // require(
@@ -398,6 +421,19 @@ contract Marketplace {
                 uint256 refund_amount = purchasesTillNow[manufacturers[manufacturerID].wallet][i].money - effective_price;
                
                 manufacturers[manufacturerID].cars-=purchasesTillNow[manufacturers[manufacturerID].wallet][i].quantity;
+                uint256 num_of_cars = purchasesTillNow[manufacturers[manufacturerID].wallet][i].quantity;
+                address mf_adrr = manufacturers[manufacturerID].wallet;
+                for (uint256 j=0;j<num_of_cars;j++)
+                {
+                    uint256 idx = productsTillNow[mf_adrr].length - 1;
+                    Car memory newcar;
+                    newcar.tag= productsTillNow[mf_adrr][idx].tag;
+                    newcar.manufacturerID = manufacturerID;
+                    newcar.sellerIDA = productsTillNow[mf_adrr][idx].sellerA;
+                    newcar.sellerIDB = productsTillNow[mf_adrr][idx].sellerB;
+                    carsBought[purchasesTillNow[mf_adrr][idx].buyerID].push(newcar);
+                    productsTillNow[mf_adrr].pop();
+                }
                 transferMoney(
                     customers[purchasesTillNow[manufacturers[manufacturerID].wallet][i].buyerID].wallet, 
                     manufacturers[manufacturerID].wallet, 
@@ -452,7 +488,9 @@ contract Marketplace {
             0,
             AuctionState.NOT_STARTED,
             addr,
-            auctionBidders
+            auctionBidders,
+            0,
+            0
         );
     }
 
@@ -474,7 +512,9 @@ contract Marketplace {
     function update_Manufacturer_Quantities(
         uint256 manufacturerID,
         uint256 quantityA,
-        uint256 quantityB
+        uint256 quantityB,
+        uint256 supplierA,
+        uint256 supplierB
     ) private {
         manufacturers[manufacturerID].quantityA += quantityA;
         manufacturers[manufacturerID].quantityB += quantityB;
@@ -482,6 +522,14 @@ contract Marketplace {
         manufacturers[manufacturerID].quantityA -= max_cars;
         manufacturers[manufacturerID].quantityB -= max_cars;
         manufacturers[manufacturerID].cars += max_cars;
+    
+        Product memory newcar;
+        num_products++;
+        newcar.tag=num_products;
+        newcar.manufacturerID=manufacturerID;
+        newcar.sellerA = manufacturerID;
+        newcar.sellerB = 3;
+        productsTillNow[manufacturers[manufacturerID].wallet].push(newcar);
         
     }
     function set_cars_price (uint256 manufacturerID , uint256 price) public {
@@ -575,6 +623,19 @@ contract Marketplace {
             }
         }
         return ret;
+    }
+
+    function verifyproduct(uint256 customerID, uint256 car_tag) public view returns (uint256 a,uint256 b,uint256 c){
+        for (uint256 i=0; i<carsBought[customerID].length;i++)
+        {
+            if(carsBought[customerID][i].tag == car_tag)
+            return(
+                carsBought[customerID][i].manufacturerID,
+                carsBought[customerID][i].sellerIDA,
+                carsBought[customerID][i].sellerIDB
+            );
+        }
+       
     }
 
     //everyone can access it

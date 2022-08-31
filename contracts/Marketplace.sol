@@ -23,6 +23,14 @@ contract Marketplace {
         bool correctReveal;
     }
 
+    struct Purchase {
+        uint256 sellerID;
+        uint256 buyerID;
+        uint256 quantity;
+        address payable customeraddr;
+        uint256 money;
+    }
+
     uint256 public num_supplier;
     uint256 public num_manufacturer;
     uint256 public num_customer;
@@ -31,6 +39,7 @@ contract Marketplace {
     mapping(uint256 => Manufacturer) public manufacturers;
     mapping(uint256 => Customer) public customers;
     mapping(address => Bid[]) bidsTillNow;
+    mapping(address => Purchase[]) purchasesTillNow;
 
     address payable public owner;
 
@@ -43,7 +52,7 @@ contract Marketplace {
 
     struct Supplier {
         uint256 tag;
-        int256 partType;
+        int256 partType;  // 0 is wheels, 1 is car_parts
         uint256 quantityAvailable;
         AuctionState currentState;
         address wallet;
@@ -57,6 +66,7 @@ contract Marketplace {
         uint256 quantityA;
         uint256 quantityB;
         uint256 cars;
+        uint256 carsprice;
         AuctionState currentState;
         address wallet;
         uint256 maxBidders;
@@ -115,8 +125,10 @@ contract Marketplace {
         emit EndSupplierAuction(tag, block.timestamp);
         return block.timestamp;
     }
-
-    function supplierEndReveal(uint256 tag) public returns (uint256) {
+ 
+    function supplierEndReveal(uint256 tag) public 
+    // afterOnly(supplierEndAuction(tag)) 
+    returns (uint256){
         require(tag <= num_supplier, "Supplier doesn't exist");
         require(
             suppliers[tag].currentState == AuctionState.REVEALING,
@@ -199,7 +211,15 @@ contract Marketplace {
                     allocatingPrices[i],
                     allocatingQuantities[i]
                 );
+                //update all the manufacturers quanitites to make cars
+                if(suppliers[tag].partType == 0)
+                    Update_Manufacturer_Quantities(i,allocatingQuantities[i] , 0);
+                else if (suppliers[tag].partType == 1)
+                    Update_Manufacturer_Quantities(i, 0, allocatingQuantities[i]);
+                else
+                    revert();
             }
+            
         return block.timestamp;
     }
 
@@ -209,6 +229,13 @@ contract Marketplace {
         uint256 price,
         uint256 qunatity
     ) private {
+        // do eth transactions here
+    }
+
+    function refundMoney(
+        address beneficary,
+        uint256 price
+    ) private{
         // do eth transactions here
     }
 
@@ -222,7 +249,6 @@ contract Marketplace {
     {
         //should get all data needed for bid
         // function for manufacturer to place a bid
-        //@please check price and quant hashing part @checked
         require(
             num_manufacturer >= manufacturerID,
             "Manufacturer doesn't exist"
@@ -270,10 +296,27 @@ contract Marketplace {
         }
     }
 
-    function customerPlacesBid(uint256 manufacturerID, uint256 supplierID)
-        public
+    function customerPurchase(uint256 customerID, uint256 manufacturerID, uint256 quantity)
+        external payable
     {
-        // function for customer to place a bid
+        require(customers[customerID].wallet == msg.sender || owner == msg.sender, "Access Denied");
+        Purchase memory newpurchase;
+        newpurchase.sellerID = manufacturerID;
+        newpurchase.customeraddr = payable (msg.sender);
+        newpurchase.quantity = quantity;
+        newpurchase.buyerID = customerID;
+        newpurchase.money = msg.value;
+        uint256 unit_cost = manufacturers[manufacturerID].carsprice;
+        uint256 total_cost = unit_cost * quantity;
+        require ( newpurchase.money >=total_cost, "Money not enough");
+        address manf_adrr = manufacturers[manufacturerID].wallet;
+        purchasesTillNow[manf_adrr].push(newpurchase);
+        emit CustomerRequest(
+            customerID,
+            manufacturerID,
+            quantity,
+            manufacturers[manufacturerID].carsprice
+        );
     }
 
     function manufactuerRevealBid(
@@ -340,7 +383,39 @@ contract Marketplace {
         return false;
     }
 
-    function customerRevealBid(uint256 manufacturerID) public {}
+    function ManufacturerSupplyCars(uint256 manufacturerID) public{
+        for(uint256 i=0;
+            i<purchasesTillNow[manufacturers[manufacturerID].wallet].length;
+            i++
+        ){
+            //Money is already checked, Quantity check is done here
+           if(purchasesTillNow[manufacturers[manufacturerID].wallet][i].quantity <= manufacturers[manufacturerID].cars)
+           {
+                uint256 effective_price = purchasesTillNow[manufacturers[manufacturerID].wallet][i].quantity * manufacturers[manufacturerID].carsprice;
+                uint256 refund_amount = purchasesTillNow[manufacturers[manufacturerID].wallet][i].money - effective_price;
+               
+                transferMoney(
+                    customers[purchasesTillNow[manufacturers[manufacturerID].wallet][i].buyerID].wallet, 
+                    manufacturers[manufacturerID].wallet, 
+                    effective_price, 
+                    purchasesTillNow[manufacturers[manufacturerID].wallet][i].quantity);
+                // refundMoney(
+                // customers[purchasesTillNow[manufacturers[manufacturerID].wallet][i].buyerID].wallet,
+                // refund_amount);
+                emit AllocateFromManufacturer(
+                    manufacturerID, 
+                    purchasesTillNow[manufacturers[manufacturerID].wallet][i].buyerID, 
+                    purchasesTillNow[manufacturers[manufacturerID].wallet][i].quantity, 
+                    effective_price);
+
+           }
+           else
+           {
+             //send them back the amount saying quantity not available
+             revert("Quantity not Available"); //gas to caller
+           }
+        }
+    }
 
     function addSupplier(
         int256 partType,
@@ -367,6 +442,7 @@ contract Marketplace {
         num_manufacturer++;
         manufacturers[num_manufacturer] = Manufacturer(
             num_manufacturer,
+            0,
             0,
             0,
             0,
@@ -402,8 +478,13 @@ contract Marketplace {
         manufacturers[manufacturerID].quantityA -= max_cars;
         manufacturers[manufacturerID].quantityB -= max_cars;
         manufacturers[manufacturerID].cars += max_cars;
+        
     }
-
+    function set_cars_price (uint256 manufacturerID , uint256 price) public {
+        require(msg.sender == manufacturers[manufacturerID].wallet || msg.sender == owner,"Cannot be set by you");
+        manufacturers[manufacturerID].carsprice = price;
+    }
+   
     // Starting, ending and allocation of auction by supplier
     event StartSupplierAuction(uint256 supplierID, uint256 startTime);
     event EndSupplierAuction(uint256 supplierID, uint256 endTime);
@@ -417,6 +498,12 @@ contract Marketplace {
     // Starting, ending and allocation of auctions by manufacturers
     event StartManufacturerAuction(uint256 manufacturerID, uint256 startTime);
     event EndManufacturerAuction(uint256 manufacturerID, uint256 endTime);
+    event CustomerRequest(
+        uint256 CustomerID,
+        uint256 ManufacturerID,
+        uint256 Quantity ,
+        uint256 Price
+    );
     event AllocateFromManufacturer(
         uint256 manufacturerID,
         uint256 customerID,
@@ -484,6 +571,9 @@ contract Marketplace {
             }
         }
         return ret;
+    }
+    function get_cars_price_quantity (uint256 manfID) public view returns (uint256, uint256) {
+        return (manufacturers[manfID].carsprice, manufacturers[manfID].cars);
     }
 
     // all modifiers

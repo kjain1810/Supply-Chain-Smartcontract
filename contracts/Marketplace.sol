@@ -21,6 +21,7 @@ contract Marketplace {
         uint256 limitingResourceQuantity;
         uint256 buyerID;
         uint256 sellerID;
+        uint256 moneySent;
         bool correctReveal;
     }
 
@@ -147,6 +148,14 @@ contract Marketplace {
         return block.timestamp;
     }
 
+    function transferMoney(address senderaddr, uint256 effectivePrice)
+        public
+        payable
+    {
+        // do eth transactions here
+        require(payable(senderaddr).send(effectivePrice), "Transfer failed!");
+    }
+
     function supplierEndReveal(uint256 tag)
         public
         returns (
@@ -186,12 +195,18 @@ contract Marketplace {
         // allocate according to limiting resource first
         uint256[100] memory allocatingPrices;
         uint256[100] memory allocatingQuantities;
+        uint256[100] memory moneySentWithBid;
+
         for (
             uint256 i = 0;
             i < bidsTillNow[suppliers[tag].wallet].length;
             i++
         ) {
             Bid memory bid = bidsTillNow[suppliers[tag].wallet][i];
+            if (bid.correctReveal == false) continue;
+
+            moneySentWithBid[bid.buyerID] = bid.moneySent;
+
             uint256 allocatingHere = minimum(
                 suppliers[tag].quantityAvailable,
                 bid.limitingResourceQuantity
@@ -233,10 +248,14 @@ contract Marketplace {
                     allocatingPrices[i]
                 );
                 transferMoney(
-                    suppliers[tag].wallet,
                     manufacturers[i].wallet,
-                    allocatingPrices[i],
-                    allocatingQuantities[i]
+                    (moneySentWithBid[i] -
+                        allocatingPrices[i] *
+                        allocatingQuantities[i])
+                );
+                transferMoney(
+                    suppliers[tag].wallet,
+                    (allocatingPrices[i] * allocatingQuantities[i])
                 );
                 //update all the manufacturers quanitites to make cars
                 if (suppliers[tag].partType == 1)
@@ -262,16 +281,6 @@ contract Marketplace {
         return block.timestamp;
     }
 
-    function transferMoney(
-        address senderaddr,
-        address receiveraddr,
-        uint256 price,
-        uint256 qunatity
-    ) private {
-        // do eth transactions here
-        return;
-    }
-
     function refundMoney(address beneficary, uint256 price) private {
         // do eth transactions here
     }
@@ -282,7 +291,7 @@ contract Marketplace {
         bytes32 blindPrice,
         bytes32 blindQuantity,
         uint256 limit // beforeOnly(supplierEndAuction(supplierID)) // afterOnly(supplierEndAuction(supplierID))
-    ) public {
+    ) public payable {
         //should get all data needed for bid
         // function for manufacturer to place a bid
         require(
@@ -307,6 +316,7 @@ contract Marketplace {
 
         Bid memory newbid;
         newbid.bidderAddress = payable(msg.sender);
+        newbid.moneySent = msg.value;
         newbid.buyerID = manufacturerID;
         newbid.sellerID = supplierID;
         newbid.blindBidPrice = blindPrice;
@@ -314,7 +324,7 @@ contract Marketplace {
         newbid.limitingResourceQuantity = limit;
         newbid.valuePrice = 0;
         newbid.valueQuantity = 0;
-        newbid.correctReveal = true;
+        newbid.correctReveal = false;
 
         address supplieraddr = suppliers[supplierID].wallet;
         bidsTillNow[supplieraddr].push(newbid);
@@ -392,13 +402,13 @@ contract Marketplace {
                     keccak256(abi.encodePacked(price)) ==
                         bidsTillNow[suppliers[supplierID].wallet][i]
                             .blindBidPrice,
-                    "Incorrect price"
+                    "Incorrect price -- keeping your money"
                 );
                 require(
                     keccak256(abi.encodePacked(quantity)) ==
                         bidsTillNow[suppliers[supplierID].wallet][i]
                             .blindBidQuantity,
-                    "Incorrect quantity"
+                    "Incorrect quantity -- keeping your money"
                 );
                 if (
                     keccak256(abi.encodePacked(price)) !=
@@ -417,6 +427,17 @@ contract Marketplace {
                         .correctReveal = false;
                     return false;
                 }
+
+                uint256 effectivePrice = price * quantity;
+                require(
+                    effectivePrice >=
+                        bidsTillNow[suppliers[supplierID].wallet][i].moneySent,
+                    "Insufficient funds sent -- keeping your money"
+                );
+
+                bidsTillNow[suppliers[supplierID].wallet][i]
+                    .correctReveal = true;
+
                 bidsTillNow[suppliers[supplierID].wallet][i].valuePrice = price;
                 bidsTillNow[suppliers[supplierID].wallet][i]
                     .valueQuantity = quantity;
@@ -493,9 +514,7 @@ contract Marketplace {
                         ].buyerID
                     ].wallet,
                     manufacturers[manufacturerID].wallet,
-                    effective_price,
-                    purchasesTillNow[manufacturers[manufacturerID].wallet][i]
-                        .quantity
+                    effective_price
                 );
                 // refundMoney(
                 // customers[purchasesTillNow[manufacturers[manufacturerID].wallet][i].buyerID].wallet,

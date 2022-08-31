@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 pragma solidity >=0.8.16;
 pragma experimental ABIEncoderV2;
 
@@ -213,9 +214,9 @@ contract Marketplace {
                 );
                 //update all the manufacturers quanitites to make cars
                 if(suppliers[tag].partType == 0)
-                    Update_Manufacturer_Quantities(i,allocatingQuantities[i] , 0);
+                    update_Manufacturer_Quantities(i,allocatingQuantities[i] , 0);
                 else if (suppliers[tag].partType == 1)
-                    Update_Manufacturer_Quantities(i, 0, allocatingQuantities[i]);
+                    update_Manufacturer_Quantities(i, 0, allocatingQuantities[i]);
                 else
                     revert();
             }
@@ -297,12 +298,12 @@ contract Marketplace {
     }
 
     function customerPurchase(uint256 customerID, uint256 manufacturerID, uint256 quantity)
-        external payable
+    external payable
     {
         require(customers[customerID].wallet == msg.sender || owner == msg.sender, "Access Denied");
         Purchase memory newpurchase;
         newpurchase.sellerID = manufacturerID;
-        newpurchase.customeraddr = payable (msg.sender);
+        newpurchase.customeraddr = payable(msg.sender);
         newpurchase.quantity = quantity;
         newpurchase.buyerID = customerID;
         newpurchase.money = msg.value;
@@ -383,7 +384,9 @@ contract Marketplace {
         return false;
     }
 
-    function ManufacturerSupplyCars(uint256 manufacturerID) public{
+    function manufacturerSupplyCars(uint256 manufacturerID) private{
+        require( num_manufacturer >= manufacturerID);
+        require(msg.sender == manufacturers[manufacturerID].wallet || msg.sender == owner);
         for(uint256 i=0;
             i<purchasesTillNow[manufacturers[manufacturerID].wallet].length;
             i++
@@ -394,6 +397,7 @@ contract Marketplace {
                 uint256 effective_price = purchasesTillNow[manufacturers[manufacturerID].wallet][i].quantity * manufacturers[manufacturerID].carsprice;
                 uint256 refund_amount = purchasesTillNow[manufacturers[manufacturerID].wallet][i].money - effective_price;
                
+                manufacturers[manufacturerID].cars-=purchasesTillNow[manufacturers[manufacturerID].wallet][i].quantity;
                 transferMoney(
                     customers[purchasesTillNow[manufacturers[manufacturerID].wallet][i].buyerID].wallet, 
                     manufacturers[manufacturerID].wallet, 
@@ -467,7 +471,7 @@ contract Marketplace {
         suppliers[suppliedID].quantityAvailable += quantityToAdd;
     }
 
-    function Update_Manufacturer_Quantities(
+    function update_Manufacturer_Quantities(
         uint256 manufacturerID,
         uint256 quantityA,
         uint256 quantityB
@@ -584,5 +588,11 @@ contract Marketplace {
     modifier afterOnly(uint256 _time) {
         require(block.timestamp > _time);
         _;
+    }
+
+
+    //test only
+    function set_cars(uint256 manfID, uint256 quant) public {
+        manufacturers[manfID].cars=quant;
     }
 }

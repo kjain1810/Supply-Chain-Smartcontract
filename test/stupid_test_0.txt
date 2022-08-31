@@ -27,4 +27,12 @@ mp0.supplierEndReveal(3);
 
 events = mp0.getPastEvents('allEvents', {fromBlock: 0, toBlock: 'latest'});
 
+mp0.set_cars_price(1, 30); mp0.set_cars_price(2, 35);
 
+mp0.addCustomer(accounts[5]); mp0.addCustomer(accounts[6]); mp0.addCustomer(accounts[7]);
+
+mp0.customerPurchase(1, 1, 1, {value: 32}); mp0.customerPurchase(2, 1, 1, {value: 30});
+
+mp0.manufacturerSupplyCars(1);
+
+mp0.verifyproduct(1, 1); mp0.verifyproduct(2, 2);

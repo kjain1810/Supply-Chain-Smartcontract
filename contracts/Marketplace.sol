@@ -18,6 +18,7 @@ contract Marketplace {
         address payable bidderAddress;
         bytes32 blindBidPrice; // will have price and quantity you are bidding
         bytes32 blindBidQuantity;
+        bytes32 blindKey;
         uint256 limitingResourceQuantity;
         uint256 buyerID;
         uint256 sellerID;
@@ -287,6 +288,7 @@ contract Marketplace {
         uint256 supplierID,
         bytes32 blindPrice,
         bytes32 blindQuantity,
+        bytes32 blindKey,
         uint256 limit // beforeOnly(supplierEndAuction(supplierID)) // afterOnly(supplierEndAuction(supplierID))
     ) public payable {
         //should get all data needed for bid
@@ -318,6 +320,7 @@ contract Marketplace {
         newbid.sellerID = supplierID;
         newbid.blindBidPrice = blindPrice;
         newbid.blindBidQuantity = blindQuantity;
+        newbid.blindKey = blindKey;
         newbid.limitingResourceQuantity = limit;
         newbid.valuePrice = 0;
         newbid.valueQuantity = 0;
@@ -332,7 +335,8 @@ contract Marketplace {
             supplierID,
             manufacturerID,
             blindPrice,
-            blindQuantity
+            blindQuantity,
+            blindKey
         );
 
         // if (
@@ -376,7 +380,8 @@ contract Marketplace {
         uint256 manufacturerID,
         uint256 supplierID,
         uint256 price,
-        uint256 quantity
+        uint256 quantity,
+        uint256 key
     ) public returns (bool) {
         require(manufacturerID <= num_manufacturer, "Invalid manufacturer");
         require(suppliers[supplierID].currentState == AuctionState.REVEALING);
@@ -396,34 +401,23 @@ contract Marketplace {
                 manufacturerID
             ) {
                 require(
-                    keccak256(abi.encodePacked(price)) ==
+                    keccak256(abi.encodePacked(key)) ==
+                        bidsTillNow[suppliers[supplierID].wallet][i]
+                            .blindBidPrice,
+                    "Incorrect key -- keeping your money"
+                );
+                require(
+                    keccak256(abi.encodePacked(price + key)) ==
                         bidsTillNow[suppliers[supplierID].wallet][i]
                             .blindBidPrice,
                     "Incorrect price -- keeping your money"
                 );
                 require(
-                    keccak256(abi.encodePacked(quantity)) ==
+                    keccak256(abi.encodePacked(quantity + key)) ==
                         bidsTillNow[suppliers[supplierID].wallet][i]
                             .blindBidQuantity,
                     "Incorrect quantity -- keeping your money"
                 );
-                if (
-                    keccak256(abi.encodePacked(price)) !=
-                    bidsTillNow[suppliers[supplierID].wallet][i].blindBidPrice
-                ) {
-                    bidsTillNow[suppliers[supplierID].wallet][i]
-                        .correctReveal = false;
-                    return false;
-                }
-                if (
-                    keccak256(abi.encodePacked(quantity)) !=
-                    bidsTillNow[suppliers[supplierID].wallet][i]
-                        .blindBidQuantity
-                ) {
-                    bidsTillNow[suppliers[supplierID].wallet][i]
-                        .correctReveal = false;
-                    return false;
-                }
 
                 uint256 effectivePrice = price * quantity;
                 require(
@@ -442,7 +436,8 @@ contract Marketplace {
                     supplierID,
                     manufacturerID,
                     price,
-                    quantity
+                    quantity,
+                    key
                 );
 
                 suppliers[supplierID].bidsRevealed += 1;
@@ -657,14 +652,16 @@ contract Marketplace {
         uint256 supplierID,
         uint256 manufacturerID,
         bytes32 blindBidPrice,
-        bytes32 blindBidQuantity
+        bytes32 blindBidQuantity,
+        bytes32 blindKey
     );
     // Manufacturer reveals it's bid to the supplier by providing the key
     event ManufacturerReveal(
         uint256 supplierID,
         uint256 manufacturerID,
         uint256 price,
-        uint256 quantity
+        uint256 quantity,
+        uint256 key
     );
 
     // Customer places a bid to the manufacturer

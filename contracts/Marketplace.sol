@@ -441,7 +441,7 @@ contract Marketplace {
         return false;
     }
 
-    function manufacturerSupplyCars(uint256 manufacturerID) private {
+    function manufacturerSupplyCars(uint256 manufacturerID) public {
         require(num_manufacturer >= manufacturerID);
         require(
             msg.sender == manufacturers[manufacturerID].wallet ||
@@ -471,6 +471,8 @@ contract Marketplace {
                     manufacturers[manufacturerID].wallet
                 ][i].quantity;
                 address mf_adrr = manufacturers[manufacturerID].wallet;
+                uint256[100] memory carTags;
+                uint256 carTagsIdx = 0;
                 for (uint256 j = 0; j < num_of_cars; j++) {
                     uint256 idx = productsTillNow[mf_adrr].length - 1;
                     Car memory newcar;
@@ -482,6 +484,7 @@ contract Marketplace {
                         newcar
                     );
                     productsTillNow[mf_adrr].pop();
+                    carTags[carTagsIdx++] = newcar.tag;
                 }
                 transferMoney(
                     customers[
@@ -503,7 +506,8 @@ contract Marketplace {
                         .buyerID,
                     purchasesTillNow[manufacturers[manufacturerID].wallet][i]
                         .quantity,
-                    effective_price
+                    effective_price,
+                    carTags
                 );
             } else {
                 //send them back the amount saying quantity not available
@@ -622,7 +626,8 @@ contract Marketplace {
         uint256 manufacturerID,
         uint256 customerID,
         uint256 quantity,
-        uint256 price
+        uint256 price,
+        uint256[100] carTag
     );
 
     // Manufacturer places a bid to the supplier
@@ -654,63 +659,35 @@ contract Marketplace {
     );
 
     // ALL GET FUNCTIONS
-    function getActors() public view returns (address[200] memory) {
-        address[200] memory ret;
-        uint256 idx = 0;
-        for (uint256 i = 1; i <= num_supplier; i += 1)
-            ret[idx++] = suppliers[i].wallet;
-        for (uint256 i = 1; i <= num_manufacturer; i += 1)
-            ret[idx++] = manufacturers[i].wallet;
-        for (uint256 i = 1; i <= num_customer; i += 1)
-            ret[idx++] = customers[i].wallet;
-        return ret;
-    }
-
-    function getBids() public view returns (uint256[50] memory) {
-        uint256[50] memory ret;
-        uint256 idx = 0;
-        for (uint256 i = 1; i <= num_supplier; i++) {
-            for (
-                uint256 j = 0;
-                j < bidsTillNow[suppliers[i].wallet].length;
-                j++
-            ) {
-                ret[idx++] = bidsTillNow[suppliers[i].wallet][j].buyerID;
-                ret[idx++] = bidsTillNow[suppliers[i].wallet][j].sellerID;
-                ret[idx++] = bidsTillNow[suppliers[i].wallet][j].valueQuantity;
-                ret[idx++] = bidsTillNow[suppliers[i].wallet][j].valuePrice;
-                ret[idx++] = bidsTillNow[suppliers[i].wallet][j]
-                    .limitingResourceQuantity;
-                idx++;
-            }
-        }
-        return ret;
-    }
 
     function verifyproduct(uint256 customerID, uint256 car_tag)
         public
         view
         returns (
-            uint256 a,
-            uint256 b,
-            uint256 c
+            uint256 carID,
+            uint256 manfID,
+            uint256 sellerIDA,
+            uint256 sellerIDB
         )
     {
         for (uint256 i = 0; i < carsBought[customerID].length; i++) {
             if (carsBought[customerID][i].tag == car_tag)
                 return (
+                    car_tag,
                     carsBought[customerID][i].manufacturerID,
                     carsBought[customerID][i].sellerIDA,
                     carsBought[customerID][i].sellerIDB
                 );
         }
+        require(0 == 1, "Car not found in they buyers purchases");
+        return (0, 0, 0, 0);
     }
 
     //everyone can access it
     function get_cars_price_quantity(uint256 manfID)
         public
         view
-        returns (uint256 a, uint256 b)
+        returns (uint256 price, uint256 quantity)
     {
         require(num_manufacturer >= manfID, "Manufacturer ID doesnot exist");
         return (manufacturers[manfID].carsprice, manufacturers[manfID].cars);
@@ -728,6 +705,19 @@ contract Marketplace {
     {
         Manufacturer memory t = manufacturers[manfID];
         return (t._tag, t.quantityA, t.quantityB, t.cars);
+    }
+
+    function get_car_data(uint256 customerID)
+        public
+        view
+        returns (uint256[10] memory cars)
+    {
+        uint256[10] memory data;
+        uint256 idx = 0;
+        for (uint256 i = 0; i < carsBought[customerID].length; i++) {
+            data[idx++] = carsBought[customerID][i].tag;
+        }
+        return data;
     }
 
     // all modifiers

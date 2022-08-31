@@ -1,6 +1,6 @@
 pragma solidity >=0.8.16;
 
-import {MarketPlace_Storage} from "./MP_Storage.sol";
+import {MarketPlace_Storage} from "./MarketPlace_Storage.sol";
 
 contract MarketPlace_Events is MarketPlace_Storage {
     // @notice Triggered to start auction for a supplier
@@ -62,30 +62,26 @@ contract MarketPlace_Events is MarketPlace_Storage {
         uint256[100] carTag
     );
 
-    // Manufacturer places a bid to the supplier
+    // @notice Manufacturer places a blind bid to the supplier
+    // @param manufacturerID Tag ID of the manufacturer
+    // @param supplierID Tag ID of the supplier
+    // @param blindBidPrice bidding price blinded using keccak256
+    // @param blindBidQuantity bidding quantity blinded using keccak256
     event ManufacturerBids(
         uint256 supplierID,
         uint256 manufacturerID,
         bytes32 blindBidPrice,
         bytes32 blindBidQuantity
     );
-    // Manufacturer reveals it's bid to the supplier by providing the key
+
+    // @notice Manufacturer reveals it's bid to the supplier
+    // @param manufacturerID Tag ID of the manufacturer
+    // @param supplierID Tag ID of the supplier
+    // @param price bidding price
+    // @param quantity bidding quantity
     event ManufacturerReveal(
         uint256 supplierID,
         uint256 manufacturerID,
-        uint256 price,
-        uint256 quantity
-    );
-
-    // Customer places a bid to the manufacturer
-    event CustomerBid(
-        uint256 manufacturerID,
-        uint256 customerID,
-        bytes32 blindBid
-    );
-    event CustomerReveal(
-        uint256 manufacturerID,
-        uint256 customerID,
         uint256 price,
         uint256 quantity
     );

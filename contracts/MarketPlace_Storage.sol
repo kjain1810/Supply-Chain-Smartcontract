@@ -1,6 +1,6 @@
 pragma solidity >=0.8.16;
 
-import {MarketPlace_Structures} from "./MP_Structures.sol";
+import {MarketPlace_Structures} from "./MarketPlace_Structures.sol";
 
 contract MarketPlace_Storage is MarketPlace_Structures {
     uint256 public num_supplier;

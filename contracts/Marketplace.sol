@@ -260,7 +260,7 @@ contract Marketplace {
                 );
                 //update all the manufacturers quanitites to make cars
                 if (suppliers[tag].partType == 1)
-                    update_Manufacturer_Quantities(
+                    updateManufacturerQuantities(
                         i,
                         allocatingQuantities[i],
                         0,
@@ -268,7 +268,7 @@ contract Marketplace {
                         0
                     );
                 else if (suppliers[tag].partType == 2)
-                    update_Manufacturer_Quantities(
+                    updateManufacturerQuantities(
                         i,
                         0,
                         allocatingQuantities[i],
@@ -280,10 +280,6 @@ contract Marketplace {
         while (bidsTillNow[suppliers[tag].wallet].length > 0)
             bidsTillNow[suppliers[tag].wallet].pop();
         return block.timestamp;
-    }
-
-    function refundMoney(address beneficary, uint256 price) private {
-        // do eth transactions here
     }
 
     function manufacturerPlacesBid(
@@ -594,7 +590,7 @@ contract Marketplace {
         suppliers[suppliedID].quantityAvailable += quantityToAdd;
     }
 
-    function update_Manufacturer_Quantities(
+    function updateManufacturerQuantities(
         uint256 manufacturerID,
         uint256 quantityA,
         uint256 quantityB,

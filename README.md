@@ -42,7 +42,9 @@ console.log(balance);
 - manufactuerRevealBid : manufacturer reveals their bid to supplier from this if reveal phase is on
 - addSupplier, addManufacturer, addCustomer : adds the actors
 - supplierAddQuantity : adds quantity for the supplier
-- Update_Manufacturer_Quantities : adds quantity for the manufacturer
+- Update_Manufacturer_Quantities : updates cars from quantities;
+- ManufacturerSuppliesCars : manufacturer sells cars 
+- CustomerPurchase : customer places a order
 
 ### Events
 - StartSupplierAuction : supplier starts auction
@@ -50,6 +52,8 @@ console.log(balance);
 - AllocateFromSupplier : supplier sends goods to manufacturer
 - ManufacturerBids : manufacturer places a bid to the supplier
 - ManufacturerReveal : manufacturer reveals their bid to the supplier
+- CustomerRequest : customer requested for a purchase from manufacturer
+- AllocateFromManufacturer : manufacturer supplied to customer
 
 ### Note points
 - Only 1 bid per auction is supported. Incase of multiple bids, first bid is considered

@@ -576,7 +576,10 @@ contract Marketplace {
         }
         return ret;
     }
+
+    //everyone can access it
     function get_cars_price_quantity (uint256 manfID) public view returns (uint256, uint256) {
+        require(num_manufacturer >= manfID, "Manufacturer ID doesnot exist");
         return (manufacturers[manfID].carsprice, manufacturers[manfID].cars);
     }
 

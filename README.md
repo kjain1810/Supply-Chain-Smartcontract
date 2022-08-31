@@ -1,15 +1,35 @@
 To test in truffle
 
+- Compile:
+```bash
 truffle compile
-
+```
+- Open console in development mode:
+```bash
 truffle develop
-(in console)
+```
 
+- Deploy
+```bash
 truffle deploy
+```
 
+- Start contract
+```bash
 let instance = await Marketplace.deployed()
+```
 
+- Call a function
+```bash
 instance.function(args)
+```
+
+- Get a mapping:
+```bash
+var balance = await instance.<mapping name>.call(account);
+console.log(balance);
+```
+- 
 
 
 ## Rough documentation for us right now

@@ -1,4 +1,5 @@
 pragma solidity >=0.8.16;
+pragma experimental ABIEncoderV2;
 
 import {FirstAuction} from "./auction.sol";
 
@@ -19,6 +20,7 @@ contract Marketplace {
         uint256 limitingResourceQuantity;
         uint256 buyerID;
         uint256 sellerID;
+        bool correctReveal;
     }
 
     uint256 public num_supplier;
@@ -82,7 +84,10 @@ contract Marketplace {
         );
 
         // TODO: UNCOMMENT THE FOLLOWING TO ENSURE PEOPLE ARE STARTING AUCTIONS FOR THEMSELVES ONLY
-        // require(suppliers[tag].wallet == msg.sender, "Start auction only for yourself!");
+        // require(
+        //     suppliers[tag].wallet == msg.sender,
+        //     "Start auction only for yourself!"
+        // );
 
         suppliers[tag].currentState = AuctionState.RUNNING;
         suppliers[tag].bidsPlaced = 0;
@@ -100,12 +105,111 @@ contract Marketplace {
         );
 
         // TODO: UNCOMMENT THE FOLLOWING TO ENSURE PEOPLE ARE ENDING AUCTIONS FOR THEMSELVES ONLY
-        // require(suppliers[tag].wallet == msg.sender, "End auction only for yourself!");
+        // require(
+        //     suppliers[tag].wallet == msg.sender,
+        //     "End auction only for yourself!"
+        // );
 
         suppliers[tag].currentState = AuctionState.REVEALING;
         suppliers[tag].bidsRevealed = 0;
         emit EndSupplierAuction(tag, block.timestamp);
         return block.timestamp;
+    }
+
+    function supplierEndReveal(uint256 tag) public returns (uint256) {
+        require(tag <= num_supplier, "Supplier doesn't exist");
+        require(
+            suppliers[tag].currentState == AuctionState.REVEALING,
+            "Reveal phase not running"
+        );
+
+        // TODO: UNCOMMENT THE FOLLOWING TO ENSURE PEOPLE ARE ALLOCATING FOR THEMSELVES ONLY
+        // require(
+        //     (suppliers[tag].wallet == msg.sender || owner == msg.sender),
+        //     "Operation now allowed"
+        // );
+
+        suppliers[tag].currentState = AuctionState.FINISHED;
+
+        // do allocation logic and emit
+
+        // bubble sort according to bid value
+        for (uint256 i = 0; i < bidsTillNow[suppliers[tag].wallet].length; i++)
+            for (uint256 j = 0; j < i; j++)
+                if (
+                    bidsTillNow[suppliers[tag].wallet][i].valuePrice <
+                    bidsTillNow[suppliers[tag].wallet][j].valuePrice
+                ) {
+                    Bid memory x = bidsTillNow[suppliers[tag].wallet][i];
+                    bidsTillNow[suppliers[tag].wallet][i] = bidsTillNow[
+                        suppliers[tag].wallet
+                    ][j];
+                    bidsTillNow[suppliers[tag].wallet][j] = x;
+                }
+        // allocate according to limiting resource first
+        uint256[100] memory allocatingPrices;
+        uint256[100] memory allocatingQuantities;
+        for (
+            uint256 i = 0;
+            i < bidsTillNow[suppliers[tag].wallet].length;
+            i++
+        ) {
+            Bid memory bid = bidsTillNow[suppliers[tag].wallet][i];
+            uint256 allocatingHere = minimum(
+                suppliers[tag].quantityAvailable,
+                bid.limitingResourceQuantity
+            );
+            allocatingHere = minimum(allocatingHere, bid.valueQuantity);
+
+            allocatingPrices[bid.buyerID] = bid.valuePrice;
+            allocatingQuantities[bid.buyerID] = allocatingHere;
+            suppliers[tag].quantityAvailable -= allocatingHere;
+            bid.valueQuantity -= allocatingHere;
+        }
+
+        // allocate remaining for maximum profit
+        for (
+            uint256 i = 0;
+            i < bidsTillNow[suppliers[tag].wallet].length;
+            i++
+        ) {
+            Bid memory bid = bidsTillNow[suppliers[tag].wallet][i];
+            uint256 allocatingHere = minimum(
+                suppliers[tag].quantityAvailable,
+                bid.valueQuantity
+            );
+
+            allocatingQuantities[bid.buyerID] += allocatingHere;
+            suppliers[tag].quantityAvailable -= allocatingHere;
+            bid.valueQuantity -= allocatingHere;
+        }
+
+        // emit all allocations
+        for (uint256 i = 0; i < 100; i++)
+            if (allocatingQuantities[i] > 0) {
+                emit AllocateFromSupplier(
+                    tag,
+                    i,
+                    allocatingQuantities[i],
+                    allocatingPrices[i]
+                );
+                transferMoney(
+                    suppliers[tag].wallet,
+                    manufacturers[i].wallet,
+                    allocatingPrices[i],
+                    allocatingQuantities[i]
+                );
+            }
+        return block.timestamp;
+    }
+
+    function transferMoney(
+        address senderaddr,
+        address receiveraddr,
+        uint256 price,
+        uint256 qunatity
+    ) private {
+        // do eth transactions here
     }
 
     function manufacturerPlacesBid(
@@ -133,7 +237,10 @@ contract Marketplace {
         );
 
         // TODO: UNCOMMENT THE FOLLOWING TO ENSURE PEOPLE ARE ONLY PLACING BIDS FOR THEMSELVES
-        // require(manufacturers[manufacturerID].wallet == msg.sender, "You can only bid for yourself!");
+        // require(
+        //     manufacturers[manufacturerID].wallet == msg.sender,
+        //     "You can only bid for yourself!"
+        // );
 
         Bid memory newbid;
         newbid.bidderAddress = payable(msg.sender);
@@ -144,6 +251,7 @@ contract Marketplace {
         newbid.limitingResourceQuantity = limit;
         newbid.valuePrice = 0;
         newbid.valueQuantity = 0;
+        newbid.correctReveal = true;
 
         address supplieraddr = suppliers[supplierID].wallet;
         bidsTillNow[supplieraddr].push(newbid);
@@ -161,6 +269,7 @@ contract Marketplace {
             suppliers[supplierID].bidsPlaced == suppliers[supplierID].maxBidders
         ) {
             // go to reveal phase
+            suppliers[supplierID].currentState = AuctionState.REVEALING;
         }
     }
 
@@ -170,17 +279,71 @@ contract Marketplace {
         // function for customer to place a bid
     }
 
-    function manufactuerRevealBid(uint256 manufacturerID) public {}
+    function manufactuerRevealBid(
+        uint256 manufacturerID,
+        uint256 supplierID,
+        uint256 price,
+        uint256 quantity
+    ) public returns (bool) {
+        require(manufacturerID <= num_manufacturer, "Invalid manufacturer");
+
+        // TODO: UNCOMMENT THE FOLLOWING TO ENSURE PEOPLE ARE ONLY REVEALING BIDS FOR THEMSELVES
+        // require(
+        //     manufacturers[manufacturerID].wallet == msg.sender,
+        //     "Reveal only for yourself!"
+        // );
+
+        for (
+            uint256 i = 0;
+            i < bidsTillNow[suppliers[supplierID].wallet].length;
+            i++
+        )
+            if (
+                bidsTillNow[suppliers[supplierID].wallet][i].buyerID ==
+                manufacturerID
+            ) {
+                if (
+                    keccak256(abi.encodePacked(price)) !=
+                    bidsTillNow[suppliers[supplierID].wallet][i].blindBidPrice
+                ) {
+                    bidsTillNow[suppliers[supplierID].wallet][i]
+                        .correctReveal = false;
+                    return false;
+                }
+                if (
+                    keccak256(abi.encodePacked(quantity)) !=
+                    bidsTillNow[suppliers[supplierID].wallet][i]
+                        .blindBidQuantity
+                ) {
+                    bidsTillNow[suppliers[supplierID].wallet][i]
+                        .correctReveal = false;
+                    return false;
+                }
+                bidsTillNow[suppliers[supplierID].wallet][i].valuePrice = price;
+                bidsTillNow[suppliers[supplierID].wallet][i]
+                    .valueQuantity = quantity;
+                emit ManufacturerReveal(
+                    supplierID,
+                    manufacturerID,
+                    price,
+                    quantity
+                );
+
+                suppliers[supplierID].bidsRevealed += 1;
+                if (
+                    suppliers[supplierID].bidsRevealed ==
+                    suppliers[supplierID].maxBidders
+                ) {
+                    // go to allocation
+                    supplierEndReveal(supplierID);
+                }
+
+                return true;
+            }
+        return false;
+    }
 
     function customerRevealBid(uint256 manufacturerID) public {}
-
-    function allBidsPlacedForSupplier(uint256 suppliedID) private {
-        // once all bids have been placed, decide how much goes to each bidder
-    }
-
-    function allBidsPlacedForManufacturer(uint256 manufacturerID) private {
-        // once all bids have been placed, decide how much goes to each bidder
-    }
 
     function addSupplier(
         int256 partType,
@@ -244,11 +407,25 @@ contract Marketplace {
         manufacturers[manufacturerID].cars += max_cars;
     }
 
+    // Starting, ending and allocation of auction by supplier
     event StartSupplierAuction(uint256 supplierID, uint256 startTime);
     event EndSupplierAuction(uint256 supplierID, uint256 endTime);
+    event AllocateFromSupplier(
+        uint256 supplierID,
+        uint256 manufacturerID,
+        uint256 quantity,
+        uint256 price
+    );
 
+    // Starting, ending and allocation of auctions by manufacturers
     event StartManufacturerAuction(uint256 manufacturerID, uint256 startTime);
     event EndManufacturerAuction(uint256 manufacturerID, uint256 endTime);
+    event AllocateFromManufacturer(
+        uint256 manufacturerID,
+        uint256 customerID,
+        uint256 quantity,
+        uint256 price
+    );
 
     // Manufacturer places a bid to the supplier
     event ManufacturerBids(
@@ -258,7 +435,12 @@ contract Marketplace {
         bytes32 blindBidQuantity
     );
     // Manufacturer reveals it's bid to the supplier by providing the key
-    event ManufacturerReveal();
+    event ManufacturerReveal(
+        uint256 supplierID,
+        uint256 manufacturerID,
+        uint256 price,
+        uint256 quantity
+    );
 
     // Customer places a bid to the manufacturer
     event CustomerBid(
@@ -266,7 +448,12 @@ contract Marketplace {
         uint256 customerID,
         bytes32 blindBid
     );
-    event CustomerReveal();
+    event CustomerReveal(
+        uint256 manufacturerID,
+        uint256 customerID,
+        uint256 price,
+        uint256 quantity
+    );
 
     // ALL GET FUNCTIONS
     function getCustomers() public view returns (address[200] memory) {

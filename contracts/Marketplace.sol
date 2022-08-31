@@ -217,11 +217,8 @@ contract Marketplace {
         uint256 supplierID,
         bytes32 blindPrice,
         bytes32 blindQuantity,
-        uint256 limit
-    )
-        public
-        beforeOnly(supplierEndAuction(supplierID))
-        afterOnly(supplierEndAuction(supplierID))
+        uint256 limit // beforeOnly(supplierEndAuction(supplierID))
+    ) public // afterOnly(supplierEndAuction(supplierID))
     {
         //should get all data needed for bid
         // function for manufacturer to place a bid
@@ -261,8 +258,8 @@ contract Marketplace {
         emit ManufacturerBids(
             supplierID,
             manufacturerID,
-            newbid.blindBidPrice,
-            newbid.blindBidQuantity
+            blindPrice,
+            blindQuantity
         );
 
         if (
@@ -456,10 +453,36 @@ contract Marketplace {
     );
 
     // ALL GET FUNCTIONS
-    function getCustomers() public view returns (address[200] memory) {
+    function getActors() public view returns (address[200] memory) {
         address[200] memory ret;
+        uint256 idx = 0;
+        for (uint256 i = 1; i <= num_supplier; i += 1)
+            ret[idx++] = suppliers[i].wallet;
+        for (uint256 i = 1; i <= num_manufacturer; i += 1)
+            ret[idx++] = manufacturers[i].wallet;
         for (uint256 i = 1; i <= num_customer; i += 1)
-            ret[i] = customers[i].wallet;
+            ret[idx++] = customers[i].wallet;
+        return ret;
+    }
+
+    function getBids() public view returns (uint256[100] memory) {
+        uint256[100] memory ret;
+        uint256 idx = 0;
+        for (uint256 i = 1; i <= num_supplier; i++) {
+            for (
+                uint256 j = 0;
+                j < bidsTillNow[suppliers[i].wallet].length;
+                j++
+            ) {
+                ret[idx++] = bidsTillNow[suppliers[i].wallet][j].buyerID;
+                ret[idx++] = bidsTillNow[suppliers[i].wallet][j].sellerID;
+                ret[idx++] = bidsTillNow[suppliers[i].wallet][j].valueQuantity;
+                ret[idx++] = bidsTillNow[suppliers[i].wallet][j].valuePrice;
+                ret[idx++] = bidsTillNow[suppliers[i].wallet][j]
+                    .limitingResourceQuantity;
+                idx++;
+            }
+        }
         return ret;
     }
 

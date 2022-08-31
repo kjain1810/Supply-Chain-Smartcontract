@@ -9,9 +9,9 @@ There are 2 clients who manufacture cars, and sell them to the customers.For man
 ### Suppliers : 
 There are 3 suppliers.  </br>
 Supplier 1 (S1) supplies wheels to Manufacturer 1 (M1) </br>
-Supplier 2 (S2) supplies cars_body to both M1 and M2.
+Supplier 3 (S3) supplies cars_body to both M1 and M2.
 </br>
-Supplier 3 (S3) supplies wheels to Manufacturer 2.
+Supplier 2 (S2) supplies wheels to Manufacturer 2.
 
 ### Customers :
 They buy cars from manufacturers at retail price

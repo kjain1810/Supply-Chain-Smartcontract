@@ -454,9 +454,6 @@ contract Marketplace {
         return false;
     }
 
-
-    event DummyEvent(uint256 i, uint256 quantity);
-
     function manufacturerSupplyCars(uint256 manufacturerID) public {
         require(num_manufacturer >= manufacturerID);
         require(
@@ -468,7 +465,6 @@ contract Marketplace {
             i < purchasesTillNow[manufacturers[manufacturerID].wallet].length;
             i++
         ) {
-            
             //Money is already checked, Quantity check is done here
             if (
                 purchasesTillNow[manufacturers[manufacturerID].wallet][i]
@@ -491,8 +487,6 @@ contract Marketplace {
                 uint256[100] memory carTags;
                 uint256 carTagsIdx = 0;
                 for (uint256 j = 0; j < num_of_cars; j++) {
-                    if(productsTillNow[mf_adrr].length == 0)
-                        break;
                     uint256 idx = productsTillNow[mf_adrr].length - 1;
                     Car memory newcar;
                     newcar.tag = productsTillNow[mf_adrr][idx].tag;
@@ -534,11 +528,6 @@ contract Marketplace {
                 revert("Quantity not Available"); //gas to caller
             }
         }
-        while(purchasesTillNow[manufacturers[manufacturerID].wallet].length>0)
-        {
-            purchasesTillNow[manufacturers[manufacturerID].wallet].pop();
-        }
-
     }
 
     function addSupplier(
@@ -609,7 +598,7 @@ contract Marketplace {
         manufacturers[manufacturerID].quantityA -= max_cars;
         manufacturers[manufacturerID].quantityB -= max_cars;
         manufacturers[manufacturerID].cars += max_cars;
-        
+
         Product memory newcar;
         num_products++;
         newcar.tag = num_products;
@@ -617,7 +606,6 @@ contract Marketplace {
         newcar.sellerA = manufacturerID;
         newcar.sellerB = 3;
         productsTillNow[manufacturers[manufacturerID].wallet].push(newcar);
-        
     }
 
     function set_cars_price(uint256 manufacturerID, uint256 price) public {

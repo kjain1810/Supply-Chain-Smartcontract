@@ -100,18 +100,7 @@ contract("testcontract", (accounts) => {
     await instance.addCustomer(accounts[6]);
     await instance.addCustomer(accounts[7]);
 
-    await instance.customerPurchase(1, 2, 2, { value: 100 });
-    await instance.customerPurchase(2, 2, 1, { value: 100 });
-
-    // await instance.manufacturerSupplyCars(1);
-    await instance.manufacturerSupplyCars(2);
-
-    const ret1 = await instance.verifyproduct(1, 1);
-    assert.equal(ret1.carID, 1);
-    assert.equal(ret1.manfID, 2);
-
-    const ret2 = await instance.verifyproduct(2, 3);
-    assert.equal(ret2.carID, 3);
-    assert.equal(ret2.manfID, 2);
+    await instance.customerPurchase(1, 1, 1, { value: 32 });
+    await instance.customerPurchase(2, 2, 2, { value: 100 });
   });
 });

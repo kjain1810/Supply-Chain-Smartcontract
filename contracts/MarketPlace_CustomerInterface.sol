@@ -185,40 +185,4 @@ contract MarketPlace_CustomerInterface is MarketPlace_Bidding {
         require(0 == 1, "Car not found in they buyers purchases");
         return (0, 0, 0, 0);
     }
-
-    function get_cars_price_quantity(uint256 manfID)
-        public
-        view
-        returns (uint256 price, uint256 quantity)
-    {
-        require(num_manufacturer >= manfID, "Manufacturer ID doesnot exist");
-        return (manufacturers[manfID].carsprice, manufacturers[manfID].cars);
-    }
-
-    function get_manufacturer_data(uint256 manfID)
-        public
-        view
-        returns (
-            uint256 tag,
-            uint256 quantA,
-            uint256 quantB,
-            uint256 cars
-        )
-    {
-        Manufacturer memory t = manufacturers[manfID];
-        return (t._tag, t.quantityA, t.quantityB, t.cars);
-    }
-
-    function get_car_data(uint256 customerID)
-        public
-        view
-        returns (uint256[10] memory cars)
-    {
-        uint256[10] memory data;
-        uint256 idx = 0;
-        for (uint256 i = 0; i < carsBought[customerID].length; i++) {
-            data[idx++] = carsBought[customerID][i].tag;
-        }
-        return data;
-    }
 }

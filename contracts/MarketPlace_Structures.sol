@@ -1,6 +1,8 @@
 pragma solidity >=0.8.16;
 
 contract MarketPlace_Structures {
+    address payable public owner;
+
     // @dev State of the auction
     // @param RUNNING auction is running and bids are being places
     // @param REVEALING auction has ended and bidders are revealing their bids

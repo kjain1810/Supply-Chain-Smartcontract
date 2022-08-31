@@ -3,37 +3,46 @@
 A smart contract for a market place.
 
 Made by:
+
 - Kunal Jain (2019111037)
 - P. Sahithi Reddy (2020121011)
 - Prince Varshney (2020121012)
 
 ## Public API
+
 ### User control operations
+
 - addSupplier: Adds a supplier
 - addManufacturer: Adds a manufacturer
 - addCustomer: Adds a customer
 
-### Supplier side operations 
+### Supplier side operations
+
 - supplierStartAuction: Allows supplier to start their auction
 - supplierEndAuction: Allows supplier to end bidding phase of auction
 - supplierEndReveal: Allows supplier to end reveal phase and allocate
 - supplierAddQuantity: Allows supplier to add inventory
 
 ### Manufacturer side operations
+
 - manufacturerPlacesBid: Allows manufacturer to place bid to supplier
 - manufactuerRevealBid: Allows manufacturer to reveal their bid
 - manufacturerSupplyCars: Allows manufacturer to supply cars
 
 ### Customer side operations
+
 - customerPurchase: Allows customers to place a purchase
 - verifyproduct: Allows customer to verify their purchases
 
 ## Code Flow
+
 The flow is divided into 2 segments:
+
 1. Auction between the manufacturers to the suppliers for parts
 2. Fixed price purchases by the customers from the manufacturers.
 
 The bidding proceeds as follows:
+
 1. A supplier starts an auction in bidding phase
 2. Manufacturers commit their bids to the suppliers by encrypting them with a key and putting them on the blockchain
 3. The supplier starts the reveal phase after it has collected the bids
@@ -43,23 +52,39 @@ The bidding proceeds as follows:
 Note that a manufacturer needs to generate a new secret key for every bid it makes.
 
 The purchases proceed as follows:
+
 1. A customer requests a purchase to the manufacturer
 2. The manufacture fulfills the order if it has the said quantity and price offered is suitable to it.
 
 ## Goals
+
 ### Secret bidding
+
 - All bids are placed using a commit reveal mechanism
 - The price and quantity is sent after adding a secret key to them and encrypting all 3 using keccak256 with the `manufacturerPlacesBid` API.
 - These are emitted on the blockchain
 - During reveal phase, the manufacturers send their bids along with the key, which is also emitted on the blockchain for everyone to verify with the `manufactuerRevealBid` API.
+
 ### Optimal resource allocation
+
 - During bids, the manufacturers send their current limiting resource
 - When the supplier ends it's reveal phase with the `supplierEndReveal` API, we do resource optimal allocation
 - First , we supply the each bidder in the order of their bids the minimum of the quantity they ordered, their limiting quantity and the quantity available. If units are still available, they are sent to the highest bidder
 
 ### Validity of product
+
 - The code is written in a modular and extensible fashion such that each product sold can be traced back to how it was produced.
 - The `Product` class stores high level information like where each of the parts were produced and assembled.
 
 ## Bonus
+
 - The code is written in a generalized fashion such that we are not limited to the marketplace posed in the question. We have implemented an open marketplace where any number of buyers can bid and buy from any number of sellers
+
+## Tests
+
+The parameters of the bids change across each test
+
+1. Create 3 suppliers, 2 manufacturers and 2 customers
+2. Manufacturers buy from their unique suppliers
+3. Manufacturers bid for the common resource, resource allocation is done in supply chain optimal fashion
+4. Customers buy from manufacturers and verify their product and it's suppliers

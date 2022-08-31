@@ -1,3 +1,31 @@
+# Supply-Chain-Management
+A transparent supply chain which can be used by 5 clients and their customers.
+
+
+## Actors
+### Manufacturers : 
+There are 2 clients who manufacture cars, and sell them to the customers.For manufacturing cars we need cars_body and wheels.
+
+### Suppliers : 
+There are 3 suppliers.  </br>
+Supplier 1 (S1) supplies wheels to Manufacturer 1 (M1) </br>
+Supplier 3 (S3) supplies cars_body to both M1 and M2.
+</br>
+Supplier 2 (S2) supplies wheels to Manufacturer 2.
+
+### Customers :
+They buy cars from manufacturers at retail price
+
+## Market Interactions
+Manufacturers bids to suppliers and bids are secret.
+Once auction is over, resource allocation is based on optimal resource allocation and profit maximising strategy.
+
+## Goals
+We ensure 3 goals are met :
+1. Secret Bidding
+2. Optimal resource allocation & Profit maximization
+3. Validity of the product
+
 To test in truffle
 
 - Compile:

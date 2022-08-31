@@ -45,6 +45,8 @@ console.log(balance);
 - update_Manufacturer_Quantities : updates cars from quantities;
 - manufacturerSuppliesCars : manufacturer sells cars 
 - customerPurchase : customer places a order
+- set_cars_price : manufacturer can set cars price
+- get_cars_price : returns quantity and price (per each piece) by the mentioned manufacturer
 
 ### Events
 - StartSupplierAuction : supplier starts auction

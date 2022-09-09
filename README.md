@@ -70,7 +70,7 @@ console.log(balance);
 - manufactuerRevealBid : manufacturer reveals their bid to supplier from this if reveal phase is on
 - addSupplier, addManufacturer, addCustomer : adds the actors
 - supplierAddQuantity : adds quantity for the supplier
-- update_Manufacturer_Quantities : updates cars from quantities;
+- updateManufacturerQuantities : updates cars from quantities;
 - manufacturerSuppliesCars : manufacturer sells cars 
 - customerPurchase : customer places a order
 - set_cars_price : manufacturer can set cars price

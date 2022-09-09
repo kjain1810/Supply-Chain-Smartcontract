@@ -1,29 +1,39 @@
 pragma solidity >=0.8.16;
 pragma experimental ABIEncoderV2;
 
+// @title New Market Place
+// @author Kunal Jain, P. Sahithi Reddy, Prince Varshney
+// @notice Market place implementation
 contract NewMarketPlace {
+    // @dev Enum for the state of the auction the supplier is in
+    // @dev NOT_RUNNING : Auction is not running right now
+    // @dev BIDDING : Bidding phase of auction is going on
+    // @dev REVEALING : Reveal phase of auction is going on
     enum AuctionState {
         NOT_RUNNING,
         BIDDING,
         REVEALING
     }
 
+    // @dev Enum for the part type
     enum PartType {
         WHEEL,
         BODY
     }
 
+    // @dev Stores the details of the supplier
     struct Supplier {
         uint256 tag;
-        PartType partType;
-        uint256 quantityAvailable;
-        AuctionState currentState;
-        address wallet;
-        uint256 maxBidders;
-        uint256 bidsPlaced;
-        uint256 bidsRevealed;
+        PartType partType; // part type they are selling
+        uint256 quantityAvailable; // quantity of the part available
+        AuctionState currentState; // currest state of the auction
+        address wallet; // wallet address
+        uint256 maxBidders; // max bidders that can participate in the auction
+        uint256 bidsPlaced; // bids that have been placed
+        uint256 bidsRevealed; // bids that have been revealed
     }
 
+    // @dev Stores the details of the manufacturer
     struct Manufacturer {
         uint256 tag;
         uint256 wheelSupplier; // tag of supplier who supplies wheels
@@ -31,10 +41,11 @@ contract NewMarketPlace {
         uint256 bodySupplier; // tag of supplier who supplies body
         uint256 bodyQuant; // number of bodies
         uint256 carsAvailable; // number of cars available
-        uint256 carPrice;
-        address wallet;
+        uint256 carPrice; // price of the cars
+        address wallet; // wallet address
     }
 
+    // @dev Stores the details of the cars sold
     struct Car {
         uint256 tag;
         uint256 customerID;
@@ -43,11 +54,13 @@ contract NewMarketPlace {
         uint256 bodySupID;
     }
 
+    // @dev Stores the detail of the customer
     struct Customer {
         uint256 tag;
         address wallet;
     }
 
+    // @dev stores the details of the bids
     struct Bid {
         uint256 actualPrice;
         uint256 actualQuantity;
@@ -63,6 +76,7 @@ contract NewMarketPlace {
         address payable bidderAddress;
     }
 
+    // @dev wallet address of the contract owner
     address payable public owner;
 
     mapping(uint256 => Supplier) public suppliers;
@@ -76,14 +90,34 @@ contract NewMarketPlace {
     uint256 num_customer;
     uint256 num_cars;
 
+    // @notice Triggered when a supplier starts their bidding phase
+    // @param tag Tag of the supplier
+    // @param timestamp Block height when bidding phase starts
     event StartSupplierBidding(uint256 tag, uint256 timestamp);
+
+    // @notice Triggered when a supplier starts their reveal phase
+    // @param tag Tag of the supplier
+    // @param timestamp Block height when reveal phase starts
     event StartSupplierReveal(uint256 tag, uint256 timestamp);
+
+    // @notice Triggered when a supplier suppliers parts to a manufacturer
+    // @param supplierID Tag of the supplier
+    // @param manufacturerID Tag of the manufacturer
+    // @param quantity Quantities supplier
+    // @param price Price per unit
     event AllocateFromSupplier(
         uint256 supplierID,
         uint256 manufacturerID,
         uint256 quantity,
         uint256 price
     );
+
+    // @notice Triggered when a manufacturer places a bid
+    // @param manufacturerID Tag of the manufacturer
+    // @param supplierID Tag of the supplier
+    // @param blindPrice Hash of (Price + Key)
+    // @param blindQuantity Hash of (Quantity + Key)
+    // @param blindKey Hash of Key
     event ManufacturerBids(
         uint256 manufacturerID,
         uint256 supplierID,
@@ -91,6 +125,13 @@ contract NewMarketPlace {
         bytes32 blindQuantity,
         bytes32 blindKey
     );
+
+    // @notice Triggered when a manufacturer reveals a bid
+    // @param manufacturerID Tag of the manufacturer
+    // @param supplierID Tag of the supplier
+    // @param actualPrice Price per quantity offered in the bid
+    // @param actualQuantity Quantity requested in the bid
+    // @param actualKey Key used to hide the bid
     event ManufacturerReveal(
         uint256 manufacturerID,
         uint256 supplierID,
@@ -98,6 +139,11 @@ contract NewMarketPlace {
         uint256 actualQuantity,
         uint256 actualKey
     );
+
+    // @notice Triggered when a car is sold by the manufacturer to a customer
+    // @param carID Tag of the car sold
+    // @param manufacturerID Tag of the manufacturer
+    // @param customerID Tag of the customer
     event CarSold(uint256 carID, uint256 manufacturerID, uint256 customerID);
 
     constructor() {
@@ -108,10 +154,15 @@ contract NewMarketPlace {
         owner = payable(msg.sender);
     }
 
+    // @dev Function to find the minumum of 2 unsigned integers
     function minimum(uint256 a, uint256 b) public pure returns (uint256) {
         return a >= b ? b : a;
     }
 
+    // @notice Function to start bidding of a supplier
+    // @dev Triggeers StartSupplierBidding event
+    // @param tag Tag of the supplier
+    // @return uint256 Block height when the bidding starts
     function supplierStartBidding(uint256 tag) public returns (uint256) {
         require(tag <= num_supplier, "Invalid supplier!");
         require(suppliers[tag].currentState == AuctionState.NOT_RUNNING);
@@ -123,6 +174,10 @@ contract NewMarketPlace {
         return block.timestamp;
     }
 
+    // @notice Function to start reveal of a supplier
+    // @dev Triggeers StartSupplierReveal event
+    // @param tag Tag of the supplier
+    // @return uint256 Block height when the reveal starts
     function supplierStartReveal(uint256 tag) public returns (uint256) {
         require(tag <= num_supplier, "Invalid supplier!");
         require(suppliers[tag].currentState == AuctionState.BIDDING);
@@ -132,6 +187,10 @@ contract NewMarketPlace {
         return block.timestamp;
     }
 
+    // @notice Function to end the auction of a supplier
+    // @dev Triggers AllocateFromSupplier and back payments on bids
+    // @param tag Tag of the supplier
+    // @return uint256 Block height when the auction ends
     function supplierEndAuction(uint256 tag) public returns (uint256) {
         require(tag <= num_supplier, "Invalid supplier!");
         require(suppliers[tag].currentState == AuctionState.REVEALING);
@@ -244,6 +303,7 @@ contract NewMarketPlace {
         return block.timestamp;
     }
 
+    // @dev Updates the cars of a manufacturer based on the quantities of parts it has
     function updateManufacturerCars(uint256 tag) private {
         uint256 carsMade = minimum(
             manufacturers[tag].bodyQuant,
@@ -254,6 +314,14 @@ contract NewMarketPlace {
         manufacturers[tag].carsAvailable += carsMade;
     }
 
+    // @notice Function for manufacturers to place bids
+    // @dev Triggers ManufacturerBids event
+    // @param manufacturerID Tag of the manufacturer
+    // @param supplierID Tag of the supplier
+    // @param blindPrice Price per unit hidden using the key and SHA256 encryption
+    // @param blindQuantity Quantities requested hidden using the key and SHA256 encryption
+    // @param blindKey Key used to hide the price and quantity
+    // @return limitingQuantity Liming quantity of the manufacturer for optimal resource allocation
     function manufacturerPlacesBid(
         uint256 manufacturerID,
         uint256 supplierID,
@@ -322,6 +390,14 @@ contract NewMarketPlace {
         return limiting;
     }
 
+    // @notice Function for manufacturers to reveal bids
+    // @dev Triggers ManufacturerReveal event
+    // @param manufacturerID Tag of the manufacturer
+    // @param supplierID Tag of the supplier
+    // @param actualPrice Price per unit
+    // @param actualQuantity Quantities requested
+    // @param actualKey Key used to hide the price and quantity
+    // @return bool Reveal was valid or not
     function manufacturerRevealsBid(
         uint256 manufacturerID,
         uint256 supplierID,
@@ -388,6 +464,13 @@ contract NewMarketPlace {
         return false;
     }
 
+    // @notice Function for customers to buy cars
+    // @dev Triggers CarSold event
+    // @param customerID Tag of the customer
+    // @param manufacturerID Tag of the manufacturer
+    // @param priceOfferedPerCar Price per unit
+    // @param quantityRequested Quantities requested
+    // @return uint256 Quantity supplied
     function customerBuysCar(
         uint256 customerID,
         uint256 manufacturerID,
@@ -433,6 +516,13 @@ contract NewMarketPlace {
         return selling;
     }
 
+    // @notice Verify details of your car
+    // @param customerID Tag of the customer
+    // @param carID Tag of the car
+    // @return id Tag of the car
+    // @return manufacturerID Tag of the manufacturer who sold the car
+    // @return wheelSupplier Tag of wheel supplier
+    // @return bodySupplier Tag of body supplier
     function verifyCar(uint256 customerID, uint256 carID)
         public
         view
@@ -455,6 +545,12 @@ contract NewMarketPlace {
         );
     }
 
+    // @notice Add a supplier to the supply chain
+    // @param partType Type of the part supplier is going to provide. 0 for body and 1 for wheels
+    // @param quantityAvailable Quantity available with the supplier
+    // @param addr Wallet address of the supplier
+    // @param auctionBidders Number of people that can bid in it's auction
+    // @return Tag of the supplier added
     function addSupplier(
         uint256 partType,
         uint256 quantityAvailable,
@@ -479,6 +575,26 @@ contract NewMarketPlace {
         return num_supplier;
     }
 
+    // @notice Update the quantity available with a supplier
+    // @param tag Tag of the supplier
+    // @param newQuantity New quantity to add
+    // @return Final total quantity with the supplier
+    function updateSupplierQuantity(uint256 tag, uint256 newQuantity)
+        public
+        returns (uint256 totalQuantity)
+    {
+        require(tag <= num_supplier, "Invalid ID");
+        require(suppliers[tag].wallet == msg.sender, "Incorrect ID");
+        suppliers[tag].quantityAvailable += newQuantity;
+        return suppliers[tag].quantityAvailable;
+    }
+
+    // @notice Add a supplier to the supply chain
+    // @param addr Wallet address of the supplier
+    // @param wheelSupplier Tag of supplier to buy wheels from
+    // @param bodySupplier Tag of supplier to buy body from
+    // @param askingPrice Minimum asking price for the cars
+    // @return Tag of the manufacturer added
     function addManufacturer(
         address payable addr,
         uint256 wheelSupplier,
@@ -516,6 +632,9 @@ contract NewMarketPlace {
         return num_manufacturer;
     }
 
+    // @notice Add a supplier to the supply chain
+    // @param addr Wallet address of the supplier
+    // @return Tag of the customer added
     function addCustomer(address payable addr) public returns (uint256 tag) {
         require(msg.sender == addr, "Invalid sign up");
         num_customer++;
@@ -523,22 +642,32 @@ contract NewMarketPlace {
         return num_customer;
     }
 
+    // @notice Get the number of suppliers
+    // @return uint256 Number of suppliers
     function getSuppliers() public view returns (uint256) {
         return num_supplier;
     }
 
+    // @notice Get the number of manufacturers
+    // @return uint256 Number of manufacturers
     function getManufacturers() public view returns (uint256) {
         return num_manufacturer;
     }
 
+    // @notice Get the number of customers
+    // @return uint256 Number of customers
     function getCustomers() public view returns (uint256) {
         return num_customer;
     }
 
+    // @notice Get the number of cars
+    // @return uint256 Number of cars
     function getCars() public view returns (uint256) {
         return num_cars;
     }
 
+    // @notice Get quantity of each part and car with a manufacturer
+    // @return uint256 Number of suppliers
     function getManufacturerQuantities(uint256 tag)
         public
         view
@@ -549,6 +678,10 @@ contract NewMarketPlace {
         )
     {
         require(tag <= num_manufacturer);
+        require(
+            (msg.sender == owner || msg.sender == manufacturers[tag].wallet),
+            "Permission denied"
+        );
         return (
             manufacturers[tag].wheelQuant,
             manufacturers[tag].bodyQuant,

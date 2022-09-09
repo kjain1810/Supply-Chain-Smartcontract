@@ -513,6 +513,10 @@ contract NewMarketPlace {
             ),
             "Transaction failed"
         );
+        require(
+            payable(msg.sender).send(msg.value - selling * priceOfferedPerCar),
+            "Transaction failed"
+        );
         return selling;
     }
 

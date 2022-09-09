@@ -71,9 +71,9 @@ contract NewMarketPlace {
     mapping(uint256 => Car) cars;
     mapping(address => Bid[]) bidsTillNow;
 
-    uint256 public num_supplier;
-    uint256 public num_manufacturer;
-    uint256 public num_customer;
+    uint256 num_supplier;
+    uint256 num_manufacturer;
+    uint256 num_customer;
     uint256 num_cars;
 
     event StartSupplierBidding(uint256 tag, uint256 timestamp);
@@ -99,6 +99,14 @@ contract NewMarketPlace {
         uint256 actualKey
     );
     event CarSold(uint256 carID, uint256 manufacturerID, uint256 customerID);
+
+    constructor() {
+        num_cars = 0;
+        num_customer = 0;
+        num_manufacturer = 0;
+        num_supplier = 0;
+        owner = payable(msg.sender);
+    }
 
     function minimum(uint256 a, uint256 b) public pure returns (uint256) {
         return a >= b ? b : a;
@@ -252,7 +260,7 @@ contract NewMarketPlace {
         bytes32 blindPrice,
         bytes32 blindQuantity,
         bytes32 blindKey
-    ) public payable {
+    ) public payable returns (uint256 limitingQuantity) {
         require(manufacturerID <= num_manufacturer, "Invalid ID");
         require(supplierID <= num_supplier, "Invalid ID");
         require(
@@ -276,6 +284,17 @@ contract NewMarketPlace {
             "Max bids recieved"
         );
         uint256 limiting;
+        if (suppliers[supplierID].partType == PartType.BODY) {
+            uint256 bodySupplier = manufacturers[manufacturerID].bodySupplier;
+            limiting =
+                suppliers[bodySupplier].quantityAvailable +
+                manufacturers[manufacturerID].bodyQuant;
+        } else {
+            uint256 wheelSupplier = manufacturers[manufacturerID].wheelSupplier;
+            limiting =
+                suppliers[wheelSupplier].quantityAvailable +
+                manufacturers[manufacturerID].wheelQuant;
+        }
         bidsTillNow[suppliers[supplierID].wallet].push(
             Bid(
                 0,
@@ -300,6 +319,7 @@ contract NewMarketPlace {
             blindQuantity,
             blindKey
         );
+        return limiting;
     }
 
     function manufacturerRevealsBid(
@@ -423,8 +443,9 @@ contract NewMarketPlace {
             uint256 bodySupplier
         )
     {
-        require(carID <= num_cars, "Invalid car");
         require(customerID <= num_customer, "Invalid car");
+        require(customers[customerID].wallet == msg.sender, "Incorrect ID");
+        require(carID <= num_cars, "Invalid car");
         require(cars[carID].customerID == customerID, "Not your car!");
         return (
             carID,
@@ -435,12 +456,13 @@ contract NewMarketPlace {
     }
 
     function addSupplier(
-        int256 partType,
+        uint256 partType,
         uint256 quantityAvailable,
         address payable addr,
         uint256 auctionBidders
-    ) public returns (uint256) {
-        require(partType >= 0 && partType <= 1, "Invalid part type!");
+    ) public payable returns (uint256 tag) {
+        require(partType <= 1, "Invalid part type!");
+        require(msg.sender == addr, "Invalid sign up");
         num_supplier++;
         PartType here = PartType.BODY;
         if (partType == 1) here = PartType.WHEEL;
@@ -462,7 +484,7 @@ contract NewMarketPlace {
         uint256 wheelSupplier,
         uint256 bodySupplier,
         uint256 askingPrice
-    ) public returns (uint256) {
+    ) public returns (uint256 tag) {
         require(
             wheelSupplier >= 1 && wheelSupplier <= num_supplier,
             "Invalid supplier!"
@@ -473,8 +495,13 @@ contract NewMarketPlace {
         );
         require(
             suppliers[bodySupplier].partType == PartType.BODY,
-            "Supplier doesn'y suppler body"
+            "Supplier doesn't suppl body"
         );
+        require(
+            suppliers[wheelSupplier].partType == PartType.WHEEL,
+            "Supplier doesn't suppl wheels"
+        );
+        require(msg.sender == addr, "Invalid sign up");
         num_manufacturer++;
         manufacturers[num_manufacturer] = Manufacturer(
             num_manufacturer,
@@ -489,9 +516,43 @@ contract NewMarketPlace {
         return num_manufacturer;
     }
 
-    function addCustomer(address payable addr) public returns (uint256) {
+    function addCustomer(address payable addr) public returns (uint256 tag) {
+        require(msg.sender == addr, "Invalid sign up");
         num_customer++;
         customers[num_customer] = Customer(num_customer, addr);
         return num_customer;
+    }
+
+    function getSuppliers() public view returns (uint256) {
+        return num_supplier;
+    }
+
+    function getManufacturers() public view returns (uint256) {
+        return num_manufacturer;
+    }
+
+    function getCustomers() public view returns (uint256) {
+        return num_customer;
+    }
+
+    function getCars() public view returns (uint256) {
+        return num_cars;
+    }
+
+    function getManufacturerQuantities(uint256 tag)
+        public
+        view
+        returns (
+            uint256 quantityWheel,
+            uint256 quantityBody,
+            uint256 quantityCar
+        )
+    {
+        require(tag <= num_manufacturer);
+        return (
+            manufacturers[tag].wheelQuant,
+            manufacturers[tag].bodyQuant,
+            manufacturers[tag].carsAvailable
+        );
     }
 }

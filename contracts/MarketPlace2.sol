@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 pragma solidity >=0.8.16;
 pragma experimental ABIEncoderV2;
 
@@ -33,6 +34,12 @@ contract NewMarketPlace {
         uint256 bidsRevealed; // bids that have been revealed
     }
 
+    function isSupplier() public view returns (bool){
+        for(uint256 i=0;i<=num_supplier;i++){
+            if(suppliers[i].wallet == msg.sender) return true;
+        }
+        return false;
+    }
     // @dev Stores the details of the manufacturer
     struct Manufacturer {
         uint256 tag;
@@ -43,6 +50,13 @@ contract NewMarketPlace {
         uint256 carsAvailable; // number of cars available
         uint256 carPrice; // price of the cars
         address wallet; // wallet address
+    }
+
+    function isManufacturer() public view returns (bool){
+        for(uint256 i=0;i<=num_manufacturer;i++){
+            if(manufacturers[i].wallet == msg.sender) return true;
+        }
+        return false;
     }
 
     // @dev Stores the details of the cars sold

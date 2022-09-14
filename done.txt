@@ -15,3 +15,6 @@ logic for supplierstartbidding supplierrevealbidding supplierendauction
 
 running : manufacturer reveal bid in file manufacturer.js (trying to display who is 
 ones supplier for wheels and body )
+
+
+not sure how to pass web3.utils.etc etc 

@@ -2,27 +2,27 @@
 pragma solidity >=0.8.16;
 pragma experimental ABIEncoderV2;
 
-// @title New Market Place
-// @author Kunal Jain, P. Sahithi Reddy, Prince Varshney
-// @notice Market place implementation
+/// @title New Market Place
+/// @author Kunal Jain, P. Sahithi Reddy, Prince Varshney
+/// @notice Market place implementation
 contract NewMarketPlace {
-    // @dev Enum for the state of the auction the supplier is in
-    // @dev NOT_RUNNING : Auction is not running right now
-    // @dev BIDDING : Bidding phase of auction is going on
-    // @dev REVEALING : Reveal phase of auction is going on
+    /// @dev Enum for the state of the auction the supplier is in
+    /// @dev NOT_RUNNING : Auction is not running right now
+    /// @dev BIDDING : Bidding phase of auction is going on
+    /// @dev REVEALING : Reveal phase of auction is going on
     enum AuctionState {
         NOT_RUNNING,
         BIDDING,
         REVEALING
     }
 
-    // @dev Enum for the part type
+    /// @dev Enum for the part type
     enum PartType {
         WHEEL,
         BODY
     }
 
-    // @dev Stores the details of the supplier
+    /// @dev Stores the details of the supplier
     struct Supplier {
         uint256 tag;
         PartType partType; // part type they are selling
@@ -34,19 +34,18 @@ contract NewMarketPlace {
         uint256 bidsRevealed; // bids that have been revealed
     }
 
-
-    function isSupplier() public view returns (bool){
-        for(uint256 i=0;i<=num_supplier;i++){
-            if(suppliers[i].wallet == msg.sender) return true;
+    function isSupplier() public view returns (bool) {
+        for (uint256 i = 0; i <= num_supplier; i++) {
+            if (suppliers[i].wallet == msg.sender) return true;
         }
         return false;
     }
 
-    function getAllSuppliers() public view returns (Supplier[] memory){
+    function getAllSuppliers() public view returns (Supplier[] memory) {
         return allSuppliers;
     }
-    
-    // @dev Stores the details of the manufacturer
+
+    /// @dev Stores the details of the manufacturer
     struct Manufacturer {
         uint256 tag;
         uint256 wheelSupplier; // tag of supplier who supplies wheels
@@ -58,14 +57,14 @@ contract NewMarketPlace {
         address wallet; // wallet address
     }
 
-    function isManufacturer() public view returns (bool){
-        for(uint256 i=0;i<=num_manufacturer;i++){
-            if(manufacturers[i].wallet == msg.sender) return true;
+    function isManufacturer() public view returns (bool) {
+        for (uint256 i = 0; i <= num_manufacturer; i++) {
+            if (manufacturers[i].wallet == msg.sender) return true;
         }
         return false;
     }
 
-    // @dev Stores the details of the cars sold
+    /// @dev Stores the details of the cars sold
     struct Car {
         uint256 tag;
         uint256 customerID;
@@ -74,13 +73,13 @@ contract NewMarketPlace {
         uint256 bodySupID;
     }
 
-    // @dev Stores the detail of the customer
+    /// @dev Stores the detail of the customer
     struct Customer {
         uint256 tag;
         address wallet;
     }
 
-    // @dev stores the details of the bids
+    /// @dev stores the details of the bids
     struct Bid {
         uint256 actualPrice;
         uint256 actualQuantity;
@@ -96,7 +95,7 @@ contract NewMarketPlace {
         address payable bidderAddress;
     }
 
-    // @dev wallet address of the contract owner
+    /// @dev wallet address of the contract owner
     address payable public owner;
 
     mapping(uint256 => Supplier) public suppliers;
@@ -112,21 +111,21 @@ contract NewMarketPlace {
 
     Supplier[] allSuppliers;
 
-    // @notice Triggered when a supplier starts their bidding phase
-    // @param tag Tag of the supplier
-    // @param timestamp Block height when bidding phase starts
+    /// @notice Triggered when a supplier starts their bidding phase
+    /// @param tag Tag of the supplier
+    /// @param timestamp Block height when bidding phase starts
     event StartSupplierBidding(uint256 tag, uint256 timestamp);
 
-    // @notice Triggered when a supplier starts their reveal phase
-    // @param tag Tag of the supplier
-    // @param timestamp Block height when reveal phase starts
+    /// @notice Triggered when a supplier starts their reveal phase
+    /// @param tag Tag of the supplier
+    /// @param timestamp Block height when reveal phase starts
     event StartSupplierReveal(uint256 tag, uint256 timestamp);
 
-    // @notice Triggered when a supplier suppliers parts to a manufacturer
-    // @param supplierID Tag of the supplier
-    // @param manufacturerID Tag of the manufacturer
-    // @param quantity Quantities supplier
-    // @param price Price per unit
+    /// @notice Triggered when a supplier suppliers parts to a manufacturer
+    /// @param supplierID Tag of the supplier
+    /// @param manufacturerID Tag of the manufacturer
+    /// @param quantity Quantities supplier
+    /// @param price Price per unit
     event AllocateFromSupplier(
         uint256 supplierID,
         uint256 manufacturerID,
@@ -134,12 +133,12 @@ contract NewMarketPlace {
         uint256 price
     );
 
-    // @notice Triggered when a manufacturer places a bid
-    // @param manufacturerID Tag of the manufacturer
-    // @param supplierID Tag of the supplier
-    // @param blindPrice Hash of (Price + Key)
-    // @param blindQuantity Hash of (Quantity + Key)
-    // @param blindKey Hash of Key
+    /// @notice Triggered when a manufacturer places a bid
+    /// @param manufacturerID Tag of the manufacturer
+    /// @param supplierID Tag of the supplier
+    /// @param blindPrice Hash of (Price + Key)
+    /// @param blindQuantity Hash of (Quantity + Key)
+    /// @param blindKey Hash of Key
     event ManufacturerBids(
         uint256 manufacturerID,
         uint256 supplierID,
@@ -148,12 +147,12 @@ contract NewMarketPlace {
         bytes32 blindKey
     );
 
-    // @notice Triggered when a manufacturer reveals a bid
-    // @param manufacturerID Tag of the manufacturer
-    // @param supplierID Tag of the supplier
-    // @param actualPrice Price per quantity offered in the bid
-    // @param actualQuantity Quantity requested in the bid
-    // @param actualKey Key used to hide the bid
+    /// @notice Triggered when a manufacturer reveals a bid
+    /// @param manufacturerID Tag of the manufacturer
+    /// @param supplierID Tag of the supplier
+    /// @param actualPrice Price per quantity offered in the bid
+    /// @param actualQuantity Quantity requested in the bid
+    /// @param actualKey Key used to hide the bid
     event ManufacturerReveal(
         uint256 manufacturerID,
         uint256 supplierID,
@@ -162,10 +161,10 @@ contract NewMarketPlace {
         uint256 actualKey
     );
 
-    // @notice Triggered when a car is sold by the manufacturer to a customer
-    // @param carID Tag of the car sold
-    // @param manufacturerID Tag of the manufacturer
-    // @param customerID Tag of the customer
+    /// @notice Triggered when a car is sold by the manufacturer to a customer
+    /// @param carID Tag of the car sold
+    /// @param manufacturerID Tag of the manufacturer
+    /// @param customerID Tag of the customer
     event CarSold(uint256 carID, uint256 manufacturerID, uint256 customerID);
 
     constructor() {
@@ -176,15 +175,15 @@ contract NewMarketPlace {
         owner = payable(msg.sender);
     }
 
-    // @dev Function to find the minumum of 2 unsigned integers
+    /// @dev Function to find the minumum of 2 unsigned integers
     function minimum(uint256 a, uint256 b) public pure returns (uint256) {
         return a >= b ? b : a;
     }
 
-    // @notice Function to start bidding of a supplier
-    // @dev Triggeers StartSupplierBidding event
-    // @param tag Tag of the supplier
-    // @return uint256 Block height when the bidding starts
+    /// @notice Function to start bidding of a supplier
+    /// @dev Triggeers StartSupplierBidding event
+    /// @param tag Tag of the supplier
+    /// @return uint256 Block height when the bidding starts
     function supplierStartBidding(uint256 tag) public returns (uint256) {
         require(tag <= num_supplier, "Invalid supplier!");
         require(suppliers[tag].currentState == AuctionState.NOT_RUNNING);
@@ -196,10 +195,10 @@ contract NewMarketPlace {
         return block.timestamp;
     }
 
-    // @notice Function to start reveal of a supplier
-    // @dev Triggeers StartSupplierReveal event
-    // @param tag Tag of the supplier
-    // @return uint256 Block height when the reveal starts
+    /// @notice Function to start reveal of a supplier
+    /// @dev Triggeers StartSupplierReveal event
+    /// @param tag Tag of the supplier
+    /// @return uint256 Block height when the reveal starts
     function supplierStartReveal(uint256 tag) public returns (uint256) {
         require(tag <= num_supplier, "Invalid supplier!");
         require(suppliers[tag].currentState == AuctionState.BIDDING);
@@ -209,10 +208,10 @@ contract NewMarketPlace {
         return block.timestamp;
     }
 
-    // @notice Function to end the auction of a supplier
-    // @dev Triggers AllocateFromSupplier and back payments on bids
-    // @param tag Tag of the supplier
-    // @return uint256 Block height when the auction ends
+    /// @notice Function to end the auction of a supplier
+    /// @dev Triggers AllocateFromSupplier and back payments on bids
+    /// @param tag Tag of the supplier
+    /// @return uint256 Block height when the auction ends
     function supplierEndAuction(uint256 tag) public returns (uint256) {
         require(tag <= num_supplier, "Invalid supplier!");
         require(suppliers[tag].currentState == AuctionState.REVEALING);
@@ -325,7 +324,7 @@ contract NewMarketPlace {
         return block.timestamp;
     }
 
-    // @dev Updates the cars of a manufacturer based on the quantities of parts it has
+    /// @dev Updates the cars of a manufacturer based on the quantities of parts it has
     function updateManufacturerCars(uint256 tag) private {
         uint256 carsMade = minimum(
             manufacturers[tag].bodyQuant,
@@ -336,14 +335,14 @@ contract NewMarketPlace {
         manufacturers[tag].carsAvailable += carsMade;
     }
 
-    // @notice Function for manufacturers to place bids
-    // @dev Triggers ManufacturerBids event
-    // @param manufacturerID Tag of the manufacturer
-    // @param supplierID Tag of the supplier
-    // @param blindPrice Price per unit hidden using the key and SHA256 encryption
-    // @param blindQuantity Quantities requested hidden using the key and SHA256 encryption
-    // @param blindKey Key used to hide the price and quantity
-    // @return limitingQuantity Liming quantity of the manufacturer for optimal resource allocation
+    /// @notice Function for manufacturers to place bids
+    /// @dev Triggers ManufacturerBids event
+    /// @param manufacturerID Tag of the manufacturer
+    /// @param supplierID Tag of the supplier
+    /// @param blindPrice Price per unit hidden using the key and SHA256 encryption
+    /// @param blindQuantity Quantities requested hidden using the key and SHA256 encryption
+    /// @param blindKey Key used to hide the price and quantity
+    /// @return limitingQuantity Liming quantity of the manufacturer for optimal resource allocation
     function manufacturerPlacesBid(
         uint256 manufacturerID,
         uint256 supplierID,
@@ -412,14 +411,14 @@ contract NewMarketPlace {
         return limiting;
     }
 
-    // @notice Function for manufacturers to reveal bids
-    // @dev Triggers ManufacturerReveal event
-    // @param manufacturerID Tag of the manufacturer
-    // @param supplierID Tag of the supplier
-    // @param actualPrice Price per unit
-    // @param actualQuantity Quantities requested
-    // @param actualKey Key used to hide the price and quantity
-    // @return bool Reveal was valid or not
+    /// @notice Function for manufacturers to reveal bids
+    /// @dev Triggers ManufacturerReveal event
+    /// @param manufacturerID Tag of the manufacturer
+    /// @param supplierID Tag of the supplier
+    /// @param actualPrice Price per unit
+    /// @param actualQuantity Quantities requested
+    /// @param actualKey Key used to hide the price and quantity
+    /// @return bool Reveal was valid or not
     function manufacturerRevealsBid(
         uint256 manufacturerID,
         uint256 supplierID,
@@ -486,13 +485,13 @@ contract NewMarketPlace {
         return false;
     }
 
-    // @notice Function for customers to buy cars
-    // @dev Triggers CarSold event
-    // @param customerID Tag of the customer
-    // @param manufacturerID Tag of the manufacturer
-    // @param priceOfferedPerCar Price per unit
-    // @param quantityRequested Quantities requested
-    // @return uint256 Quantity supplied
+    /// @notice Function for customers to buy cars
+    /// @dev Triggers CarSold event
+    /// @param customerID Tag of the customer
+    /// @param manufacturerID Tag of the manufacturer
+    /// @param priceOfferedPerCar Price per unit
+    /// @param quantityRequested Quantities requested
+    /// @return uint256 Quantity supplied
     function customerBuysCar(
         uint256 customerID,
         uint256 manufacturerID,
@@ -542,13 +541,13 @@ contract NewMarketPlace {
         return selling;
     }
 
-    // @notice Verify details of your car
-    // @param customerID Tag of the customer
-    // @param carID Tag of the car
-    // @return id Tag of the car
-    // @return manufacturerID Tag of the manufacturer who sold the car
-    // @return wheelSupplier Tag of wheel supplier
-    // @return bodySupplier Tag of body supplier
+    /// @notice Verify details of your car
+    /// @param customerID Tag of the customer
+    /// @param carID Tag of the car
+    /// @return id Tag of the car
+    /// @return manufacturerID Tag of the manufacturer who sold the car
+    /// @return wheelSupplier Tag of wheel supplier
+    /// @return bodySupplier Tag of body supplier
     function verifyCar(uint256 customerID, uint256 carID)
         public
         view
@@ -571,12 +570,12 @@ contract NewMarketPlace {
         );
     }
 
-    // @notice Add a supplier to the supply chain
-    // @param partType Type of the part supplier is going to provide. 0 for body and 1 for wheels
-    // @param quantityAvailable Quantity available with the supplier
-    // @param addr Wallet address of the supplier
-    // @param auctionBidders Number of people that can bid in it's auction
-    // @return Tag of the supplier added
+    /// @notice Add a supplier to the supply chain
+    /// @param partType Type of the part supplier is going to provide. 0 for body and 1 for wheels
+    /// @param quantityAvailable Quantity available with the supplier
+    /// @param addr Wallet address of the supplier
+    /// @param auctionBidders Number of people that can bid in it's auction
+    /// @return tag of the supplier added
     function addSupplier(
         uint256 partType,
         uint256 quantityAvailable,
@@ -598,23 +597,25 @@ contract NewMarketPlace {
             0,
             0
         );
-        allSuppliers.push(Supplier(
-            num_supplier,
-            here,
-            quantityAvailable,
-            AuctionState.NOT_RUNNING,
-            addr,
-            auctionBidders,
-            0,
-            0
-        ));
+        allSuppliers.push(
+            Supplier(
+                num_supplier,
+                here,
+                quantityAvailable,
+                AuctionState.NOT_RUNNING,
+                addr,
+                auctionBidders,
+                0,
+                0
+            )
+        );
         return num_supplier;
     }
 
-    // @notice Update the quantity available with a supplier
-    // @param tag Tag of the supplier
-    // @param newQuantity New quantity to add
-    // @return Final total quantity with the supplier
+    /// @notice Update the quantity available with a supplier
+    /// @param tag Tag of the supplier
+    /// @param newQuantity New quantity to add
+    /// @return totalQuantity total quantity with the supplier
     function updateSupplierQuantity(uint256 tag, uint256 newQuantity)
         public
         returns (uint256 totalQuantity)
@@ -625,12 +626,12 @@ contract NewMarketPlace {
         return suppliers[tag].quantityAvailable;
     }
 
-    // @notice Add a supplier to the supply chain
-    // @param addr Wallet address of the supplier
-    // @param wheelSupplier Tag of supplier to buy wheels from
-    // @param bodySupplier Tag of supplier to buy body from
-    // @param askingPrice Minimum asking price for the cars
-    // @return Tag of the manufacturer added
+    /// @notice Add a supplier to the supply chain
+    /// @param addr Wallet address of the supplier
+    /// @param wheelSupplier Tag of supplier to buy wheels from
+    /// @param bodySupplier Tag of supplier to buy body from
+    /// @param askingPrice Minimum asking price for the cars
+    /// @return tag of the manufacturer added
     function addManufacturer(
         address payable addr,
         uint256 wheelSupplier,
@@ -668,9 +669,9 @@ contract NewMarketPlace {
         return num_manufacturer;
     }
 
-    // @notice Add a supplier to the supply chain
-    // @param addr Wallet address of the supplier
-    // @return Tag of the customer added
+    /// @notice Add a supplier to the supply chain
+    /// @param addr Wallet address of the supplier
+    /// @return tag of the customer added
     function addCustomer(address payable addr) public returns (uint256 tag) {
         require(msg.sender == addr, "Invalid sign up");
         num_customer++;
@@ -678,32 +679,50 @@ contract NewMarketPlace {
         return num_customer;
     }
 
-    // @notice Get the number of suppliers
-    // @return uint256 Number of suppliers
+<<<<<<< Updated upstream
+    /// @notice Get the number of suppliers
+    /// @return uint256 Number of suppliers
     function getSuppliers() public view returns (uint256) {
         return num_supplier;
     }
 
-    // @notice Get the number of manufacturers
-    // @return uint256 Number of manufacturers
+    /// @notice Get the number of manufacturers
+    /// @return uint256 Number of manufacturers
     function getManufacturers() public view returns (uint256) {
         return num_manufacturer;
     }
 
-    // @notice Get the number of customers
-    // @return uint256 Number of customers
+    /// @notice Get the number of customers
+    /// @return uint256 Number of customers
     function getCustomers() public view returns (uint256) {
         return num_customer;
     }
 
-    // @notice Get the number of cars
-    // @return uint256 Number of cars
+    /// @notice Get the number of cars
+    /// @return uint256 Number of cars
     function getCars() public view returns (uint256) {
         return num_cars;
     }
+=======
+    // // @notice Get the number of suppliers
+    // // @return uint256 Number of suppliers
+    // function getSuppliers() public view returns (uint256) {
+    //     return num_supplier;
+    // }
 
-    // @notice Get quantity of each part and car with a manufacturer
-    // @return uint256 Number of suppliers
+    
+
+    // // @notice Get the number of cars
+    // // @return uint256 Number of cars
+    // function getCars() public view returns (uint256) {
+    //     return num_cars;
+    // }
+>>>>>>> Stashed changes
+
+    /// @notice Get quantity of each part and car with a manufacturer
+    /// @return quantityWheel Number of wheels
+    /// @return quantityBody Number of bodies
+    /// @return quantityCar Number of prepared cars
     function getManufacturerQuantities(uint256 tag)
         public
         view
@@ -724,43 +743,84 @@ contract NewMarketPlace {
             manufacturers[tag].carsAvailable
         );
     }
+
     function getSupplierID(address supplier_addr)
+<<<<<<< Updated upstream
+        public
+        view
+        returns (uint256 tag)
+    {
+        for (uint256 i = 0; i < allSuppliers.length; i++) {
+            if (allSuppliers[i].wallet == supplier_addr) {
+=======
     public 
     view
     returns(
         uint256 tag
     ){
-        for(uint256 i=0;i<allSuppliers.length;i++){
+        for(uint256 i=1;i<num_supplier;i++){
             if(allSuppliers[i].wallet == supplier_addr){
+>>>>>>> Stashed changes
                 return allSuppliers[i].tag;
             }
         }
     }
+
     function getManufacturerID(address manufacturer_addr)
-    public
-    view
-    returns(Manufacturer memory){
-        for(uint256 i=1;i<=num_manufacturer;i++){
-            if(manufacturers[i].wallet == manufacturer_addr){
+<<<<<<< Updated upstream
+        public
+        view
+        returns (Manufacturer memory)
+    {
+        for (uint256 i = 1; i <= num_manufacturer; i++) {
+            if (manufacturers[i].wallet == manufacturer_addr) {
                 return manufacturers[i];
-            }
-        }
-    }
-    function getAuctionState(uint256 tag)
+=======
     public
     view
     returns(
-        uint state
+         uint256 tag,
+            uint256 wheelSupplier,
+            uint256 wheelQuant,
+            uint256 bodySupplier,
+            uint256 bodyQuant,
+            uint256 carsAvailable,
+            uint256 carPrice,
+            address wallet
     ){
+        for(uint256 i=1;i<=num_manufacturer;i++){
+            if(manufacturers[i].wallet == manufacturer_addr){
+                return (
+                     manufacturers[i].tag,
+                    manufacturers[i].wheelSupplier,
+                    manufacturers[i].wheelQuant,
+                    manufacturers[i].bodySupplier,
+                    manufacturers[i].bodyQuant,
+                    manufacturers[i].carsAvailable,
+                    manufacturers[i].carPrice,
+                    manufacturers[i].wallet
+                );
+>>>>>>> Stashed changes
+            }
+        }
+    }
+
+    function getAuctionState(uint256 tag) public view returns (uint256 state) {
         require(tag <= num_supplier);
-        if(suppliers[tag].currentState == AuctionState.NOT_RUNNING){
+        if (suppliers[tag].currentState == AuctionState.NOT_RUNNING) {
             return 1;
-        }
-        else if(suppliers[tag].currentState == AuctionState.BIDDING){
+        } else if (suppliers[tag].currentState == AuctionState.BIDDING) {
             return 2;
-        }
-        else if(suppliers[tag].currentState == AuctionState.REVEALING){
+        } else if (suppliers[tag].currentState == AuctionState.REVEALING) {
             return 3;
         }
+    }
+    function getSupplierBids(address wallet, uint256 idx)
+    public
+    view
+    returns(
+        Bid[] memory
+    ){
+        return bidsTillNow[wallet];
     }
 }

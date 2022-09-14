@@ -34,12 +34,18 @@ contract NewMarketPlace {
         uint256 bidsRevealed; // bids that have been revealed
     }
 
+
     function isSupplier() public view returns (bool){
         for(uint256 i=0;i<=num_supplier;i++){
             if(suppliers[i].wallet == msg.sender) return true;
         }
         return false;
     }
+
+    function getAllSuppliers() public view returns (Supplier[] memory){
+        return allSuppliers;
+    }
+    
     // @dev Stores the details of the manufacturer
     struct Manufacturer {
         uint256 tag;
@@ -104,6 +110,7 @@ contract NewMarketPlace {
     uint256 num_customer;
     uint256 num_cars;
 
+    Supplier[] allSuppliers;
     // @notice Triggered when a supplier starts their bidding phase
     // @param tag Tag of the supplier
     // @param timestamp Block height when bidding phase starts
@@ -590,6 +597,16 @@ contract NewMarketPlace {
             0,
             0
         );
+        allSuppliers.push(Supplier(
+            num_supplier,
+            here,
+            quantityAvailable,
+            AuctionState.NOT_RUNNING,
+            addr,
+            auctionBidders,
+            0,
+            0
+        ));
         return num_supplier;
     }
 

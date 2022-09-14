@@ -16,11 +16,13 @@ root.render(
   <BrowserRouter>
     <Routes>
       <Route path="/" element={<App />}>
-        <Route path="regSup" element={<RegSupplier />} />
         <Route path="homeSup" element={<Supplier />} />
-        <Route path="regManf" element={<RegManufacturer />} />
         <Route path="homeManf" element={<Manufacturer />} />
-        <Route path="assign" element={<Assign />} />
+        <Route path="assign" element={<Assign />}>
+          <Route path="regManf" element={<RegManufacturer />} />
+
+          <Route path="regSup" element={<RegSupplier />} />
+        </Route>
       </Route>
     </Routes>
   </BrowserRouter>

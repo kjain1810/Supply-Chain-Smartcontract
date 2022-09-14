@@ -2,7 +2,7 @@ import "./App.css";
 import React, { useState, useEffect, createContext } from "react";
 import getWeb3 from "./getWeb3";
 import Contract from "./contracts/NewMarketPlace.json";
-import { useNavigate, Outlet } from "react-router-dom";
+import { useNavigate, Outlet, Link } from "react-router-dom";
 
 export const UserContext = createContext();
 
@@ -52,11 +52,9 @@ function App() {
         setLoad(true);
         if (await contract.methods.isManufacturer().call()) {
           setIsManufacturer(true);
-          navigate("/homeManf");
         } else if (await contract.methods.isSupplier().call()) {
           setIsSupplier(true);
-          navigate("/homeSup");
-        } else navigate("/assign");
+        }
       } catch (error) {
         // Catch any errors for any of the above operations.
         alert(
@@ -66,18 +64,48 @@ function App() {
       }
     };
     init();
-  }, []);
+  }, [navigate]);
 
   window.ethereum.on("accountsChanged", function (accounts) {
     // Time to reload your interface with accounts[0]!
-    window.location.reload();
+    window.location.assign("/");
   });
 
   return load ? (
-    <div style={{ display: "flex", justifyContent: "space-around" }}>
-      <p>Account Id: {blockchain.userAccount}</p>
-      <p>Balance: {balance}</p>
-      <UserContext.Provider value={{ blockchain, isSupplier, isManufacturer }}>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        height: "100vh",
+      }}
+    >
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-around",
+        }}
+      >
+        <p>Account Id: {blockchain.userAccount}</p>
+        <p>Balance: {balance}</p>
+      </div>
+      <nav
+        style={{
+          display: "flex",
+          justifyContent: "space-around",
+        }}
+      >
+        {!isSupplier && !isManufacturer && <Link to="/assign">Assign</Link>}
+        {isSupplier && <Link to="/homeSup">MarketPlace</Link>}
+        {isManufacturer && <Link to="/homeManf">MarketPlace</Link>}
+      </nav>
+
+      <UserContext.Provider
+        value={{
+          blockchain,
+          isSupplier,
+          isManufacturer,
+        }}
+      >
         <Outlet />
       </UserContext.Provider>
     </div>

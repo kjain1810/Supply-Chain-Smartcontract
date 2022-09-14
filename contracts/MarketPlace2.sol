@@ -739,12 +739,10 @@ contract NewMarketPlace {
     function getManufacturerID(address manufacturer_addr)
     public
     view
-    returns(
-        uint256 tag
-    ){
+    returns(Manufacturer memory){
         for(uint256 i=1;i<=num_manufacturer;i++){
             if(manufacturers[i].wallet == manufacturer_addr){
-                return i;
+                return manufacturers[i];
             }
         }
     }

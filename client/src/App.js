@@ -17,6 +17,7 @@ function App() {
   const [load, setLoad] = useState(false);
   const [isManufacturer, setIsManufacturer] = useState(false);
   const [isSupplier, setIsSupplier] = useState(false);
+  const [isCustomer, setIsCustomer] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -94,9 +95,10 @@ function App() {
           justifyContent: "space-around",
         }}
       >
-        {!isSupplier && !isManufacturer && <Link to="/assign">Assign</Link>}
+        {!isSupplier && !isManufacturer && !isCustomer && <Link to="/assign">Assign</Link>}
         {isSupplier && <Link to="/homeSup">MarketPlace</Link>}
         {isManufacturer && <Link to="/homeManf">MarketPlace</Link>}
+        {isCustomer && <Link to="/Cus_homepage">MarketPlace</Link>}
       </nav>
 
       <UserContext.Provider

@@ -111,6 +111,7 @@ contract NewMarketPlace {
     uint256 num_cars;
 
     Supplier[] allSuppliers;
+
     // @notice Triggered when a supplier starts their bidding phase
     // @param tag Tag of the supplier
     // @param timestamp Block height when bidding phase starts
@@ -722,5 +723,46 @@ contract NewMarketPlace {
             manufacturers[tag].bodyQuant,
             manufacturers[tag].carsAvailable
         );
+    }
+    function getSupplierID(address supplier_addr)
+    public 
+    view
+    returns(
+        uint256 tag
+    ){
+        for(uint256 i=0;i<allSuppliers.length;i++){
+            if(allSuppliers[i].wallet == supplier_addr){
+                return allSuppliers[i].tag;
+            }
+        }
+    }
+    function getManufacturerID(address manufacturer_addr)
+    public
+    view
+    returns(
+        uint256 tag
+    ){
+        for(uint256 i=1;i<=num_manufacturer;i++){
+            if(manufacturers[i].wallet == manufacturer_addr){
+                return i;
+            }
+        }
+    }
+    function getAuctionState(uint256 tag)
+    public
+    view
+    returns(
+        uint state
+    ){
+        require(tag <= num_supplier);
+        if(suppliers[tag].currentState == AuctionState.NOT_RUNNING){
+            return 1;
+        }
+        else if(suppliers[tag].currentState == AuctionState.BIDDING){
+            return 2;
+        }
+        else if(suppliers[tag].currentState == AuctionState.REVEALING){
+            return 3;
+        }
     }
 }

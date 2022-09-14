@@ -1118,19 +1118,19 @@
   "sourceMap": "27:2459:5:-:0;;;;;;;;;;;;;;;;;;;",
   "deployedSourceMap": "27:2459:5:-:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;65:28;;;:::i;:::-;;;;;;;:::i;:::-;;;;;;;;2377:107;;;;;;;;;;;;;:::i;:::-;;:::i;:::-;;;;;;;:::i;:::-;;;;;;;;65:28;;;;;;;;;;;;:::o;2377:107::-;2437:7;2468:1;2463;:6;;:14;;2476:1;2463:14;;;2472:1;2463:14;2456:21;;2377:107;;;;:::o;7:126:8:-;44:7;84:42;77:5;73:54;62:65;;7:126;;;:::o;139:104::-;184:7;213:24;231:5;213:24;:::i;:::-;202:35;;139:104;;;:::o;249:142::-;352:32;378:5;352:32;:::i;:::-;347:3;340:45;249:142;;:::o;397:254::-;506:4;544:2;533:9;529:18;521:26;;557:87;641:1;630:9;626:17;617:6;557:87;:::i;:::-;397:254;;;;:::o;738:117::-;847:1;844;837:12;984:77;1021:7;1050:5;1039:16;;984:77;;;:::o;1067:122::-;1140:24;1158:5;1140:24;:::i;:::-;1133:5;1130:35;1120:63;;1179:1;1176;1169:12;1120:63;1067:122;:::o;1195:139::-;1241:5;1279:6;1266:20;1257:29;;1295:33;1322:5;1295:33;:::i;:::-;1195:139;;;;:::o;1340:474::-;1408:6;1416;1465:2;1453:9;1444:7;1440:23;1436:32;1433:119;;;1471:79;;:::i;:::-;1433:119;1591:1;1616:53;1661:7;1652:6;1641:9;1637:22;1616:53;:::i;:::-;1606:63;;1562:117;1718:2;1744:53;1789:7;1780:6;1769:9;1765:22;1744:53;:::i;:::-;1734:63;;1689:118;1340:474;;;;;:::o;1820:118::-;1907:24;1925:5;1907:24;:::i;:::-;1902:3;1895:37;1820:118;;:::o;1944:222::-;2037:4;2075:2;2064:9;2060:18;2052:26;;2088:71;2156:1;2145:9;2141:17;2132:6;2088:71;:::i;:::-;1944:222;;;;:::o",
   "source": "pragma solidity >=0.8.16;\n\ncontract MarketPlace_Structures {\n    address payable public owner;\n\n    // @dev State of the auction\n    // @param RUNNING auction is running and bids are being places\n    // @param REVEALING auction has ended and bidders are revealing their bids\n    // @param NOT_STARTED auction hasn't started yet\n    // @param FINISHED auction has finished\n    enum AuctionState {\n        RUNNING,\n        REVEALING,\n        NOT_STARTED,\n        FINISHED\n    }\n\n    // @dev Stores details of the bids\n    struct Bid {\n        uint256 valuePrice;\n        uint256 valueQuantity;\n        address payable bidderAddress;\n        bytes32 blindBidPrice;\n        bytes32 blindBidQuantity;\n        uint256 limitingResourceQuantity;\n        uint256 buyerID;\n        uint256 sellerID;\n        uint256 moneySent;\n        bool correctReveal;\n    }\n\n    // @dev Stores details of purchases requested\n    struct Purchase {\n        uint256 sellerID;\n        uint256 buyerID;\n        uint256 quantity;\n        address payable customeraddr;\n        uint256 money;\n    }\n\n    // @dev Stores details of successful purchases or products bought\n    struct Product {\n        uint256 tag;\n        uint256 manufacturerID;\n        uint256 sellerA;\n        uint256 sellerB;\n    }\n\n    // @dev Stores details of all the suppliers\n    // @note partType is 0 for wheels and 1 for car parts\n    struct Supplier {\n        uint256 tag;\n        int256 partType; // 0 is wheels, 1 is car_parts\n        uint256 quantityAvailable;\n        AuctionState currentState;\n        address wallet;\n        uint256 maxBidders;\n        uint256 bidsPlaced;\n        uint256 bidsRevealed;\n    }\n\n    // @dev Stores details of all the manufacturers\n    struct Manufacturer {\n        uint256 _tag;\n        uint256 quantityA;\n        uint256 quantityB;\n        uint256 cars;\n        uint256 carsprice;\n        AuctionState currentState;\n        address wallet;\n        uint256 maxBidders;\n        uint256 QA_sellerID;\n        uint256 QB_sellerID;\n    }\n\n    // @dev Stores details of all the cars developed\n    struct Car {\n        uint256 tag;\n        uint256 manufacturerID;\n        uint256 sellerIDA;\n        uint256 sellerIDB;\n    }\n\n    // @dev Stores details of all the customers\n    struct Customer {\n        uint256 _tag;\n        address wallet;\n    }\n\n    // @dev Returns minimum of 2 uint256 integers\n    function minimum(uint256 a, uint256 b) public pure returns (uint256) {\n        return a >= b ? b : a;\n    }\n}\n",
-  "sourcePath": "/home/prince/Course_M22/BLOCKCHAIN/Supply-Chain-Smartcontract/contracts/MarketPlace_Structures.sol",
+  "sourcePath": "/home/sahithi/acads/sem7/dtb/Supply-Chain-Smartcontract/contracts/MarketPlace_Structures.sol",
   "ast": {
     "absolutePath": "project:/contracts/MarketPlace_Structures.sol",
     "exportedSymbols": {
       "MarketPlace_Structures": [
-        3723
+        3813
       ]
     },
-    "id": 3724,
+    "id": 3814,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 3603,
+        "id": 3693,
         "literals": [
           "solidity",
           ">=",
@@ -1147,9 +1147,9 @@
         "contractDependencies": [],
         "contractKind": "contract",
         "fullyImplemented": true,
-        "id": 3723,
+        "id": 3813,
         "linearizedBaseContracts": [
-          3723
+          3813
         ],
         "name": "MarketPlace_Structures",
         "nameLocation": "36:22:5",
@@ -1158,12 +1158,12 @@
           {
             "constant": false,
             "functionSelector": "8da5cb5b",
-            "id": 3605,
+            "id": 3695,
             "mutability": "mutable",
             "name": "owner",
             "nameLocation": "88:5:5",
             "nodeType": "VariableDeclaration",
-            "scope": 3723,
+            "scope": 3813,
             "src": "65:28:5",
             "stateVariable": true,
             "storageLocation": "default",
@@ -1172,7 +1172,7 @@
               "typeString": "address payable"
             },
             "typeName": {
-              "id": 3604,
+              "id": 3694,
               "name": "address",
               "nodeType": "ElementaryTypeName",
               "src": "65:15:5",
@@ -1186,31 +1186,31 @@
           },
           {
             "canonicalName": "MarketPlace_Structures.AuctionState",
-            "id": 3610,
+            "id": 3700,
             "members": [
               {
-                "id": 3606,
+                "id": 3696,
                 "name": "RUNNING",
                 "nameLocation": "404:7:5",
                 "nodeType": "EnumValue",
                 "src": "404:7:5"
               },
               {
-                "id": 3607,
+                "id": 3697,
                 "name": "REVEALING",
                 "nameLocation": "421:9:5",
                 "nodeType": "EnumValue",
                 "src": "421:9:5"
               },
               {
-                "id": 3608,
+                "id": 3698,
                 "name": "NOT_STARTED",
                 "nameLocation": "440:11:5",
                 "nodeType": "EnumValue",
                 "src": "440:11:5"
               },
               {
-                "id": 3609,
+                "id": 3699,
                 "name": "FINISHED",
                 "nameLocation": "461:8:5",
                 "nodeType": "EnumValue",
@@ -1224,16 +1224,16 @@
           },
           {
             "canonicalName": "MarketPlace_Structures.Bid",
-            "id": 3631,
+            "id": 3721,
             "members": [
               {
                 "constant": false,
-                "id": 3612,
+                "id": 3702,
                 "mutability": "mutable",
                 "name": "valuePrice",
                 "nameLocation": "549:10:5",
                 "nodeType": "VariableDeclaration",
-                "scope": 3631,
+                "scope": 3721,
                 "src": "541:18:5",
                 "stateVariable": false,
                 "storageLocation": "default",
@@ -1242,7 +1242,7 @@
                   "typeString": "uint256"
                 },
                 "typeName": {
-                  "id": 3611,
+                  "id": 3701,
                   "name": "uint256",
                   "nodeType": "ElementaryTypeName",
                   "src": "541:7:5",
@@ -1255,12 +1255,12 @@
               },
               {
                 "constant": false,
-                "id": 3614,
+                "id": 3704,
                 "mutability": "mutable",
                 "name": "valueQuantity",
                 "nameLocation": "577:13:5",
                 "nodeType": "VariableDeclaration",
-                "scope": 3631,
+                "scope": 3721,
                 "src": "569:21:5",
                 "stateVariable": false,
                 "storageLocation": "default",
@@ -1269,7 +1269,7 @@
                   "typeString": "uint256"
                 },
                 "typeName": {
-                  "id": 3613,
+                  "id": 3703,
                   "name": "uint256",
                   "nodeType": "ElementaryTypeName",
                   "src": "569:7:5",
@@ -1282,12 +1282,12 @@
               },
               {
                 "constant": false,
-                "id": 3616,
+                "id": 3706,
                 "mutability": "mutable",
                 "name": "bidderAddress",
                 "nameLocation": "616:13:5",
                 "nodeType": "VariableDeclaration",
-                "scope": 3631,
+                "scope": 3721,
                 "src": "600:29:5",
                 "stateVariable": false,
                 "storageLocation": "default",
@@ -1296,7 +1296,7 @@
                   "typeString": "address payable"
                 },
                 "typeName": {
-                  "id": 3615,
+                  "id": 3705,
                   "name": "address",
                   "nodeType": "ElementaryTypeName",
                   "src": "600:15:5",
@@ -1310,12 +1310,12 @@
               },
               {
                 "constant": false,
-                "id": 3618,
+                "id": 3708,
                 "mutability": "mutable",
                 "name": "blindBidPrice",
                 "nameLocation": "647:13:5",
                 "nodeType": "VariableDeclaration",
-                "scope": 3631,
+                "scope": 3721,
                 "src": "639:21:5",
                 "stateVariable": false,
                 "storageLocation": "default",
@@ -1324,7 +1324,7 @@
                   "typeString": "bytes32"
                 },
                 "typeName": {
-                  "id": 3617,
+                  "id": 3707,
                   "name": "bytes32",
                   "nodeType": "ElementaryTypeName",
                   "src": "639:7:5",
@@ -1337,12 +1337,12 @@
               },
               {
                 "constant": false,
-                "id": 3620,
+                "id": 3710,
                 "mutability": "mutable",
                 "name": "blindBidQuantity",
                 "nameLocation": "678:16:5",
                 "nodeType": "VariableDeclaration",
-                "scope": 3631,
+                "scope": 3721,
                 "src": "670:24:5",
                 "stateVariable": false,
                 "storageLocation": "default",
@@ -1351,7 +1351,7 @@
                   "typeString": "bytes32"
                 },
                 "typeName": {
-                  "id": 3619,
+                  "id": 3709,
                   "name": "bytes32",
                   "nodeType": "ElementaryTypeName",
                   "src": "670:7:5",
@@ -1364,12 +1364,12 @@
               },
               {
                 "constant": false,
-                "id": 3622,
+                "id": 3712,
                 "mutability": "mutable",
                 "name": "limitingResourceQuantity",
                 "nameLocation": "712:24:5",
                 "nodeType": "VariableDeclaration",
-                "scope": 3631,
+                "scope": 3721,
                 "src": "704:32:5",
                 "stateVariable": false,
                 "storageLocation": "default",
@@ -1378,7 +1378,7 @@
                   "typeString": "uint256"
                 },
                 "typeName": {
-                  "id": 3621,
+                  "id": 3711,
                   "name": "uint256",
                   "nodeType": "ElementaryTypeName",
                   "src": "704:7:5",
@@ -1391,12 +1391,12 @@
               },
               {
                 "constant": false,
-                "id": 3624,
+                "id": 3714,
                 "mutability": "mutable",
                 "name": "buyerID",
                 "nameLocation": "754:7:5",
                 "nodeType": "VariableDeclaration",
-                "scope": 3631,
+                "scope": 3721,
                 "src": "746:15:5",
                 "stateVariable": false,
                 "storageLocation": "default",
@@ -1405,7 +1405,7 @@
                   "typeString": "uint256"
                 },
                 "typeName": {
-                  "id": 3623,
+                  "id": 3713,
                   "name": "uint256",
                   "nodeType": "ElementaryTypeName",
                   "src": "746:7:5",
@@ -1418,12 +1418,12 @@
               },
               {
                 "constant": false,
-                "id": 3626,
+                "id": 3716,
                 "mutability": "mutable",
                 "name": "sellerID",
                 "nameLocation": "779:8:5",
                 "nodeType": "VariableDeclaration",
-                "scope": 3631,
+                "scope": 3721,
                 "src": "771:16:5",
                 "stateVariable": false,
                 "storageLocation": "default",
@@ -1432,7 +1432,7 @@
                   "typeString": "uint256"
                 },
                 "typeName": {
-                  "id": 3625,
+                  "id": 3715,
                   "name": "uint256",
                   "nodeType": "ElementaryTypeName",
                   "src": "771:7:5",
@@ -1445,12 +1445,12 @@
               },
               {
                 "constant": false,
-                "id": 3628,
+                "id": 3718,
                 "mutability": "mutable",
                 "name": "moneySent",
                 "nameLocation": "805:9:5",
                 "nodeType": "VariableDeclaration",
-                "scope": 3631,
+                "scope": 3721,
                 "src": "797:17:5",
                 "stateVariable": false,
                 "storageLocation": "default",
@@ -1459,7 +1459,7 @@
                   "typeString": "uint256"
                 },
                 "typeName": {
-                  "id": 3627,
+                  "id": 3717,
                   "name": "uint256",
                   "nodeType": "ElementaryTypeName",
                   "src": "797:7:5",
@@ -1472,12 +1472,12 @@
               },
               {
                 "constant": false,
-                "id": 3630,
+                "id": 3720,
                 "mutability": "mutable",
                 "name": "correctReveal",
                 "nameLocation": "829:13:5",
                 "nodeType": "VariableDeclaration",
-                "scope": 3631,
+                "scope": 3721,
                 "src": "824:18:5",
                 "stateVariable": false,
                 "storageLocation": "default",
@@ -1486,7 +1486,7 @@
                   "typeString": "bool"
                 },
                 "typeName": {
-                  "id": 3629,
+                  "id": 3719,
                   "name": "bool",
                   "nodeType": "ElementaryTypeName",
                   "src": "824:4:5",
@@ -1501,22 +1501,22 @@
             "name": "Bid",
             "nameLocation": "527:3:5",
             "nodeType": "StructDefinition",
-            "scope": 3723,
+            "scope": 3813,
             "src": "520:329:5",
             "visibility": "public"
           },
           {
             "canonicalName": "MarketPlace_Structures.Purchase",
-            "id": 3642,
+            "id": 3732,
             "members": [
               {
                 "constant": false,
-                "id": 3633,
+                "id": 3723,
                 "mutability": "mutable",
                 "name": "sellerID",
                 "nameLocation": "939:8:5",
                 "nodeType": "VariableDeclaration",
-                "scope": 3642,
+                "scope": 3732,
                 "src": "931:16:5",
                 "stateVariable": false,
                 "storageLocation": "default",
@@ -1525,7 +1525,7 @@
                   "typeString": "uint256"
                 },
                 "typeName": {
-                  "id": 3632,
+                  "id": 3722,
                   "name": "uint256",
                   "nodeType": "ElementaryTypeName",
                   "src": "931:7:5",
@@ -1538,12 +1538,12 @@
               },
               {
                 "constant": false,
-                "id": 3635,
+                "id": 3725,
                 "mutability": "mutable",
                 "name": "buyerID",
                 "nameLocation": "965:7:5",
                 "nodeType": "VariableDeclaration",
-                "scope": 3642,
+                "scope": 3732,
                 "src": "957:15:5",
                 "stateVariable": false,
                 "storageLocation": "default",
@@ -1552,7 +1552,7 @@
                   "typeString": "uint256"
                 },
                 "typeName": {
-                  "id": 3634,
+                  "id": 3724,
                   "name": "uint256",
                   "nodeType": "ElementaryTypeName",
                   "src": "957:7:5",
@@ -1565,12 +1565,12 @@
               },
               {
                 "constant": false,
-                "id": 3637,
+                "id": 3727,
                 "mutability": "mutable",
                 "name": "quantity",
                 "nameLocation": "990:8:5",
                 "nodeType": "VariableDeclaration",
-                "scope": 3642,
+                "scope": 3732,
                 "src": "982:16:5",
                 "stateVariable": false,
                 "storageLocation": "default",
@@ -1579,7 +1579,7 @@
                   "typeString": "uint256"
                 },
                 "typeName": {
-                  "id": 3636,
+                  "id": 3726,
                   "name": "uint256",
                   "nodeType": "ElementaryTypeName",
                   "src": "982:7:5",
@@ -1592,12 +1592,12 @@
               },
               {
                 "constant": false,
-                "id": 3639,
+                "id": 3729,
                 "mutability": "mutable",
                 "name": "customeraddr",
                 "nameLocation": "1024:12:5",
                 "nodeType": "VariableDeclaration",
-                "scope": 3642,
+                "scope": 3732,
                 "src": "1008:28:5",
                 "stateVariable": false,
                 "storageLocation": "default",
@@ -1606,7 +1606,7 @@
                   "typeString": "address payable"
                 },
                 "typeName": {
-                  "id": 3638,
+                  "id": 3728,
                   "name": "address",
                   "nodeType": "ElementaryTypeName",
                   "src": "1008:15:5",
@@ -1620,12 +1620,12 @@
               },
               {
                 "constant": false,
-                "id": 3641,
+                "id": 3731,
                 "mutability": "mutable",
                 "name": "money",
                 "nameLocation": "1054:5:5",
                 "nodeType": "VariableDeclaration",
-                "scope": 3642,
+                "scope": 3732,
                 "src": "1046:13:5",
                 "stateVariable": false,
                 "storageLocation": "default",
@@ -1634,7 +1634,7 @@
                   "typeString": "uint256"
                 },
                 "typeName": {
-                  "id": 3640,
+                  "id": 3730,
                   "name": "uint256",
                   "nodeType": "ElementaryTypeName",
                   "src": "1046:7:5",
@@ -1649,22 +1649,22 @@
             "name": "Purchase",
             "nameLocation": "912:8:5",
             "nodeType": "StructDefinition",
-            "scope": 3723,
+            "scope": 3813,
             "src": "905:161:5",
             "visibility": "public"
           },
           {
             "canonicalName": "MarketPlace_Structures.Product",
-            "id": 3651,
+            "id": 3741,
             "members": [
               {
                 "constant": false,
-                "id": 3644,
+                "id": 3734,
                 "mutability": "mutable",
                 "name": "tag",
                 "nameLocation": "1175:3:5",
                 "nodeType": "VariableDeclaration",
-                "scope": 3651,
+                "scope": 3741,
                 "src": "1167:11:5",
                 "stateVariable": false,
                 "storageLocation": "default",
@@ -1673,7 +1673,7 @@
                   "typeString": "uint256"
                 },
                 "typeName": {
-                  "id": 3643,
+                  "id": 3733,
                   "name": "uint256",
                   "nodeType": "ElementaryTypeName",
                   "src": "1167:7:5",
@@ -1686,12 +1686,12 @@
               },
               {
                 "constant": false,
-                "id": 3646,
+                "id": 3736,
                 "mutability": "mutable",
                 "name": "manufacturerID",
                 "nameLocation": "1196:14:5",
                 "nodeType": "VariableDeclaration",
-                "scope": 3651,
+                "scope": 3741,
                 "src": "1188:22:5",
                 "stateVariable": false,
                 "storageLocation": "default",
@@ -1700,7 +1700,7 @@
                   "typeString": "uint256"
                 },
                 "typeName": {
-                  "id": 3645,
+                  "id": 3735,
                   "name": "uint256",
                   "nodeType": "ElementaryTypeName",
                   "src": "1188:7:5",
@@ -1713,12 +1713,12 @@
               },
               {
                 "constant": false,
-                "id": 3648,
+                "id": 3738,
                 "mutability": "mutable",
                 "name": "sellerA",
                 "nameLocation": "1228:7:5",
                 "nodeType": "VariableDeclaration",
-                "scope": 3651,
+                "scope": 3741,
                 "src": "1220:15:5",
                 "stateVariable": false,
                 "storageLocation": "default",
@@ -1727,7 +1727,7 @@
                   "typeString": "uint256"
                 },
                 "typeName": {
-                  "id": 3647,
+                  "id": 3737,
                   "name": "uint256",
                   "nodeType": "ElementaryTypeName",
                   "src": "1220:7:5",
@@ -1740,12 +1740,12 @@
               },
               {
                 "constant": false,
-                "id": 3650,
+                "id": 3740,
                 "mutability": "mutable",
                 "name": "sellerB",
                 "nameLocation": "1253:7:5",
                 "nodeType": "VariableDeclaration",
-                "scope": 3651,
+                "scope": 3741,
                 "src": "1245:15:5",
                 "stateVariable": false,
                 "storageLocation": "default",
@@ -1754,7 +1754,7 @@
                   "typeString": "uint256"
                 },
                 "typeName": {
-                  "id": 3649,
+                  "id": 3739,
                   "name": "uint256",
                   "nodeType": "ElementaryTypeName",
                   "src": "1245:7:5",
@@ -1769,22 +1769,22 @@
             "name": "Product",
             "nameLocation": "1149:7:5",
             "nodeType": "StructDefinition",
-            "scope": 3723,
+            "scope": 3813,
             "src": "1142:125:5",
             "visibility": "public"
           },
           {
             "canonicalName": "MarketPlace_Structures.Supplier",
-            "id": 3669,
+            "id": 3759,
             "members": [
               {
                 "constant": false,
-                "id": 3653,
+                "id": 3743,
                 "mutability": "mutable",
                 "name": "tag",
                 "nameLocation": "1413:3:5",
                 "nodeType": "VariableDeclaration",
-                "scope": 3669,
+                "scope": 3759,
                 "src": "1405:11:5",
                 "stateVariable": false,
                 "storageLocation": "default",
@@ -1793,7 +1793,7 @@
                   "typeString": "uint256"
                 },
                 "typeName": {
-                  "id": 3652,
+                  "id": 3742,
                   "name": "uint256",
                   "nodeType": "ElementaryTypeName",
                   "src": "1405:7:5",
@@ -1806,12 +1806,12 @@
               },
               {
                 "constant": false,
-                "id": 3655,
+                "id": 3745,
                 "mutability": "mutable",
                 "name": "partType",
                 "nameLocation": "1433:8:5",
                 "nodeType": "VariableDeclaration",
-                "scope": 3669,
+                "scope": 3759,
                 "src": "1426:15:5",
                 "stateVariable": false,
                 "storageLocation": "default",
@@ -1820,7 +1820,7 @@
                   "typeString": "int256"
                 },
                 "typeName": {
-                  "id": 3654,
+                  "id": 3744,
                   "name": "int256",
                   "nodeType": "ElementaryTypeName",
                   "src": "1426:6:5",
@@ -1833,12 +1833,12 @@
               },
               {
                 "constant": false,
-                "id": 3657,
+                "id": 3747,
                 "mutability": "mutable",
                 "name": "quantityAvailable",
                 "nameLocation": "1490:17:5",
                 "nodeType": "VariableDeclaration",
-                "scope": 3669,
+                "scope": 3759,
                 "src": "1482:25:5",
                 "stateVariable": false,
                 "storageLocation": "default",
@@ -1847,7 +1847,7 @@
                   "typeString": "uint256"
                 },
                 "typeName": {
-                  "id": 3656,
+                  "id": 3746,
                   "name": "uint256",
                   "nodeType": "ElementaryTypeName",
                   "src": "1482:7:5",
@@ -1860,36 +1860,36 @@
               },
               {
                 "constant": false,
-                "id": 3660,
+                "id": 3750,
                 "mutability": "mutable",
                 "name": "currentState",
                 "nameLocation": "1530:12:5",
                 "nodeType": "VariableDeclaration",
-                "scope": 3669,
+                "scope": 3759,
                 "src": "1517:25:5",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
-                  "typeIdentifier": "t_enum$_AuctionState_$3610",
+                  "typeIdentifier": "t_enum$_AuctionState_$3700",
                   "typeString": "enum MarketPlace_Structures.AuctionState"
                 },
                 "typeName": {
-                  "id": 3659,
+                  "id": 3749,
                   "nodeType": "UserDefinedTypeName",
                   "pathNode": {
-                    "id": 3658,
+                    "id": 3748,
                     "name": "AuctionState",
                     "nameLocations": [
                       "1517:12:5"
                     ],
                     "nodeType": "IdentifierPath",
-                    "referencedDeclaration": 3610,
+                    "referencedDeclaration": 3700,
                     "src": "1517:12:5"
                   },
-                  "referencedDeclaration": 3610,
+                  "referencedDeclaration": 3700,
                   "src": "1517:12:5",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_enum$_AuctionState_$3610",
+                    "typeIdentifier": "t_enum$_AuctionState_$3700",
                     "typeString": "enum MarketPlace_Structures.AuctionState"
                   }
                 },
@@ -1897,12 +1897,12 @@
               },
               {
                 "constant": false,
-                "id": 3662,
+                "id": 3752,
                 "mutability": "mutable",
                 "name": "wallet",
                 "nameLocation": "1560:6:5",
                 "nodeType": "VariableDeclaration",
-                "scope": 3669,
+                "scope": 3759,
                 "src": "1552:14:5",
                 "stateVariable": false,
                 "storageLocation": "default",
@@ -1911,7 +1911,7 @@
                   "typeString": "address"
                 },
                 "typeName": {
-                  "id": 3661,
+                  "id": 3751,
                   "name": "address",
                   "nodeType": "ElementaryTypeName",
                   "src": "1552:7:5",
@@ -1925,12 +1925,12 @@
               },
               {
                 "constant": false,
-                "id": 3664,
+                "id": 3754,
                 "mutability": "mutable",
                 "name": "maxBidders",
                 "nameLocation": "1584:10:5",
                 "nodeType": "VariableDeclaration",
-                "scope": 3669,
+                "scope": 3759,
                 "src": "1576:18:5",
                 "stateVariable": false,
                 "storageLocation": "default",
@@ -1939,7 +1939,7 @@
                   "typeString": "uint256"
                 },
                 "typeName": {
-                  "id": 3663,
+                  "id": 3753,
                   "name": "uint256",
                   "nodeType": "ElementaryTypeName",
                   "src": "1576:7:5",
@@ -1952,12 +1952,12 @@
               },
               {
                 "constant": false,
-                "id": 3666,
+                "id": 3756,
                 "mutability": "mutable",
                 "name": "bidsPlaced",
                 "nameLocation": "1612:10:5",
                 "nodeType": "VariableDeclaration",
-                "scope": 3669,
+                "scope": 3759,
                 "src": "1604:18:5",
                 "stateVariable": false,
                 "storageLocation": "default",
@@ -1966,7 +1966,7 @@
                   "typeString": "uint256"
                 },
                 "typeName": {
-                  "id": 3665,
+                  "id": 3755,
                   "name": "uint256",
                   "nodeType": "ElementaryTypeName",
                   "src": "1604:7:5",
@@ -1979,12 +1979,12 @@
               },
               {
                 "constant": false,
-                "id": 3668,
+                "id": 3758,
                 "mutability": "mutable",
                 "name": "bidsRevealed",
                 "nameLocation": "1640:12:5",
                 "nodeType": "VariableDeclaration",
-                "scope": 3669,
+                "scope": 3759,
                 "src": "1632:20:5",
                 "stateVariable": false,
                 "storageLocation": "default",
@@ -1993,7 +1993,7 @@
                   "typeString": "uint256"
                 },
                 "typeName": {
-                  "id": 3667,
+                  "id": 3757,
                   "name": "uint256",
                   "nodeType": "ElementaryTypeName",
                   "src": "1632:7:5",
@@ -2008,22 +2008,22 @@
             "name": "Supplier",
             "nameLocation": "1386:8:5",
             "nodeType": "StructDefinition",
-            "scope": 3723,
+            "scope": 3813,
             "src": "1379:280:5",
             "visibility": "public"
           },
           {
             "canonicalName": "MarketPlace_Structures.Manufacturer",
-            "id": 3691,
+            "id": 3781,
             "members": [
               {
                 "constant": false,
-                "id": 3671,
+                "id": 3761,
                 "mutability": "mutable",
                 "name": "_tag",
                 "nameLocation": "1755:4:5",
                 "nodeType": "VariableDeclaration",
-                "scope": 3691,
+                "scope": 3781,
                 "src": "1747:12:5",
                 "stateVariable": false,
                 "storageLocation": "default",
@@ -2032,7 +2032,7 @@
                   "typeString": "uint256"
                 },
                 "typeName": {
-                  "id": 3670,
+                  "id": 3760,
                   "name": "uint256",
                   "nodeType": "ElementaryTypeName",
                   "src": "1747:7:5",
@@ -2045,12 +2045,12 @@
               },
               {
                 "constant": false,
-                "id": 3673,
+                "id": 3763,
                 "mutability": "mutable",
                 "name": "quantityA",
                 "nameLocation": "1777:9:5",
                 "nodeType": "VariableDeclaration",
-                "scope": 3691,
+                "scope": 3781,
                 "src": "1769:17:5",
                 "stateVariable": false,
                 "storageLocation": "default",
@@ -2059,7 +2059,7 @@
                   "typeString": "uint256"
                 },
                 "typeName": {
-                  "id": 3672,
+                  "id": 3762,
                   "name": "uint256",
                   "nodeType": "ElementaryTypeName",
                   "src": "1769:7:5",
@@ -2072,12 +2072,12 @@
               },
               {
                 "constant": false,
-                "id": 3675,
+                "id": 3765,
                 "mutability": "mutable",
                 "name": "quantityB",
                 "nameLocation": "1804:9:5",
                 "nodeType": "VariableDeclaration",
-                "scope": 3691,
+                "scope": 3781,
                 "src": "1796:17:5",
                 "stateVariable": false,
                 "storageLocation": "default",
@@ -2086,7 +2086,7 @@
                   "typeString": "uint256"
                 },
                 "typeName": {
-                  "id": 3674,
+                  "id": 3764,
                   "name": "uint256",
                   "nodeType": "ElementaryTypeName",
                   "src": "1796:7:5",
@@ -2099,12 +2099,12 @@
               },
               {
                 "constant": false,
-                "id": 3677,
+                "id": 3767,
                 "mutability": "mutable",
                 "name": "cars",
                 "nameLocation": "1831:4:5",
                 "nodeType": "VariableDeclaration",
-                "scope": 3691,
+                "scope": 3781,
                 "src": "1823:12:5",
                 "stateVariable": false,
                 "storageLocation": "default",
@@ -2113,7 +2113,7 @@
                   "typeString": "uint256"
                 },
                 "typeName": {
-                  "id": 3676,
+                  "id": 3766,
                   "name": "uint256",
                   "nodeType": "ElementaryTypeName",
                   "src": "1823:7:5",
@@ -2126,12 +2126,12 @@
               },
               {
                 "constant": false,
-                "id": 3679,
+                "id": 3769,
                 "mutability": "mutable",
                 "name": "carsprice",
                 "nameLocation": "1853:9:5",
                 "nodeType": "VariableDeclaration",
-                "scope": 3691,
+                "scope": 3781,
                 "src": "1845:17:5",
                 "stateVariable": false,
                 "storageLocation": "default",
@@ -2140,7 +2140,7 @@
                   "typeString": "uint256"
                 },
                 "typeName": {
-                  "id": 3678,
+                  "id": 3768,
                   "name": "uint256",
                   "nodeType": "ElementaryTypeName",
                   "src": "1845:7:5",
@@ -2153,36 +2153,36 @@
               },
               {
                 "constant": false,
-                "id": 3682,
+                "id": 3772,
                 "mutability": "mutable",
                 "name": "currentState",
                 "nameLocation": "1885:12:5",
                 "nodeType": "VariableDeclaration",
-                "scope": 3691,
+                "scope": 3781,
                 "src": "1872:25:5",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
-                  "typeIdentifier": "t_enum$_AuctionState_$3610",
+                  "typeIdentifier": "t_enum$_AuctionState_$3700",
                   "typeString": "enum MarketPlace_Structures.AuctionState"
                 },
                 "typeName": {
-                  "id": 3681,
+                  "id": 3771,
                   "nodeType": "UserDefinedTypeName",
                   "pathNode": {
-                    "id": 3680,
+                    "id": 3770,
                     "name": "AuctionState",
                     "nameLocations": [
                       "1872:12:5"
                     ],
                     "nodeType": "IdentifierPath",
-                    "referencedDeclaration": 3610,
+                    "referencedDeclaration": 3700,
                     "src": "1872:12:5"
                   },
-                  "referencedDeclaration": 3610,
+                  "referencedDeclaration": 3700,
                   "src": "1872:12:5",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_enum$_AuctionState_$3610",
+                    "typeIdentifier": "t_enum$_AuctionState_$3700",
                     "typeString": "enum MarketPlace_Structures.AuctionState"
                   }
                 },
@@ -2190,12 +2190,12 @@
               },
               {
                 "constant": false,
-                "id": 3684,
+                "id": 3774,
                 "mutability": "mutable",
                 "name": "wallet",
                 "nameLocation": "1915:6:5",
                 "nodeType": "VariableDeclaration",
-                "scope": 3691,
+                "scope": 3781,
                 "src": "1907:14:5",
                 "stateVariable": false,
                 "storageLocation": "default",
@@ -2204,7 +2204,7 @@
                   "typeString": "address"
                 },
                 "typeName": {
-                  "id": 3683,
+                  "id": 3773,
                   "name": "address",
                   "nodeType": "ElementaryTypeName",
                   "src": "1907:7:5",
@@ -2218,12 +2218,12 @@
               },
               {
                 "constant": false,
-                "id": 3686,
+                "id": 3776,
                 "mutability": "mutable",
                 "name": "maxBidders",
                 "nameLocation": "1939:10:5",
                 "nodeType": "VariableDeclaration",
-                "scope": 3691,
+                "scope": 3781,
                 "src": "1931:18:5",
                 "stateVariable": false,
                 "storageLocation": "default",
@@ -2232,7 +2232,7 @@
                   "typeString": "uint256"
                 },
                 "typeName": {
-                  "id": 3685,
+                  "id": 3775,
                   "name": "uint256",
                   "nodeType": "ElementaryTypeName",
                   "src": "1931:7:5",
@@ -2245,12 +2245,12 @@
               },
               {
                 "constant": false,
-                "id": 3688,
+                "id": 3778,
                 "mutability": "mutable",
                 "name": "QA_sellerID",
                 "nameLocation": "1967:11:5",
                 "nodeType": "VariableDeclaration",
-                "scope": 3691,
+                "scope": 3781,
                 "src": "1959:19:5",
                 "stateVariable": false,
                 "storageLocation": "default",
@@ -2259,7 +2259,7 @@
                   "typeString": "uint256"
                 },
                 "typeName": {
-                  "id": 3687,
+                  "id": 3777,
                   "name": "uint256",
                   "nodeType": "ElementaryTypeName",
                   "src": "1959:7:5",
@@ -2272,12 +2272,12 @@
               },
               {
                 "constant": false,
-                "id": 3690,
+                "id": 3780,
                 "mutability": "mutable",
                 "name": "QB_sellerID",
                 "nameLocation": "1996:11:5",
                 "nodeType": "VariableDeclaration",
-                "scope": 3691,
+                "scope": 3781,
                 "src": "1988:19:5",
                 "stateVariable": false,
                 "storageLocation": "default",
@@ -2286,7 +2286,7 @@
                   "typeString": "uint256"
                 },
                 "typeName": {
-                  "id": 3689,
+                  "id": 3779,
                   "name": "uint256",
                   "nodeType": "ElementaryTypeName",
                   "src": "1988:7:5",
@@ -2301,22 +2301,22 @@
             "name": "Manufacturer",
             "nameLocation": "1724:12:5",
             "nodeType": "StructDefinition",
-            "scope": 3723,
+            "scope": 3813,
             "src": "1717:297:5",
             "visibility": "public"
           },
           {
             "canonicalName": "MarketPlace_Structures.Car",
-            "id": 3700,
+            "id": 3790,
             "members": [
               {
                 "constant": false,
-                "id": 3693,
+                "id": 3783,
                 "mutability": "mutable",
                 "name": "tag",
                 "nameLocation": "2102:3:5",
                 "nodeType": "VariableDeclaration",
-                "scope": 3700,
+                "scope": 3790,
                 "src": "2094:11:5",
                 "stateVariable": false,
                 "storageLocation": "default",
@@ -2325,7 +2325,7 @@
                   "typeString": "uint256"
                 },
                 "typeName": {
-                  "id": 3692,
+                  "id": 3782,
                   "name": "uint256",
                   "nodeType": "ElementaryTypeName",
                   "src": "2094:7:5",
@@ -2338,12 +2338,12 @@
               },
               {
                 "constant": false,
-                "id": 3695,
+                "id": 3785,
                 "mutability": "mutable",
                 "name": "manufacturerID",
                 "nameLocation": "2123:14:5",
                 "nodeType": "VariableDeclaration",
-                "scope": 3700,
+                "scope": 3790,
                 "src": "2115:22:5",
                 "stateVariable": false,
                 "storageLocation": "default",
@@ -2352,7 +2352,7 @@
                   "typeString": "uint256"
                 },
                 "typeName": {
-                  "id": 3694,
+                  "id": 3784,
                   "name": "uint256",
                   "nodeType": "ElementaryTypeName",
                   "src": "2115:7:5",
@@ -2365,12 +2365,12 @@
               },
               {
                 "constant": false,
-                "id": 3697,
+                "id": 3787,
                 "mutability": "mutable",
                 "name": "sellerIDA",
                 "nameLocation": "2155:9:5",
                 "nodeType": "VariableDeclaration",
-                "scope": 3700,
+                "scope": 3790,
                 "src": "2147:17:5",
                 "stateVariable": false,
                 "storageLocation": "default",
@@ -2379,7 +2379,7 @@
                   "typeString": "uint256"
                 },
                 "typeName": {
-                  "id": 3696,
+                  "id": 3786,
                   "name": "uint256",
                   "nodeType": "ElementaryTypeName",
                   "src": "2147:7:5",
@@ -2392,12 +2392,12 @@
               },
               {
                 "constant": false,
-                "id": 3699,
+                "id": 3789,
                 "mutability": "mutable",
                 "name": "sellerIDB",
                 "nameLocation": "2182:9:5",
                 "nodeType": "VariableDeclaration",
-                "scope": 3700,
+                "scope": 3790,
                 "src": "2174:17:5",
                 "stateVariable": false,
                 "storageLocation": "default",
@@ -2406,7 +2406,7 @@
                   "typeString": "uint256"
                 },
                 "typeName": {
-                  "id": 3698,
+                  "id": 3788,
                   "name": "uint256",
                   "nodeType": "ElementaryTypeName",
                   "src": "2174:7:5",
@@ -2421,22 +2421,22 @@
             "name": "Car",
             "nameLocation": "2080:3:5",
             "nodeType": "StructDefinition",
-            "scope": 3723,
+            "scope": 3813,
             "src": "2073:125:5",
             "visibility": "public"
           },
           {
             "canonicalName": "MarketPlace_Structures.Customer",
-            "id": 3705,
+            "id": 3795,
             "members": [
               {
                 "constant": false,
-                "id": 3702,
+                "id": 3792,
                 "mutability": "mutable",
                 "name": "_tag",
                 "nameLocation": "2286:4:5",
                 "nodeType": "VariableDeclaration",
-                "scope": 3705,
+                "scope": 3795,
                 "src": "2278:12:5",
                 "stateVariable": false,
                 "storageLocation": "default",
@@ -2445,7 +2445,7 @@
                   "typeString": "uint256"
                 },
                 "typeName": {
-                  "id": 3701,
+                  "id": 3791,
                   "name": "uint256",
                   "nodeType": "ElementaryTypeName",
                   "src": "2278:7:5",
@@ -2458,12 +2458,12 @@
               },
               {
                 "constant": false,
-                "id": 3704,
+                "id": 3794,
                 "mutability": "mutable",
                 "name": "wallet",
                 "nameLocation": "2308:6:5",
                 "nodeType": "VariableDeclaration",
-                "scope": 3705,
+                "scope": 3795,
                 "src": "2300:14:5",
                 "stateVariable": false,
                 "storageLocation": "default",
@@ -2472,7 +2472,7 @@
                   "typeString": "address"
                 },
                 "typeName": {
-                  "id": 3703,
+                  "id": 3793,
                   "name": "address",
                   "nodeType": "ElementaryTypeName",
                   "src": "2300:7:5",
@@ -2488,13 +2488,13 @@
             "name": "Customer",
             "nameLocation": "2259:8:5",
             "nodeType": "StructDefinition",
-            "scope": 3723,
+            "scope": 3813,
             "src": "2252:69:5",
             "visibility": "public"
           },
           {
             "body": {
-              "id": 3721,
+              "id": 3811,
               "nodeType": "Block",
               "src": "2446:38:5",
               "statements": [
@@ -2505,17 +2505,17 @@
                         "typeIdentifier": "t_uint256",
                         "typeString": "uint256"
                       },
-                      "id": 3716,
+                      "id": 3806,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
                       "lValueRequested": false,
                       "leftExpression": {
-                        "id": 3714,
+                        "id": 3804,
                         "name": "a",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 3707,
+                        "referencedDeclaration": 3797,
                         "src": "2463:1:5",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
@@ -2525,11 +2525,11 @@
                       "nodeType": "BinaryOperation",
                       "operator": ">=",
                       "rightExpression": {
-                        "id": 3715,
+                        "id": 3805,
                         "name": "b",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 3709,
+                        "referencedDeclaration": 3799,
                         "src": "2468:1:5",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
@@ -2543,18 +2543,18 @@
                       }
                     },
                     "falseExpression": {
-                      "id": 3718,
+                      "id": 3808,
                       "name": "a",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 3707,
+                      "referencedDeclaration": 3797,
                       "src": "2476:1:5",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
                         "typeString": "uint256"
                       }
                     },
-                    "id": 3719,
+                    "id": 3809,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -2562,11 +2562,11 @@
                     "nodeType": "Conditional",
                     "src": "2463:14:5",
                     "trueExpression": {
-                      "id": 3717,
+                      "id": 3807,
                       "name": "b",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 3709,
+                      "referencedDeclaration": 3799,
                       "src": "2472:1:5",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
@@ -2578,15 +2578,15 @@
                       "typeString": "uint256"
                     }
                   },
-                  "functionReturnParameters": 3713,
-                  "id": 3720,
+                  "functionReturnParameters": 3803,
+                  "id": 3810,
                   "nodeType": "Return",
                   "src": "2456:21:5"
                 }
               ]
             },
             "functionSelector": "dd2d2a12",
-            "id": 3722,
+            "id": 3812,
             "implemented": true,
             "kind": "function",
             "modifiers": [],
@@ -2594,17 +2594,17 @@
             "nameLocation": "2386:7:5",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 3710,
+              "id": 3800,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3707,
+                  "id": 3797,
                   "mutability": "mutable",
                   "name": "a",
                   "nameLocation": "2402:1:5",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3722,
+                  "scope": 3812,
                   "src": "2394:9:5",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -2613,7 +2613,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 3706,
+                    "id": 3796,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "2394:7:5",
@@ -2626,12 +2626,12 @@
                 },
                 {
                   "constant": false,
-                  "id": 3709,
+                  "id": 3799,
                   "mutability": "mutable",
                   "name": "b",
                   "nameLocation": "2413:1:5",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3722,
+                  "scope": 3812,
                   "src": "2405:9:5",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -2640,7 +2640,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 3708,
+                    "id": 3798,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "2405:7:5",
@@ -2655,17 +2655,17 @@
               "src": "2393:22:5"
             },
             "returnParameters": {
-              "id": 3713,
+              "id": 3803,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3712,
+                  "id": 3802,
                   "mutability": "mutable",
                   "name": "",
                   "nameLocation": "-1:-1:-1",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3722,
+                  "scope": 3812,
                   "src": "2437:7:5",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -2674,7 +2674,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 3711,
+                    "id": 3801,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "2437:7:5",
@@ -2688,14 +2688,14 @@
               ],
               "src": "2436:9:5"
             },
-            "scope": 3723,
+            "scope": 3813,
             "src": "2377:107:5",
             "stateMutability": "pure",
             "virtual": false,
             "visibility": "public"
           }
         ],
-        "scope": 3724,
+        "scope": 3814,
         "src": "27:2459:5",
         "usedErrors": []
       }
@@ -2708,7 +2708,7 @@
   },
   "networks": {},
   "schemaVersion": "3.4.8",
-  "updatedAt": "2022-09-12T09:29:52.752Z",
+  "updatedAt": "2022-09-14T13:53:22.579Z",
   "devdoc": {
     "kind": "dev",
     "methods": {},

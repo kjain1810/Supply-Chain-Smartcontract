@@ -35,15 +35,45 @@ contract NewMarketPlace {
     }
 
     function isSupplier() public view returns (bool) {
-        for (uint256 i = 0; i <= num_supplier; i++) {
+        for (uint256 i = 1; i <= num_supplier; i++) {
             if (suppliers[i].wallet == msg.sender) return true;
         }
         return false;
     }
 
-    function getAllSuppliers() public view returns (Supplier[] memory) {
-        return allSuppliers;
+    function numSuppliers() public view returns (uint256) {
+        return num_supplier;
     }
+
+    function getSupplierByID(uint256 id)
+        public
+        view
+        returns (
+            uint256 tag,
+            PartType partType,
+            uint256 quantityAvailable,
+            AuctionState currentState,
+            address wallet,
+            uint256 maxBidders,
+            uint256 bidsPlaced,
+            uint256 bidsRevealed
+        )
+    {
+        return (
+            suppliers[id].tag,
+            suppliers[id].partType,
+            suppliers[id].quantityAvailable,
+            suppliers[id].currentState,
+            suppliers[id].wallet,
+            suppliers[id].maxBidders,
+            suppliers[id].bidsPlaced,
+            suppliers[id].bidsRevealed
+        );
+    }
+
+    // function getAllSuppliers() public view returns (Supplier[] memory) {
+    //     return allSuppliers;
+    // }
 
     /// @dev Stores the details of the manufacturer
     struct Manufacturer {
@@ -58,7 +88,7 @@ contract NewMarketPlace {
     }
 
     function isManufacturer() public view returns (bool) {
-        for (uint256 i = 0; i <= num_manufacturer; i++) {
+        for (uint256 i = 1; i <= num_manufacturer; i++) {
             if (manufacturers[i].wallet == msg.sender) return true;
         }
         return false;
@@ -109,7 +139,7 @@ contract NewMarketPlace {
     uint256 num_customer;
     uint256 num_cars;
 
-    Supplier[] allSuppliers;
+    // Supplier[] allSuppliers;
 
     /// @notice Triggered when a supplier starts their bidding phase
     /// @param tag Tag of the supplier
@@ -597,18 +627,18 @@ contract NewMarketPlace {
             0,
             0
         );
-        allSuppliers.push(
-            Supplier(
-                num_supplier,
-                here,
-                quantityAvailable,
-                AuctionState.NOT_RUNNING,
-                addr,
-                auctionBidders,
-                0,
-                0
-            )
-        );
+        // allSuppliers.push(
+        //     Supplier(
+        //         num_supplier,
+        //         here,
+        //         quantityAvailable,
+        //         AuctionState.NOT_RUNNING,
+        //         addr,
+        //         auctionBidders,
+        //         0,
+        //         0
+        //     )
+        // );
         return num_supplier;
     }
 
@@ -690,13 +720,12 @@ contract NewMarketPlace {
     function getCars() public view returns (uint256) {
         return num_cars;
     }
+
     // // @notice Get the number of suppliers
     // // @return uint256 Number of suppliers
     // function getSuppliers() public view returns (uint256) {
     //     return num_supplier;
     // }
-
-    
 
     // // @notice Get the number of cars
     // // @return uint256 Number of cars
@@ -730,23 +759,22 @@ contract NewMarketPlace {
     }
 
     function getSupplierID(address supplier_addr)
-    public 
-    view
-    returns(
-        uint256 tag
-    ){
-        for(uint256 i=1;i<num_supplier;i++){
-            if(allSuppliers[i].wallet == supplier_addr){
-                return allSuppliers[i].tag;
+        public
+        view
+        returns (uint256 tag)
+    {
+        for (uint256 i = 1; i <= num_supplier; i++) {
+            if (suppliers[i].wallet == supplier_addr) {
+                return suppliers[i].tag;
             }
         }
     }
 
     function getManufacturerID(address manufacturer_addr)
-    public
-    view
-    returns(
-         uint256 tag,
+        public
+        view
+        returns (
+            uint256 tag,
             uint256 wheelSupplier,
             uint256 wheelQuant,
             uint256 bodySupplier,
@@ -754,11 +782,12 @@ contract NewMarketPlace {
             uint256 carsAvailable,
             uint256 carPrice,
             address wallet
-    ){
-        for(uint256 i=1;i<=num_manufacturer;i++){
-            if(manufacturers[i].wallet == manufacturer_addr){
+        )
+    {
+        for (uint256 i = 1; i <= num_manufacturer; i++) {
+            if (manufacturers[i].wallet == manufacturer_addr) {
                 return (
-                     manufacturers[i].tag,
+                    manufacturers[i].tag,
                     manufacturers[i].wheelSupplier,
                     manufacturers[i].wheelQuant,
                     manufacturers[i].bodySupplier,
@@ -781,12 +810,53 @@ contract NewMarketPlace {
             return 3;
         }
     }
-    // function getSupplierBids(address wallet, uint256 idx)
-    // public
-    // view
-    // returns(
-    //     Bid[] memory
-    // ){
-    //     return bidsTillNow[wallet];
-    // }
+
+    function getSupplierBids(address wallet, uint256 idx)
+        public
+        view
+        returns (
+            uint256 actualPrice,
+            uint256 actualQuantity,
+            uint256 actualKey,
+            bytes32 blindPrice,
+            bytes32 blindQuantity,
+            bytes32 blindKey,
+            uint256 limitingQuantity,
+            uint256 buyerID,
+            uint256 sellerID,
+            uint256 moneySent,
+            bool correctReveal,
+            address payable bidderAddress
+        )
+    {
+        if (bidsTillNow[wallet].length < idx)
+            return (
+                uint256(0),
+                uint256(0),
+                uint256(0),
+                bytes32(0),
+                bytes32(0),
+                bytes32(0),
+                uint256(0),
+                uint256(0),
+                uint256(0),
+                uint256(0),
+                false,
+                payable(wallet)
+            );
+        return (
+            bidsTillNow[wallet][idx].actualPrice,
+            bidsTillNow[wallet][idx].actualQuantity,
+            bidsTillNow[wallet][idx].actualKey,
+            bidsTillNow[wallet][idx].blindPrice,
+            bidsTillNow[wallet][idx].blindQuantity,
+            bidsTillNow[wallet][idx].blindKey,
+            bidsTillNow[wallet][idx].limitingQuantity,
+            bidsTillNow[wallet][idx].buyerID,
+            bidsTillNow[wallet][idx].sellerID,
+            bidsTillNow[wallet][idx].moneySent,
+            bidsTillNow[wallet][idx].correctReveal,
+            bidsTillNow[wallet][idx].bidderAddress
+        );
+    }
 }

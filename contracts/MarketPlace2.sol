@@ -767,7 +767,6 @@ contract NewMarketPlace {
                     manufacturers[i].carPrice,
                     manufacturers[i].wallet
                 );
->>>>>>> Stashed changes
             }
         }
     }
@@ -782,12 +781,12 @@ contract NewMarketPlace {
             return 3;
         }
     }
-    function getSupplierBids(address wallet, uint256 idx)
-    public
-    view
-    returns(
-        Bid[] memory
-    ){
-        return bidsTillNow[wallet];
-    }
+    // function getSupplierBids(address wallet, uint256 idx)
+    // public
+    // view
+    // returns(
+    //     Bid[] memory
+    // ){
+    //     return bidsTillNow[wallet];
+    // }
 }

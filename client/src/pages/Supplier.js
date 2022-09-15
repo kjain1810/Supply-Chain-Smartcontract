@@ -6,6 +6,7 @@ export default function Supplier() {
   const { isSupplier } = useContext(UserContext);
   const [auction_state, setAucState] = useState("loading...");
   const [ID, setID] = useState(0);
+  const [bid_details, setBidDetails] = useState([]);
 
   const init = async () => {
     let temp = await blockchain.contract.methods
@@ -22,19 +23,17 @@ export default function Supplier() {
     console.log(temp1);
   };
 
-  // const init2 = async () => {
-  //   console.log("ID:", ID);
-  //   let temp1 = await blockchain.contract.methods.getAuctionState(ID).call();
-  //   if (temp1 == 1) setAucState("NOT_RUNNING");
-  //   else if (temp1 == 2) setAucState("BIDDING");
-  //   else if (temp1 == 3) setAucState("REVEALING");
-  //   console.log(temp1);
-  // };
+  const getallbids = async () => {
+    let temp = await blockchain.contract.methods
+      .getSupplierBids(ID)
+      .call();
+    console.log(temp);
+    setBidDetails(temp);
+  }
+
 
   useEffect(() => {
     init();
-
-    // init2();
   }, [blockchain]);
 
   return (
@@ -73,7 +72,7 @@ export default function Supplier() {
                 await blockchain.contract.methods
                   .supplierStartReveal(ID)
                   .send({ from: blockchain.userAccount });
-                  init();
+                init();
               } catch (error) {
                 alert("Something went wrong!"); //has error here
               }
@@ -85,6 +84,8 @@ export default function Supplier() {
           ""
         )}
       </h2>
+      
+
       <h2>
         {auction_state == "REVEALING" ? (
           <button
@@ -94,7 +95,7 @@ export default function Supplier() {
                 await blockchain.contract.methods
                   .supplierEndAuction(ID)
                   .send({ from: blockchain.userAccount });
-                  init();
+                init();
               } catch (error) {
                 alert(error);
               }

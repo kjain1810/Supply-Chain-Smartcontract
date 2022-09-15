@@ -811,6 +811,10 @@ contract NewMarketPlace {
         }
     }
 
+    function getNumberOfBids(address wallet) public view returns (uint256) {
+        return bidsTillNow[wallet].length;
+    }
+
     function getSupplierBids(address wallet, uint256 idx)
         public
         view

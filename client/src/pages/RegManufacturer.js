@@ -6,10 +6,26 @@ export default function RegManufacturer() {
 
   useEffect(() => {
     const init = async () => {
-      let temp = await blockchain.contract.methods.getAllSuppliers().call();
+      // let temp = await blockchain.contract.methods.getAllSuppliers().call();
+      let temp = updateSuppliers();
       setAllSuppliers(temp);
       console.log(temp);
     };
+    const updateSuppliers = () => {
+      let size = await blockchain.contract.methods.numSuppliers;
+      let ret = [];
+      for(let i = 1; i <= size; i++)
+      {
+        let temp = await blockchain.contract.methods.getSupplierByID(i);
+        ret.push({
+          tag: temp[0],
+          partType: temp[1],
+          quantityAvailable: temp[2],
+          wallet: temp[3]
+        });
+      }
+      return ret;
+    }
     init();
   }, [blockchain]);
 

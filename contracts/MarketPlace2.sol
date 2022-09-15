@@ -50,24 +50,18 @@ contract NewMarketPlace {
         view
         returns (
             uint256 tag,
-            PartType partType,
+            uint256 partType,
             uint256 quantityAvailable,
-            AuctionState currentState,
-            address wallet,
-            uint256 maxBidders,
-            uint256 bidsPlaced,
-            uint256 bidsRevealed
+            address wallet
         )
     {
+        uint256 retType = 0;
+        if (suppliers[id].partType == PartType.WHEEL) retType = 1;
         return (
             suppliers[id].tag,
-            suppliers[id].partType,
+            retType,
             suppliers[id].quantityAvailable,
-            suppliers[id].currentState,
-            suppliers[id].wallet,
-            suppliers[id].maxBidders,
-            suppliers[id].bidsPlaced,
-            suppliers[id].bidsRevealed
+            suppliers[id].wallet
         );
     }
 
@@ -819,48 +813,19 @@ contract NewMarketPlace {
         public
         view
         returns (
-            uint256 actualPrice,
-            uint256 actualQuantity,
-            uint256 actualKey,
             bytes32 blindPrice,
             bytes32 blindQuantity,
-            bytes32 blindKey,
-            uint256 limitingQuantity,
             uint256 buyerID,
-            uint256 sellerID,
-            uint256 moneySent,
-            bool correctReveal,
-            address payable bidderAddress
+            bool correctReveal
         )
     {
         if (bidsTillNow[wallet].length < idx)
-            return (
-                uint256(0),
-                uint256(0),
-                uint256(0),
-                bytes32(0),
-                bytes32(0),
-                bytes32(0),
-                uint256(0),
-                uint256(0),
-                uint256(0),
-                uint256(0),
-                false,
-                payable(wallet)
-            );
+            return (bytes32(0), bytes32(0), uint256(0), false);
         return (
-            bidsTillNow[wallet][idx].actualPrice,
-            bidsTillNow[wallet][idx].actualQuantity,
-            bidsTillNow[wallet][idx].actualKey,
             bidsTillNow[wallet][idx].blindPrice,
             bidsTillNow[wallet][idx].blindQuantity,
-            bidsTillNow[wallet][idx].blindKey,
-            bidsTillNow[wallet][idx].limitingQuantity,
             bidsTillNow[wallet][idx].buyerID,
-            bidsTillNow[wallet][idx].sellerID,
-            bidsTillNow[wallet][idx].moneySent,
-            bidsTillNow[wallet][idx].correctReveal,
-            bidsTillNow[wallet][idx].bidderAddress
+            bidsTillNow[wallet][idx].correctReveal
         );
     }
 }

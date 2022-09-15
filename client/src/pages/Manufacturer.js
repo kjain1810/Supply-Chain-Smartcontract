@@ -17,7 +17,10 @@ export default function Manufacturer() {
   const [Bid, setBid] = useState(0);
   const [partType, setPartType] = useState("Wheels");
   const [cars_available, setCars] = useState(0);
-
+  const [reveal_price, setRevealPrice] = useState(0);
+  const [reveal_quantity, setRevealQuantity] = useState(0);
+  const [reveal_blindkey, setRevealBlindkey] = useState(0);
+ const [reveal_to_supplier, setRevealtoSupplier] = useState(0);
   const init = async () => {
     let temp = [];
     temp = await blockchain.contract.methods
@@ -216,7 +219,70 @@ export default function Manufacturer() {
           >
             Submit
           </button>
-          <h4>Reveal Form</h4>
+          <h4>
+            <div>
+              Reveal Form
+              <label>
+                Reveal to supplier:
+                <input
+                  type="number"
+                  value={reveal_to_supplier}
+                  onChange={(e) => setRevealtoSupplier(e.target.value)}
+                />
+              </label>
+              <label>
+                quantity:
+                <input
+                  type="number"
+                  value={reveal_quantity}
+                  onChange={(e) => setRevealQuantity(e.target.value)}
+                />
+              </label>
+              <label>
+                Bid:
+                <input
+                  type="number"
+                  value={reveal_price}
+                  onChange={(e) => setRevealPrice(e.target.value)}
+                />
+              </label>
+              <label>
+                Blind key:
+                <input
+                  type="number"
+                  value={reveal_blindkey}
+                  onChange={(e) => setRevealBlindkey(e.target.value)}
+                />
+              </label>
+              <button
+                type="button"
+                onClick={async () => {
+                  if (
+                    body_sup_auction_state == "REVEALING" ||
+                    wheel_sup_auction_state == "REVEALING"
+                  ) {
+                    try {
+                      await blockchain.contract.methods
+                        .manufacturerRevealsBid(
+                          ID,
+                          reveal_to_supplier,
+                          reveal_price,
+                          reveal_quantity,
+                          reveal_blindkey
+                        )
+                        .send({ from: blockchain.userAccount });
+                    } catch (error) {
+                      alert("Something went wrong!");
+                    }
+                  } else {
+                    alert("Auction not running");
+                  }
+                }}
+              >
+                Reveal
+              </button>
+            </div>
+          </h4>
         </form>
 
         <table>

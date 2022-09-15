@@ -13,9 +13,9 @@ export default function Supplier() {
       .getSupplierID(blockchain.userAccount)
       .call();
     setID(temp);
-    console.log(temp);
+    console.log("ID: ", temp);
 
-    console.log("ID:", temp);
+    console.log("ID:", ID);
     let temp1 = await blockchain.contract.methods.getAuctionState(temp).call();
     if (temp1 == 1) setAucState("NOT_RUNNING");
     else if (temp1 == 2) setAucState("BIDDING");
@@ -25,15 +25,24 @@ export default function Supplier() {
 
   const getallbids = async () => {
     let temp = await blockchain.contract.methods
-      .getSupplierBids(ID)
+      .getNumberOfBids(blockchain.userAccount)
       .call();
-    console.log(temp);
-    setBidDetails(temp);
-  }
-
+    console.log("bid length: ", temp);
+    let bids = [];
+    for (let i = 0; i < temp; i++) {
+      let here = await blockchain.contract.methods
+        .getSupplierBids(blockchain.userAccount, i)
+        .call();
+      console.log(here);
+      bids.push(here);
+    }
+    setBidDetails(bids);
+    console.log(bids);
+  };
 
   useEffect(() => {
     init();
+    getallbids();
   }, [blockchain]);
 
   return (
@@ -63,46 +72,84 @@ export default function Supplier() {
           ""
         )}
       </h2>
-      <h2>
+      <h4>
         {auction_state == "BIDDING" ? (
-          <button
-            type="button"
-            onClick={async () => {
-              try {
-                await blockchain.contract.methods
-                  .supplierStartReveal(ID)
-                  .send({ from: blockchain.userAccount });
-                init();
-              } catch (error) {
-                alert("Something went wrong!"); //has error here
-              }
-            }}
-          >
-            Stop bids and start reveal phase
-          </button>
+          <div>
+            <table>
+              <thead>
+                <th>buyerid</th>
+                <th>blind price</th>
+                <th></th>
+                <th>blind quantity</th>
+              </thead>
+              <tbody>
+                {bid_details.map((bid) => (
+                  <tr>
+                    <td>{bid[2]}</td>
+                    <td>{bid[0]}</td>
+                    <td> </td>
+                    <td>{bid[1]}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <button
+              type="button"
+              onClick={async () => {
+                try {
+                  await blockchain.contract.methods
+                    .supplierStartReveal(ID)
+                    .send({ from: blockchain.userAccount });
+                  init();
+                } catch (error) {
+                  alert("Something went wrong!"); //has error here
+                }
+              }}
+            >
+              Stop bids and start reveal phase
+            </button>
+          </div>
         ) : (
           ""
         )}
-      </h2>
-      
-
+      </h4>
       <h2>
         {auction_state == "REVEALING" ? (
-          <button
-            type="button"
-            onClick={async () => {
-              try {
-                await blockchain.contract.methods
-                  .supplierEndAuction(ID)
-                  .send({ from: blockchain.userAccount });
-                init();
-              } catch (error) {
-                alert(error);
-              }
-            }}
-          >
-            End Reveal Phase
-          </button>
+          <div>
+            <table>
+              <thead>
+                <th>buyerid</th>
+                <th>blind price</th>
+                <th></th>
+                <th>Revealed Bid</th>
+              </thead>
+              <tbody>
+                {bid_details.map((bid) => (
+                  <tr>
+                    <td>{bid[2]}</td>
+                    <td>{bid[0]}</td>
+                    <td> </td>
+                    <td>{bid[3]}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <button
+              type="button"
+              onClick={async () => {
+                try {
+                  await blockchain.contract.methods
+                    .supplierEndAuction(ID)
+                    .send({ from: blockchain.userAccount });
+                  init();
+                } catch (error) {
+                  alert(error);
+                }
+              }}
+            >
+              End Reveal Phase
+            </button>
+          </div>
         ) : (
           ""
         )}

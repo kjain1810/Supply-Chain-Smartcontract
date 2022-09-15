@@ -679,19 +679,6 @@ contract NewMarketPlace {
         return num_customer;
     }
 
-<<<<<<< Updated upstream
-    /// @notice Get the number of suppliers
-    /// @return uint256 Number of suppliers
-    function getSuppliers() public view returns (uint256) {
-        return num_supplier;
-    }
-
-    /// @notice Get the number of manufacturers
-    /// @return uint256 Number of manufacturers
-    function getManufacturers() public view returns (uint256) {
-        return num_manufacturer;
-    }
-
     /// @notice Get the number of customers
     /// @return uint256 Number of customers
     function getCustomers() public view returns (uint256) {
@@ -703,7 +690,6 @@ contract NewMarketPlace {
     function getCars() public view returns (uint256) {
         return num_cars;
     }
-=======
     // // @notice Get the number of suppliers
     // // @return uint256 Number of suppliers
     // function getSuppliers() public view returns (uint256) {
@@ -717,7 +703,6 @@ contract NewMarketPlace {
     // function getCars() public view returns (uint256) {
     //     return num_cars;
     // }
->>>>>>> Stashed changes
 
     /// @notice Get quantity of each part and car with a manufacturer
     /// @return quantityWheel Number of wheels
@@ -745,14 +730,6 @@ contract NewMarketPlace {
     }
 
     function getSupplierID(address supplier_addr)
-<<<<<<< Updated upstream
-        public
-        view
-        returns (uint256 tag)
-    {
-        for (uint256 i = 0; i < allSuppliers.length; i++) {
-            if (allSuppliers[i].wallet == supplier_addr) {
-=======
     public 
     view
     returns(
@@ -760,22 +737,12 @@ contract NewMarketPlace {
     ){
         for(uint256 i=1;i<num_supplier;i++){
             if(allSuppliers[i].wallet == supplier_addr){
->>>>>>> Stashed changes
                 return allSuppliers[i].tag;
             }
         }
     }
 
     function getManufacturerID(address manufacturer_addr)
-<<<<<<< Updated upstream
-        public
-        view
-        returns (Manufacturer memory)
-    {
-        for (uint256 i = 1; i <= num_manufacturer; i++) {
-            if (manufacturers[i].wallet == manufacturer_addr) {
-                return manufacturers[i];
-=======
     public
     view
     returns(

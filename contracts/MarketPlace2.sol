@@ -55,8 +55,8 @@ contract NewMarketPlace {
             address wallet
         )
     {
-        uint256 retType = 0;
-        if (suppliers[id].partType == PartType.WHEEL) retType = 1;
+        uint256 retType = 1;
+        if (suppliers[id].partType == PartType.WHEEL) retType = 0;
         return (
             suppliers[id].tag,
             retType,
@@ -476,14 +476,14 @@ contract NewMarketPlace {
                 "Incorrect key -- keeping your money"
             );
             require(
-                keccak256(abi.encodePacked(actualKey + actualPrice)) ==
-                    bid.blindPrice,
-                "Incorrect price -- keeping your money"
-            );
-            require(
                 keccak256(abi.encodePacked(actualKey + actualQuantity)) ==
                     bid.blindQuantity,
                 "Incorrect quantity -- keeping your money"
+            );
+            require(
+                keccak256(abi.encodePacked(actualKey + actualPrice)) ==
+                    bid.blindPrice,
+                "Incorrect price -- keeping your money"
             );
             uint256 effectivePrice = actualPrice * actualQuantity;
             require(
@@ -703,17 +703,17 @@ contract NewMarketPlace {
         return num_customer;
     }
 
-    /// @notice Get the number of customers
-    /// @return uint256 Number of customers
-    function getCustomers() public view returns (uint256) {
-        return num_customer;
-    }
+    // /// @notice Get the number of customers
+    // /// @return uint256 Number of customers
+    // function getCustomers() public view returns (uint256) {
+    //     return num_customer;
+    // }
 
-    /// @notice Get the number of cars
-    /// @return uint256 Number of cars
-    function getCars() public view returns (uint256) {
-        return num_cars;
-    }
+    // /// @notice Get the number of cars
+    // /// @return uint256 Number of cars
+    // function getCars() public view returns (uint256) {
+    //     return num_cars;
+    // }
 
     // // @notice Get the number of suppliers
     // // @return uint256 Number of suppliers
@@ -774,8 +774,7 @@ contract NewMarketPlace {
             uint256 bodySupplier,
             uint256 bodyQuant,
             uint256 carsAvailable,
-            uint256 carPrice,
-            address wallet
+            uint256 carPrice
         )
     {
         for (uint256 i = 1; i <= num_manufacturer; i++) {
@@ -787,8 +786,7 @@ contract NewMarketPlace {
                     manufacturers[i].bodySupplier,
                     manufacturers[i].bodyQuant,
                     manufacturers[i].carsAvailable,
-                    manufacturers[i].carPrice,
-                    manufacturers[i].wallet
+                    manufacturers[i].carPrice
                 );
             }
         }
@@ -828,4 +826,16 @@ contract NewMarketPlace {
             bidsTillNow[wallet][idx].correctReveal
         );
     }
+    function getSuppliers() public view returns (uint256) {
+        return num_supplier;
+    }
+    function getManufacturers() public view returns (uint256) {
+        return num_manufacturer;
+    }
+    function getCustomers() public view returns (uint256) {
+        return num_customer;
+    }
+
+
 }
+   

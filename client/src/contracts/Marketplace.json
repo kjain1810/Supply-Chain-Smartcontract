@@ -46076,12 +46076,12 @@
     "5777": {
       "events": {},
       "links": {},
-      "address": "0x2194bB189db7d0abf2Deb758C52639bBe7fccbFa",
-      "transactionHash": "0x393b39429e86c9868c565b33dd0b9fe89df5cd49504baf53eb40ea8eca2ab3bd"
+      "address": "0xCE20FdF61678a5c1BbF6f214C2A15c9F8cEd5ED1",
+      "transactionHash": "0x371d7e868d77178c33146a22fc1fd3d30d8c7d2b7ceccefcaf339cceae754527"
     }
   },
   "schemaVersion": "3.4.8",
-  "updatedAt": "2022-09-15T17:01:34.293Z",
+  "updatedAt": "2022-09-15T20:39:12.575Z",
   "networkType": "ethereum",
   "devdoc": {
     "kind": "dev",

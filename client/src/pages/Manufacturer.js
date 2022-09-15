@@ -20,7 +20,9 @@ export default function Manufacturer() {
   const [reveal_price, setRevealPrice] = useState(0);
   const [reveal_quantity, setRevealQuantity] = useState(0);
   const [reveal_blindkey, setRevealBlindkey] = useState(0);
- const [reveal_to_supplier, setRevealtoSupplier] = useState(0);
+  const [reveal_to_supplier, setRevealtoSupplier] = useState(0);
+  const [carsprice, setcarsprice] = useState(0);
+
   const init = async () => {
     let temp = [];
     temp = await blockchain.contract.methods
@@ -97,6 +99,39 @@ export default function Manufacturer() {
         >
           View all customer requests
         </button>
+      </div>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-around",
+          alignItems: "center",
+          height: "20%",
+          width: "40%",
+        }}
+      >
+        <form>
+          <label>
+            Set Price as :
+            <input
+              type="number"
+              value={carsprice}
+              onChange={(e) => setcarsprice(e.target.value)}
+            />
+          </label>
+          <button
+            type="button"
+            onClick={async () => {
+                // await blockchain.contract.methods
+                //     .setPrice(carsprice, ID)
+                //     .send({ from: blockchain.userAccount });
+                // alert("Price set");
+                alert("To be implemented in backend also");
+            }}
+          >
+            Set Price for Cars
+          </button>
+        </form>
       </div>
       <div style={{ display: "flex", height: "100%" }}>
         <form
@@ -175,12 +210,12 @@ export default function Manufacturer() {
                       .manufacturerPlacesBid(
                         ID,
                         bidto_supID,
-                        Web3.utils.soliditySha3(quant_toBid + blindkey),
                         Web3.utils.soliditySha3(Bid + blindkey),
+                        Web3.utils.soliditySha3(quant_toBid + blindkey),
                         Web3.utils.soliditySha3(blindkey)
                       )
                       .send({
-                        value: Web3.utils.toWei(Bid, "ether"),
+                        value: Bid * 1000000000000000000,
                         from: blockchain.userAccount,
                       });
                     alert("Bidding for bodies successful");
@@ -198,12 +233,12 @@ export default function Manufacturer() {
                     .manufacturerPlacesBid(
                       ID,
                       bidto_supID,
-                      Web3.utils.soliditySha3(quant_toBid + blindkey),
                       Web3.utils.soliditySha3(Bid + blindkey),
+                      Web3.utils.soliditySha3(quant_toBid + blindkey),
                       Web3.utils.soliditySha3(blindkey)
                     )
                     .send({
-                      value: Bid,
+                      value: Bid * 1000000000000000000,
                       from: blockchain.userAccount,
                     });
                   alert("Bidding for wheels successful");
@@ -221,39 +256,41 @@ export default function Manufacturer() {
           </button>
           <h4>
             <div>
-              Reveal Form
-              <label>
-                Reveal to supplier:
-                <input
-                  type="number"
-                  value={reveal_to_supplier}
-                  onChange={(e) => setRevealtoSupplier(e.target.value)}
-                />
-              </label>
-              <label>
-                quantity:
-                <input
-                  type="number"
-                  value={reveal_quantity}
-                  onChange={(e) => setRevealQuantity(e.target.value)}
-                />
-              </label>
-              <label>
-                Bid:
-                <input
-                  type="number"
-                  value={reveal_price}
-                  onChange={(e) => setRevealPrice(e.target.value)}
-                />
-              </label>
-              <label>
-                Blind key:
-                <input
-                  type="number"
-                  value={reveal_blindkey}
-                  onChange={(e) => setRevealBlindkey(e.target.value)}
-                />
-              </label>
+              <form>
+                Reveal Form
+                <label>
+                  Reveal to supplier:
+                  <input
+                    type="number"
+                    value={reveal_to_supplier}
+                    onChange={(e) => setRevealtoSupplier(e.target.value)}
+                  />
+                </label>
+                <label>
+                  Quantity:
+                  <input
+                    type="number"
+                    value={reveal_quantity}
+                    onChange={(e) => setRevealQuantity(e.target.value)}
+                  />
+                </label>
+                <label>
+                  Bid:
+                  <input
+                    type="number"
+                    value={reveal_price}
+                    onChange={(e) => setRevealPrice(e.target.value)}
+                  />
+                </label>
+                <label>
+                  Blind key:
+                  <input
+                    type="number"
+                    value={reveal_blindkey}
+                    onChange={(e) => setRevealBlindkey(e.target.value)}
+                  />
+                </label>
+              </form>
               <button
                 type="button"
                 onClick={async () => {
@@ -261,6 +298,11 @@ export default function Manufacturer() {
                     body_sup_auction_state == "REVEALING" ||
                     wheel_sup_auction_state == "REVEALING"
                   ) {
+                    console.log("ID", ID);
+                    console.log("reveal_to_supplier", reveal_to_supplier);
+                    console.log("reveal_quantity", reveal_quantity);
+                    console.log("Revealed price", reveal_price);
+                    console.log("reveal_blindkey", reveal_blindkey);
                     try {
                       await blockchain.contract.methods
                         .manufacturerRevealsBid(
@@ -272,6 +314,7 @@ export default function Manufacturer() {
                         )
                         .send({ from: blockchain.userAccount });
                     } catch (error) {
+                      console.log(error);
                       alert("Something went wrong!");
                     }
                   } else {

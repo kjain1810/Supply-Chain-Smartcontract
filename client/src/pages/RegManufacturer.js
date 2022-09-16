@@ -73,7 +73,7 @@ export default function RegManufacturer() {
             />
           </label>
           <label>
-            Minimum Ask Price:
+            Set Cars Price:
             <input
               type="number"
               value={askPrice}

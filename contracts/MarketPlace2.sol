@@ -40,6 +40,12 @@ contract NewMarketPlace {
         }
         return false;
     }
+    function isCustomer() public view returns (bool) {
+        for (uint256 i = 1; i <= num_customer; i++) {
+            if (customers[i].wallet == msg.sender) return true;
+        }
+        return false;
+    }
 
     function numSuppliers() public view returns (uint256) {
         return num_supplier;
@@ -798,6 +804,17 @@ contract NewMarketPlace {
                     manufacturers[i].carsAvailable,
                     manufacturers[i].carPrice
                 );
+            }
+        }
+    }
+    function getCustomerID(address customer_addr)
+        public
+        view
+        returns (uint256 tag)
+    {
+        for (uint256 i = 1; i <= num_customer; i++) {
+            if (customers[i].wallet == customer_addr) {
+                return customers[i].tag;
             }
         }
     }

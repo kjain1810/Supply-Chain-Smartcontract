@@ -10,7 +10,7 @@ export default function Customer_homepage() {
    const [quant_needed, set_quant_needed] = useState(0);
    const [cars_available, set_cars_available] = useState(0);
    const [cars_price, set_cars_price] = useState(0);
-
+   const [cars_details, set_cars_details] = useState([]);
    const get_manufacturer_details = async () => {
     try{
       let temp = await blockchain.contract.methods
@@ -26,6 +26,29 @@ export default function Customer_homepage() {
       console.log(error)
     }
    }
+  const init = async () => {
+  let temp = await blockchain.contract.methods
+          .getCustomerID(blockchain.userAccount)
+          .call();
+        setID(temp);
+        console.log("ID: ", temp);
+  };
+  const verifycars = async () => {
+    let idx = await blockchain.contract.methods.numberOfCarsBought(ID).call();
+    console.log("idx: ", idx);
+    for (let i = 0; i < idx; i++) {
+      let temp = await blockchain.contract.methods
+        .verifyCar(ID, i)
+        .call();
+      console.log("car details: ", temp);
+      set_cars_details((cars_details) => [...cars_details, temp]);
+    }
+   }
+
+   useEffect(() => {
+      init();
+    }, [blockchain]);
+
   return (
     <div>
       <h1>Welcome Customer!</h1>
@@ -80,58 +103,100 @@ export default function Customer_homepage() {
       </div>
       <div>
         <form
-        style={{
+          style={{
             display: "flex",
             flexDirection: "column",
             justifyContent: "space-around",
             alignItems: "center",
             height: "100%",
             width: "40%",
-          }}>
-            <h4>Make a purchase </h4>
-            <label>
-                Enter Manufacturer ID:
-                <input
-                    type="number"
-                    value={manf_ID}
-                    onChange={(e) => set_manf_ID(e.target.value)}
-                />
-            </label>
-            <label>
-                Enter Quantity:
-                <input
-                    type="number"
-                    value={quant_needed}
-                    onChange={(e) => set_quant_needed(e.target.value)}
-                />
-            </label>
-            <label>
-                Enter Price:
-                <input
-                    type="number"
-                    value={price_paying}
-                    onChange={(e) => set_price_paying(e.target.value)}
-                />
-            </label>
-            <button
-                type="button"
-                onClick={async () => {
-                  try
-                  {
-                    await blockchain.contract.methods
-                        .customerBuysCar(ID,manf_ID,price_paying,quant_needed)
-                        .send({ from: blockchain.account });
-                  }
-                  catch(err)
-                  {
-                    console.log(err);
-                    alert("Error in making purchase");
-                  }
-                }}
-            >
-                Make Purchase
-            </button>
-          </form>
+          }}
+        >
+          <h4>Make a purchase </h4>
+          <label>
+            Enter Manufacturer ID:
+            <input
+              type="number"
+              value={manf_ID}
+              onChange={(e) => set_manf_ID(e.target.value)}
+            />
+          </label>
+          <label>
+            Enter Quantity:
+            <input
+              type="number"
+              value={quant_needed}
+              onChange={(e) => set_quant_needed(e.target.value)}
+            />
+          </label>
+          <label>
+            Enter Price:
+            <input
+              type="number"
+              value={price_paying}
+              onChange={(e) => set_price_paying(parseInt(e.target.value))}
+            />
+          </label>
+          <button
+            type="button"
+            onClick={async () => {
+              try {
+                await blockchain.contract.methods
+                  .customerBuysCar(ID, manf_ID, price_paying, quant_needed)
+                  .send({ value: price_paying*100000000,from: blockchain.account });
+              } catch (err) {
+                console.log(err);
+                alert("Error in making purchase");
+              }
+            }}
+          >
+            Make Purchase
+          </button>
+        </form>
+      </div>
+      <div>
+        <form
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-around",
+            alignItems: "center",
+            height: "100%",
+            width: "40%",
+          }}
+        >
+          <h4>Verify the Cars </h4>
+          <button
+            type="button"
+            onClick={async () => {
+              verifycars();
+            }}
+          >
+            verify
+          </button>
+        </form>
+      </div>
+      <div>
+        <table>
+          <thead>
+            <tr>
+              <th>Car ID</th>
+              <th>Manufacturer ID</th>
+              <th>Wheel Supplier ID</th>
+              <th>Body Supplier ID</th>
+            </tr>
+          </thead>
+          <tbody>
+            {cars_details.map((cars) => (
+              <tr key={cars.id}>
+                <td>{cars.id}</td>
+                <td> {cars.manufacturerID}</td>
+                <td>{cars.wheelSupplier}</td>
+                <td> {cars.bodySupplier}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   );

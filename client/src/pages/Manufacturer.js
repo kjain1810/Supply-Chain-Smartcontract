@@ -81,58 +81,7 @@ export default function Manufacturer() {
       <h2>Number of cars you have : {cars_available}</h2>
       <h3>Number of bodies you have :{body_quantity} </h3>
       <h3>Number of wheels you have :{wheel_quantity} </h3>
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "space-around",
-          alignItems: "center",
-          height: "20%",
-          width: "40%",
-        }}
-      >
-        <button
-          type="button"
-          onClick={async () => {
-            alert("To be implemented");
-          }}
-        >
-          View all customer requests
-        </button>
-      </div>
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "space-around",
-          alignItems: "center",
-          height: "20%",
-          width: "40%",
-        }}
-      >
-        <form>
-          <label>
-            Set Price as :
-            <input
-              type="number"
-              value={carsprice}
-              onChange={(e) => setcarsprice(e.target.value)}
-            />
-          </label>
-          <button
-            type="button"
-            onClick={async () => {
-                // await blockchain.contract.methods
-                //     .setPrice(carsprice, ID)
-                //     .send({ from: blockchain.userAccount });
-                // alert("Price set");
-                alert("To be implemented in backend also");
-            }}
-          >
-            Set Price for Cars
-          </button>
-        </form>
-      </div>
+  
       <div style={{ display: "flex", height: "100%" }}>
         <form
           style={{
@@ -173,6 +122,14 @@ export default function Manufacturer() {
             />
           </label>
           <label>
+            Bid Price:
+            <input
+              type="number"
+              value={Bid}
+              onChange={(e) => setBid(parseInt(e.target.value))}
+            />
+          </label>
+          <label>
             quantity:
             <input
               type="number"
@@ -180,14 +137,7 @@ export default function Manufacturer() {
               onChange={(e) => setquant_toBid(parseInt(e.target.value))}
             />
           </label>
-          <label>
-            Bid:
-            <input
-              type="number"
-              value={Bid}
-              onChange={(e) => setBid(parseInt(e.target.value))}
-            />
-          </label>
+
           <label>
             Blind key:
             <input
@@ -199,43 +149,18 @@ export default function Manufacturer() {
           <button
             type="button"
             onClick={async () => {
-              console.log("PLACING THE BID")
-              console.log("Price", Bid)
-              console.log("Quantity",quant_toBid)
-              console.log("Key",blindkey )
+              console.log("PLACING THE BID");
+              console.log("Price", Bid);
+              console.log("Quantity", quant_toBid);
+              console.log("Key", blindkey);
               if (partType == "Body" && body_sup_auction_state == "BIDDING") {
                 // if (quant_toBid > wheel_quantity) {
                 //   alert(
                 //     "You don't have enough wheel quantity, buy wheels first"
                 //   );
                 // } else {
-                  console.log("Blind Bid", Bid + blindkey);
-                  console.log("Blind Quant", quant_toBid + blindkey);
-                  try {
-                    await blockchain.contract.methods
-                      .manufacturerPlacesBid(
-                        ID,
-                        bidto_supID,
-                        Web3.utils.soliditySha3(Bid + blindkey),
-                        Web3.utils.soliditySha3(quant_toBid + blindkey),
-                        Web3.utils.soliditySha3(blindkey)
-                      )
-                      .send({
-                        value: (Bid*quant_toBid)*10000000000,
-                        from: blockchain.userAccount,
-                      });
-                    alert("Bidding for bodies successful");
-                  } catch (error) {
-                    console.log(error);
-                    alert("Error bidding");
-                  
-                }
-              } else if (
-                partType == "Wheels" &&
-                wheel_sup_auction_state == "BIDDING"
-              ) {
-                console.log("Blind Bid", Bid+blindkey)
-                console.log("Blind Quant",quant_toBid+blindkey)
+                console.log("Blind Bid", Bid + blindkey);
+                console.log("Blind Quant", quant_toBid + blindkey);
                 try {
                   await blockchain.contract.methods
                     .manufacturerPlacesBid(
@@ -246,7 +171,31 @@ export default function Manufacturer() {
                       Web3.utils.soliditySha3(blindkey)
                     )
                     .send({
-                      value: (Bid*quant_toBid)*100000000000 ,
+                      value: Bid * quant_toBid * 10000000000,
+                      from: blockchain.userAccount,
+                    });
+                  alert("Bidding for bodies successful");
+                } catch (error) {
+                  console.log(error);
+                  alert("Error bidding");
+                }
+              } else if (
+                partType == "Wheels" &&
+                wheel_sup_auction_state == "BIDDING"
+              ) {
+                console.log("Blind Bid", Bid + blindkey);
+                console.log("Blind Quant", quant_toBid + blindkey);
+                try {
+                  await blockchain.contract.methods
+                    .manufacturerPlacesBid(
+                      ID,
+                      bidto_supID,
+                      Web3.utils.soliditySha3(Bid + blindkey),
+                      Web3.utils.soliditySha3(quant_toBid + blindkey),
+                      Web3.utils.soliditySha3(blindkey)
+                    )
+                    .send({
+                      value: Bid * quant_toBid * 100000000000,
                       from: blockchain.userAccount,
                     });
                   alert("Bidding for wheels successful");
@@ -275,19 +224,19 @@ export default function Manufacturer() {
                   />
                 </label>
                 <label>
+                  Bid Price:
+                  <input
+                    type="number"
+                    value={reveal_price}
+                    onChange={(e) => setRevealPrice(e.target.value)}
+                  />
+                </label>
+                <label>
                   Quantity:
                   <input
                     type="number"
                     value={reveal_quantity}
                     onChange={(e) => setRevealQuantity(e.target.value)}
-                  />
-                </label>
-                <label>
-                  Bid:
-                  <input
-                    type="number"
-                    value={reveal_price}
-                    onChange={(e) => setRevealPrice(e.target.value)}
                   />
                 </label>
                 <label>

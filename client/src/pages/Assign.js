@@ -6,7 +6,7 @@ export default function Assign() {
       <nav>
         <Link to="/assign/regSup">Supplier</Link>
         <Link to="/assign/regManf">Manufacturer</Link>
-        <Link to="/assign/Cus_homepage">Customer</Link>
+        <Link to="/assign/regCust">Customer</Link>
       </nav>
       <Outlet />
     </div>

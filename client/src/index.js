@@ -10,7 +10,7 @@ import RegSupplier from "./pages/RegSupplier";
 import Assign from "./pages/Assign";
 import Customer_homepage from "./pages/Customer_homepage";
 import reportWebVitals from "./reportWebVitals";
-
+import RegCustomer from "./pages/Regcust";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <BrowserRouter>
@@ -18,10 +18,12 @@ root.render(
       <Route path="/" element={<App />}>
         <Route path="homeSup" element={<Supplier />} />
         <Route path="homeManf" element={<Manufacturer />} />
+        <Route path="homeCust" element={<Customer_homepage />} />
+
         <Route path="assign" element={<Assign />}>
-        <Route path="regManf" element={<RegManufacturer />} />
-        <Route path="regSup" element={<RegSupplier />} />
-        <Route path="Cus_homepage" element={<Customer_homepage />} />
+          <Route path="regManf" element={<RegManufacturer />} />
+          <Route path="regSup" element={<RegSupplier />} />
+          <Route path="regCust" element={<RegCustomer />} />
         </Route>
       </Route>
     </Routes>

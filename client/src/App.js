@@ -55,6 +55,8 @@ function App() {
           setIsManufacturer(true);
         } else if (await contract.methods.isSupplier().call()) {
           setIsSupplier(true);
+        } else if(await contract.methods.isCustomer().call()){
+          setIsCustomer(true);
         }
       } catch (error) {
         // Catch any errors for any of the above operations.
@@ -98,7 +100,7 @@ function App() {
         {!isSupplier && !isManufacturer && !isCustomer && <Link to="/assign">Assign</Link>}
         {isSupplier && <Link to="/homeSup">MarketPlace</Link>}
         {isManufacturer && <Link to="/homeManf">MarketPlace</Link>}
-        {isCustomer && <Link to="/Cus_homepage">MarketPlace</Link>}
+        {isCustomer && <Link to="/homeCust">MarketPlace</Link>}
       </nav>
 
       <UserContext.Provider

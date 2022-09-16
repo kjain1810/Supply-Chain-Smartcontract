@@ -8,6 +8,35 @@ Made by:
 - P. Sahithi Reddy (2020121011)
 - Prince Varshney (2020121012)
 
+## Front End
+
+### Landing page
+- Select the type of user you are in the marketplace
+- The page takes you to a registration page for either Supplier, Manufacturer or Customer
+- After registration or if you have been already registered, you go to the home page
+
+### Supplier Registration
+- Select part type you are selling and the quantities available with you
+- Select number of bidders
+
+### Manufacturer Registration
+- Select your suppliers
+- Select your selling price
+
+### Supplier Home Page
+- You can start your bid phase, reveal phase or end  you auction\
+- You can monitor the bids you have recieved (blinded fashion)
+- You can update your quantity
+
+### Manufacturer Home Page
+- You can monitor the state of auction of your suppliers
+- You can place bids for your suppliers
+- You can update your selling price
+
+### Supplier Home Page
+- You can monitor what the manufacturers are selling
+- You can try to buy from manufacturers
+
 ## Public API
 
 ### User control operations

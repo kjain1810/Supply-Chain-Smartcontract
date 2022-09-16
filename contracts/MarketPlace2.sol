@@ -40,6 +40,7 @@ contract NewMarketPlace {
         }
         return false;
     }
+
     function isCustomer() public view returns (bool) {
         for (uint256 i = 1; i <= num_customer; i++) {
             if (customers[i].wallet == msg.sender) return true;
@@ -455,9 +456,7 @@ contract NewMarketPlace {
         uint256 actualPrice,
         uint256 actualQuantity,
         uint256 actualKey
-    ) public 
-    
-    returns (bool) {
+    ) public returns (bool) {
         require(manufacturerID <= num_manufacturer, "Invalid ID");
         require(supplierID <= num_supplier, "Invalid ID");
         require(
@@ -550,13 +549,15 @@ contract NewMarketPlace {
         );
         for (uint256 i = 0; i < selling; i++) {
             num_cars++;
-            cars[customerID].push(Car(
-                num_cars,
-                customerID,
-                manufacturerID,
-                manufacturers[manufacturerID].wheelSupplier,
-                manufacturers[manufacturerID].bodySupplier
-            ));
+            cars[customerID].push(
+                Car(
+                    num_cars,
+                    customerID,
+                    manufacturerID,
+                    manufacturers[manufacturerID].wheelSupplier,
+                    manufacturers[manufacturerID].bodySupplier
+                )
+            );
             emit CarSold(num_cars, manufacturerID, customerID);
         }
         manufacturers[manufacturerID].carsAvailable -= selling;
@@ -594,8 +595,13 @@ contract NewMarketPlace {
         require(customers[customerID].wallet == msg.sender, "Incorrect ID");
         // require(carID <= num_cars, "Invalid car");
         require(cars[customerID].length > idx);
-        return (cars[customerID][idx].tag, cars[customerID][idx].manufacturerID, cars[customerID][idx].wheelSupID, cars[customerID][idx].bodySupID);
-//        require(cars[carID].customerID == customerID, "Not your car!");
+        return (
+            cars[customerID][idx].tag,
+            cars[customerID][idx].manufacturerID,
+            cars[customerID][idx].wheelSupID,
+            cars[customerID][idx].bodySupID
+        );
+        //        require(cars[carID].customerID == customerID, "Not your car!");
         // for(uint256 i = 0; i < cars[customerID].length; i++)
         // {
         //     if(cars[customerID][i].tag == carID) {
@@ -768,6 +774,9 @@ contract NewMarketPlace {
         );
     }
 
+    /// @notice Fetch the ID for a supplier
+    /// @param supplier_addr The address of the supplier
+    /// @return tag The ID of the supplier
     function getSupplierID(address supplier_addr)
         public
         view
@@ -780,6 +789,15 @@ contract NewMarketPlace {
         }
     }
 
+    /// @notice Fetch the ID for a manufacturer
+    /// @param manufacturer_addr The address of the manufacturer
+    /// @return tag The ID of the manufacturer
+    /// @return wheelSupplier ID of wheel supplier
+    /// @return wheelQuant Quantity of wheels in inventory
+    /// @return bodySupplier ID of body supplier
+    /// @return bodyQuant Quantity of body in inventory
+    /// @return carsAvailable Cars available for selling
+    /// @return carPrice Price of a car
     function getManufacturerID(address manufacturer_addr)
         public
         view
@@ -807,6 +825,10 @@ contract NewMarketPlace {
             }
         }
     }
+
+    /// @notice Fetch the ID for the customer
+    /// @param customer_addr The address of the customer
+    /// @return tag The ID of the customer
     function getCustomerID(address customer_addr)
         public
         view
@@ -819,6 +841,9 @@ contract NewMarketPlace {
         }
     }
 
+    /// @notice Get the auction state of the supplier
+    /// @param tag Tag of supplier
+    /// @return state State of the auction
     function getAuctionState(uint256 tag) public view returns (uint256 state) {
         require(tag <= num_supplier);
         if (suppliers[tag].currentState == AuctionState.NOT_RUNNING) {
@@ -830,10 +855,20 @@ contract NewMarketPlace {
         }
     }
 
+    /// @notice Get number of bids for a supplier's auction
+    /// @param wallet Address of the supplier
+    /// @return uint256 Number of bids placed
     function getNumberOfBids(address wallet) public view returns (uint256) {
         return bidsTillNow[wallet].length;
     }
 
+    /// @notice Get a bid at index for a supplier
+    /// @param wallet Address of the supplier
+    /// @param idx Index of bid
+    /// @return blindPrice Bid price in blinded form
+    /// @return blindQuantity Bid quantity in blinded form
+    /// @return buyerID ID of bidder
+    /// @return correctReveal If bid has been correctly revealed
     function getSupplierBids(address wallet, uint256 idx)
         public
         view
@@ -853,25 +888,41 @@ contract NewMarketPlace {
             bidsTillNow[wallet][idx].correctReveal
         );
     }
+
+    /// @notice Get number of suppliers
     function getSuppliers() public view returns (uint256) {
         return num_supplier;
     }
+
+    /// @notice Get number of manufacturers
     function getManufacturers() public view returns (uint256) {
         return num_manufacturer;
     }
+
+    /// @notice Get number of customers
     function getCustomers() public view returns (uint256) {
         return num_customer;
     }
-    function setCarsprice(uint256 manufacturerID, uint256 price) public returns (uint256)
+
+    /// @notice Set price of car
+    /// @param manufacturerID ID of manufacturer to set price for
+    /// @param price Price to set
+    function setCarsprice(uint256 manufacturerID, uint256 price)
+        public
+        returns (uint256)
     {
-        manufacturers[manufacturerID].carPrice=price;
+        manufacturers[manufacturerID].carPrice = price;
         return price;
     }
 
-    function numberOfCarsBought(uint256 customerID) public view returns (uint256)
+    /// @notice Number of cars bought by customer
+    /// @param customerID ID of the customer
+    /// @return uint256 Number of cars
+    function numberOfCarsBought(uint256 customerID)
+        public
+        view
+        returns (uint256)
     {
         return cars[customerID].length;
     }
-
 }
-   

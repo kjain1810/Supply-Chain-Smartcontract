@@ -34,6 +34,8 @@ contract NewMarketPlace {
         uint256 bidsRevealed; // bids that have been revealed
     }
 
+    /// @notice Check whether user is supplier or not
+    /// @return bool True if sender is supplier, false otherwise
     function isSupplier() public view returns (bool) {
         for (uint256 i = 1; i <= num_supplier; i++) {
             if (suppliers[i].wallet == msg.sender) return true;
@@ -41,6 +43,8 @@ contract NewMarketPlace {
         return false;
     }
 
+    /// @notice Check whether user is customer or not
+    /// @return bool True if sender is customer, false otherwise
     function isCustomer() public view returns (bool) {
         for (uint256 i = 1; i <= num_customer; i++) {
             if (customers[i].wallet == msg.sender) return true;
@@ -48,10 +52,19 @@ contract NewMarketPlace {
         return false;
     }
 
+    /// @notice Get number of suppliers
+    /// @return uint256 Number of suppliers
     function numSuppliers() public view returns (uint256) {
         return num_supplier;
     }
 
+    /// @notice Get supplier details by their ID
+    /// @dev partType is 0 for body and 1 for wheels
+    /// @param id ID of the supplier
+    /// @return tag ID of the supplier
+    /// @return partType Part type the are selling
+    /// @return quantityAvailable Quantity available with the supplier
+    /// @return wallet Wallet address
     function getSupplierByID(uint256 id)
         public
         view
@@ -88,6 +101,8 @@ contract NewMarketPlace {
         address wallet; // wallet address
     }
 
+    /// @notice Check whether user is manufacturer or not
+    /// @return bool True if sender is manufacturer, false otherwise
     function isManufacturer() public view returns (bool) {
         for (uint256 i = 1; i <= num_manufacturer; i++) {
             if (manufacturers[i].wallet == msg.sender) return true;

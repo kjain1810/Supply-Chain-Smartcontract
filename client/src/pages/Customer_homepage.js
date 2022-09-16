@@ -12,13 +12,19 @@ export default function Customer_homepage() {
    const [cars_price, set_cars_price] = useState(0);
 
    const get_manufacturer_details = async () => {
+    try{
       let temp = await blockchain.contract.methods
          .getManufacturerID(manf_addr)
          .call();
+
       set_manf_ID(temp[0]);
       console.log("ID: ", temp);
       set_cars_available(temp[5]);
       set_cars_price(temp[6]);
+    }catch(error)
+    {
+      console.log(error)
+    }
    }
   return (
     <div>

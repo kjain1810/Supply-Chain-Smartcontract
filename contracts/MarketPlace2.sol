@@ -125,7 +125,7 @@ contract NewMarketPlace {
     mapping(uint256 => Supplier) public suppliers;
     mapping(uint256 => Manufacturer) public manufacturers;
     mapping(uint256 => Customer) public customers;
-    mapping(uint256 => Car) cars;
+    mapping(uint256 => Car[]) cars;
     mapping(address => Bid[]) bidsTillNow;
 
     uint256 num_supplier;
@@ -449,7 +449,9 @@ contract NewMarketPlace {
         uint256 actualPrice,
         uint256 actualQuantity,
         uint256 actualKey
-    ) public returns (bool) {
+    ) public 
+    
+    returns (bool) {
         require(manufacturerID <= num_manufacturer, "Invalid ID");
         require(supplierID <= num_supplier, "Invalid ID");
         require(
@@ -542,13 +544,13 @@ contract NewMarketPlace {
         );
         for (uint256 i = 0; i < selling; i++) {
             num_cars++;
-            cars[num_cars] = Car(
+            cars[customerID].push(Car(
                 num_cars,
                 customerID,
                 manufacturerID,
                 manufacturers[manufacturerID].wheelSupplier,
                 manufacturers[manufacturerID].bodySupplier
-            );
+            ));
             emit CarSold(num_cars, manufacturerID, customerID);
         }
         manufacturers[manufacturerID].carsAvailable -= selling;
@@ -567,12 +569,12 @@ contract NewMarketPlace {
 
     /// @notice Verify details of your car
     /// @param customerID Tag of the customer
-    /// @param carID Tag of the car
+    /// @param idx Tag of the car
     /// @return id Tag of the car
     /// @return manufacturerID Tag of the manufacturer who sold the car
     /// @return wheelSupplier Tag of wheel supplier
     /// @return bodySupplier Tag of body supplier
-    function verifyCar(uint256 customerID, uint256 carID)
+    function verifyCar(uint256 customerID, uint256 idx)
         public
         view
         returns (
@@ -584,14 +586,22 @@ contract NewMarketPlace {
     {
         require(customerID <= num_customer, "Invalid car");
         require(customers[customerID].wallet == msg.sender, "Incorrect ID");
-        require(carID <= num_cars, "Invalid car");
-        require(cars[carID].customerID == customerID, "Not your car!");
-        return (
-            carID,
-            cars[carID].manufacturerID,
-            cars[carID].wheelSupID,
-            cars[carID].bodySupID
-        );
+        // require(carID <= num_cars, "Invalid car");
+        require(cars[customerID].length > idx);
+        return (cars[customerID][idx].tag, cars[customerID][idx].manufacturerID, cars[customerID][idx].wheelSupID, cars[customerID][idx].bodySupID);
+//        require(cars[carID].customerID == customerID, "Not your car!");
+        // for(uint256 i = 0; i < cars[customerID].length; i++)
+        // {
+        //     if(cars[customerID][i].tag == carID) {
+        //         return (
+        //             carID,
+        //             cars[customerID][i].manufacturerID,
+        //             cars[customerID][i].wheelSupID,
+        //             cars[customerID][i].bodySupID
+        //         );
+        //     }
+        // }
+        // return (0,0,0,0);
     }
 
     /// @notice Add a supplier to the supply chain
@@ -835,7 +845,16 @@ contract NewMarketPlace {
     function getCustomers() public view returns (uint256) {
         return num_customer;
     }
+    function setCarsprice(uint256 manufacturerID, uint256 price) public returns (uint256)
+    {
+        manufacturers[manufacturerID].carPrice=price;
+        return price;
+    }
 
+    function numberOfCarsBought(uint256 customerID) public view returns (uint256)
+    {
+        return cars[customerID].length;
+    }
 
 }
    

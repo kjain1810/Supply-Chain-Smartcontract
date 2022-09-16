@@ -177,7 +177,7 @@ export default function Manufacturer() {
             <input
               type="number"
               value={quant_toBid}
-              onChange={(e) => setquant_toBid(e.target.value)}
+              onChange={(e) => setquant_toBid(parseInt(e.target.value))}
             />
           </label>
           <label>
@@ -185,7 +185,7 @@ export default function Manufacturer() {
             <input
               type="number"
               value={Bid}
-              onChange={(e) => setBid(e.target.value)}
+              onChange={(e) => setBid(parseInt(e.target.value))}
             />
           </label>
           <label>
@@ -193,18 +193,24 @@ export default function Manufacturer() {
             <input
               type="number"
               value={blindkey}
-              onChange={(e) => setBlindkey(e.target.value)}
+              onChange={(e) => setBlindkey(parseInt(e.target.value))}
             />
           </label>
           <button
             type="button"
             onClick={async () => {
+              console.log("PLACING THE BID")
+              console.log("Price", Bid)
+              console.log("Quantity",quant_toBid)
+              console.log("Key",blindkey )
               if (partType == "Body" && body_sup_auction_state == "BIDDING") {
-                if (quant_toBid > wheel_quantity) {
-                  alert(
-                    "You don't have enough wheel quantity, buy wheels first"
-                  );
-                } else {
+                // if (quant_toBid > wheel_quantity) {
+                //   alert(
+                //     "You don't have enough wheel quantity, buy wheels first"
+                //   );
+                // } else {
+                  console.log("Blind Bid", Bid + blindkey);
+                  console.log("Blind Quant", quant_toBid + blindkey);
                   try {
                     await blockchain.contract.methods
                       .manufacturerPlacesBid(
@@ -215,19 +221,21 @@ export default function Manufacturer() {
                         Web3.utils.soliditySha3(blindkey)
                       )
                       .send({
-                        value: Bid * 1000000000000000000,
+                        value: (Bid*quant_toBid)*10000000000,
                         from: blockchain.userAccount,
                       });
                     alert("Bidding for bodies successful");
                   } catch (error) {
                     console.log(error);
                     alert("Error bidding");
-                  }
+                  
                 }
               } else if (
                 partType == "Wheels" &&
                 wheel_sup_auction_state == "BIDDING"
               ) {
+                console.log("Blind Bid", Bid+blindkey)
+                console.log("Blind Quant",quant_toBid+blindkey)
                 try {
                   await blockchain.contract.methods
                     .manufacturerPlacesBid(
@@ -238,7 +246,7 @@ export default function Manufacturer() {
                       Web3.utils.soliditySha3(blindkey)
                     )
                     .send({
-                      value: Bid * 1000000000000000000,
+                      value: (Bid*quant_toBid)*100000000000 ,
                       from: blockchain.userAccount,
                     });
                   alert("Bidding for wheels successful");
@@ -295,8 +303,8 @@ export default function Manufacturer() {
                 type="button"
                 onClick={async () => {
                   if (
-                    body_sup_auction_state == "REVEALING" ||
-                    wheel_sup_auction_state == "REVEALING"
+                    wheel_sup_auction_state == "REVEALING" ||
+                    body_sup_auction_state == "REVEALING"
                   ) {
                     console.log("ID", ID);
                     console.log("reveal_to_supplier", reveal_to_supplier);

@@ -38,6 +38,7 @@ export default function Supplier() {
     }
     setBidDetails(bids);
     console.log(bids);
+    
   };
 
   useEffect(() => {
@@ -129,7 +130,7 @@ export default function Supplier() {
                     <td>{bid[2]}</td>
                     <td>{bid[0]}</td>
                     <td> </td>
-                    <td>{bid[3]}</td>
+                    <td>{bid[3]?'true':'false'}</td>
                   </tr>
                 ))}
               </tbody>

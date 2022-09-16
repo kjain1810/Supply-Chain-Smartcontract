@@ -44,7 +44,7 @@ export default function RegManufacturer() {
         flex: "1",
       }}
     >
-      <h1>Manufacturer Registration</h1>
+      <h1 style={{display : "flex", justifyContent: "center", alignContent: "center"}}>Manufacturer Registration</h1>
       <div style={{ display: "flex", height: "100%" }}>
         <form
           style={{
@@ -53,35 +53,41 @@ export default function RegManufacturer() {
             justifyContent: "space-around",
             alignItems: "center",
             height: "100%",
-            width: "40%",
+            width: "50%",
+            border: "1px solid black"
           }}
         >
-          <label>
-            Body Supplier:
+          <div class="form-group">
+            <label>Body Supplier</label>
+            
             <input
               type="number"
+              class="form-control"
               value={bodySup}
               onChange={(e) => setBodySup(e.target.value)}
             />
-          </label>
-          <label>
-            Wheel Supplier:
+          </div>
+          <div class="form-group">
+            <lable>Wheel Supplier</lable>
             <input
               type="number"
               value={wheelSup}
+              class="form-control"
               onChange={(e) => setWheelSup(e.target.value)}
             />
-          </label>
-          <label>
-            Set Cars Price:
+          </div>
+          <div class="form-group">
+            <label>Set Cars Price</label>
             <input
               type="number"
               value={askPrice}
+              class="form-control"
               onChange={(e) => setAskPrice(e.target.value)}
             />
-          </label>
+          </div>
           <button
             type="button"
+            class="btn btn-primary"
             onClick={async () => {
               try {
                 await blockchain.contract.methods
@@ -101,13 +107,13 @@ export default function RegManufacturer() {
             Submit
           </button>
         </form>
-        <table>
+        <table class="table table-striped" style={{width: "50%", border: "1px solid black", height: "100%"}}>
           <thead>
             <tr>
-              <th>tag</th>
-              <th>partType</th>
-              <th>quantity</th>
-              <th>address</th>
+              <th scope="col">tag</th>
+              <th scope="col">partType</th>
+              <th scope="col">quantity</th>
+              <th scope="col">address</th>
             </tr>
           </thead>
           <tbody>

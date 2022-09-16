@@ -50,9 +50,135 @@ export default function Customer_homepage() {
     }, [blockchain]);
 
   return (
-    <div>
-      <h1>Welcome Customer!</h1>
-      <h3>Get Manufacturer Details</h3>
+    <div  style={{
+      display: "flex",
+      flexDirection: "column",
+      flex: "1",
+    }}>
+      <h1 style={{display: "flex", placeContent: "center"}}>Customer Homepage</h1>
+      <div style={{display: "flex", flex: 1}}>
+        <div style={{display: "flex", flexDirection: "column",height: "100%",border: "1px solid black", width: "33%"}}>
+          <h2 style={{display: "flex", placeContent: "center"}}>Get Manufacturer Details</h2>
+          <form>
+          <div className="form-group">
+            <label>Enter manufacturer Address</label>
+            <input
+              type="string" //to be changed to address, nope works
+              value={manf_addr}
+              className="form-control"
+              onChange={(e) => set_manf_addr(e.target.value)}
+            />
+          </div>
+          <button
+            type="button"
+            className="btn btn-primary"
+            onClick={async () => {
+              get_manufacturer_details();
+            }}
+          >
+            Get Details
+          </button>
+        </form>
+        <table class="table table-striped">
+          <thead>Details</thead>
+          <thead>
+            <tr>
+              <th>Manufacturer ID</th>
+              <th>Cars Available</th>
+              <th>Cars Price</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>{manf_ID}</td>
+              <td>{cars_available}</td>
+              <td> {cars_price}</td>
+            </tr>
+          </tbody>
+        </table>
+        </div>
+        <div style={{display: "flex", flexDirection: "column",height: "100%",border: "1px solid black", width: "34%"}}>
+          <h2 style={{display: "flex", placeContent: "center"}}>Purchase Form</h2>
+          <form>
+          <div className="form-group">
+            <label>Enter Manufacturer ID</label>
+            <input
+              className="form-control"
+              type="number"
+              value={manf_ID}
+              onChange={(e) => set_manf_ID(e.target.value)}
+            />
+          </div>
+          <div className="form-group">
+            <label>Enter Quantity</label>
+            <input
+              className="form-control"
+              type="number"
+              value={quant_needed}
+              onChange={(e) => set_quant_needed(e.target.value)}
+            />
+          </div>
+          <div className="form-group">
+            <label>Enter Price</label>
+            <input
+              className="form-control"
+              type="number"
+              value={price_paying}
+              onChange={(e) => set_price_paying(parseInt(e.target.value))}
+            />
+          </div>
+          <button
+            type="button"
+            className="btn btn-primary"
+            onClick={async () => {
+              try {
+                await blockchain.contract.methods
+                  .customerBuysCar(ID, manf_ID, price_paying, quant_needed)
+                  .send({ value: price_paying*100000000,from: blockchain.account });
+              } catch (err) {
+                console.log(err);
+                alert("Error in making purchase");
+              }
+            }}
+          >
+            Make Purchase
+          </button>
+          </form>
+        </div>
+        <div style={{display: "flex", flexDirection: "column",height: "100%",border: "1px solid black", width:"33%"}}>
+          <h2 style={{display: "flex", placeContent: "center"}}>Verify Car</h2>
+          <button
+            type="button"
+            className="btn btn-primary"
+            onClick={async () => {
+              verifycars();
+            }}
+          >
+            verify
+          </button>
+          <table className="table table-stripped">
+          <thead>
+            <tr>
+              <th>Car ID</th>
+              <th>Manufacturer ID</th>
+              <th>Wheel Supplier ID</th>
+              <th>Body Supplier ID</th>
+            </tr>
+          </thead>
+          <tbody>
+            {cars_details.map((cars) => (
+              <tr key={cars.id}>
+                <td>{cars.id}</td>
+                <td> {cars.manufacturerID}</td>
+                <td>{cars.wheelSupplier}</td>
+                <td> {cars.bodySupplier}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        </div>
+      </div>
+      {/* <h3>Get Manufacturer Details</h3>
       <div
         style={{
           display: "flex",
@@ -196,8 +322,8 @@ export default function Customer_homepage() {
               </tr>
             ))}
           </tbody>
-        </table>
-      </div>
+        </table> */}
+      {/* </div> */}
     </div>
   );
 

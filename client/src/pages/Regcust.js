@@ -11,10 +11,12 @@ export default function RegSupplier() {
         flex: "1",
       }}
     >
-      <h1>Customer Registration</h1>
-        <form>
+      <h1 style={{display: "flex", placeContent: "center", borderBottom: "1px solid black"}}>Customer Registration</h1>
+        <form style={{display: "flex", placeContent: "center"}}>
         <button
           type="button"
+          class="btn btn-primary"
+          
           onClick={async () => {
             try {
               await blockchain.contract.methods

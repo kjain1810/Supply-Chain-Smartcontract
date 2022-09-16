@@ -14,7 +14,7 @@ export default function RegSupplier() {
         flex: "1",
       }}
     >
-      <h1>Supplier Registration</h1>
+      <h1 style={{display: "flex", placeContent: "center"}}>Supplier Registration</h1>
       <form
         style={{
           display: "flex",
@@ -22,45 +22,55 @@ export default function RegSupplier() {
           justifyContent: "space-around",
           alignItems: "center",
           flex: "100%",
+          border: "1px solid black"
         }}
       >
-        <label>
-          Part Type:
-          <div>
+        <div class="form-group">
+          <label>Part Type</label>
+      
+          <div class="custom-control custom-radio">
             <input
               type="radio"
               value="Body"
+              class="custom-control-input"
               checked={partType === "Body"}
               onChange={(e) => setPartType(e.target.value)}
-            />{" "}
-            Body
+            />
+            <label class="custom-control-label">Body</label>
+           </div>
+           <div class="custom-control custom-radio">
             <input
               type="radio"
               value="Wheels"
+              class="custom-control-input"
               checked={partType === "Wheels"}
               onChange={(e) => setPartType(e.target.value)}
-            />{" "}
-            Wheels
+            />
+            <label class="custom-control-label">Wheels</label>
           </div>
-        </label>
-        <label>
-          Quantity:
+        </div>
+        <div class="form-group">
+          <label>Quantity</label>
+          
           <input
             type="number"
             value={quan}
+            class="form-control"
             onChange={(e) => setQuant(e.target.value)}
           />
-        </label>
-        <label>
-          Bidder Count:
+        </div >
+        <div class="form-group">
+          <label>Bidder Count</label>
           <input
             type="number"
             value={bidderCount}
+            class="form-control"
             onChange={(e) => setBidderCount(e.target.value)}
           />
-        </label>
+        </div>
         <button
           type="button"
+          class="btn btn-primary"
           onClick={async () => {
             try {
               await blockchain.contract.methods

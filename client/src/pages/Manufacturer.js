@@ -77,12 +77,289 @@ export default function Manufacturer() {
         flex: "1",
       }}
     >
-      <h1>Manufacturer Homepage</h1>
-      <h2>Number of cars you have : {cars_available}</h2>
-      <h3>Number of bodies you have :{body_quantity} </h3>
-      <h3>Number of wheels you have :{wheel_quantity} </h3>
+      <h1 style={{display: "flex", placeContent: "center", borderBottom: "1px solid black"}}>Manufacturer Homepage</h1>
+      <table class="table table-striped" >
+        <thead>
+          <tr>
+            <th scope="col">Cars</th>
+            <th scope="col">Bodies</th>
+            <th scope="col">Wheels</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th>{cars_available}</th>
+            <th>{body_quantity}</th>
+            <th>{wheel_quantity}</th>
+          </tr>
+        </tbody>
+      </table>
+
+      <div style={{display: "flex", flex: 1}}>
+        <div style={{display: "flex", flexDirection: "column",height: "100%",border: "1px solid black", width: "33%" }}>
+          <h2 style={{display: "flex", placeContent: "center"}}>Bidding Form</h2>
+          <form
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-around",
+            alignItems: "center",
+            height: "100%",
+          }}
+        >
+          
+          <div class="form-group">
+          <label>Part Type</label>
+      
+          <div class="custom-control custom-radio">
+            <input
+              type="radio"
+              value="Body"
+              class="custom-control-input"
+              checked={partType === "Body"}
+              onChange={(e) => setPartType(e.target.value)}
+            />
+            <label class="custom-control-label">Body</label>
+           </div>
+           <div class="custom-control custom-radio">
+            <input
+              type="radio"
+              value="Wheels"
+              class="custom-control-input"
+              checked={partType === "Wheels"}
+              onChange={(e) => setPartType(e.target.value)}
+            />
+            <label class="custom-control-label">Wheels</label>
+          </div>
+        </div>
+          <div className="form-group">
+            <label>Supplier ID</label>
+            <input
+              type="number"
+              value={bidto_supID}
+              className="form-control"
+              onChange={(e) => setSupID_toBid(e.target.value)}
+            />
+          </div>
+          <div className="form-group">
+            <label>Bid Price</label>
+            <input
+              type="number"
+              value={Bid}
+              className="form-control"
+              onChange={(e) => setBid(parseInt(e.target.value))}
+            />
+          </div>
+          <div className="form-group">
+            <label>quantity</label>
+            <input
+              type="number"
+              value={quant_toBid}
+              className="form-control"
+              onChange={(e) => setquant_toBid(parseInt(e.target.value))}
+            />
+          </div>
+
+          <div className="form-group">
+            <label>Blind key</label>
+            <input
+              type="number"
+              value={blindkey}
+              className="form-control"
+              onChange={(e) => setBlindkey(parseInt(e.target.value))}
+            />
+          </div>
+          <button
+            type="button"
+            className="btn btn-primary"
+            onClick={async () => {
+              console.log("PLACING THE BID");
+              console.log("Price", Bid);
+              console.log("Quantity", quant_toBid);
+              console.log("Key", blindkey);
+              if (partType == "Body" && body_sup_auction_state == "BIDDING") {
+                // if (quant_toBid > wheel_quantity) {
+                //   alert(
+                //     "You don't have enough wheel quantity, buy wheels first"
+                //   );
+                // } else {
+                console.log("Blind Bid", Bid + blindkey);
+                console.log("Blind Quant", quant_toBid + blindkey);
+                try {
+                  await blockchain.contract.methods
+                    .manufacturerPlacesBid(
+                      ID,
+                      bidto_supID,
+                      Web3.utils.soliditySha3(Bid + blindkey),
+                      Web3.utils.soliditySha3(quant_toBid + blindkey),
+                      Web3.utils.soliditySha3(blindkey)
+                    )
+                    .send({
+                      value: Bid * quant_toBid * 10000000000,
+                      from: blockchain.userAccount,
+                    });
+                  alert("Bidding for bodies successful");
+                } catch (error) {
+                  console.log(error);
+                  alert("Error bidding");
+                }
+              } else if (
+                partType == "Wheels" &&
+                wheel_sup_auction_state == "BIDDING"
+              ) {
+                console.log("Blind Bid", Bid + blindkey);
+                console.log("Blind Quant", quant_toBid + blindkey);
+                try {
+                  await blockchain.contract.methods
+                    .manufacturerPlacesBid(
+                      ID,
+                      bidto_supID,
+                      Web3.utils.soliditySha3(Bid + blindkey),
+                      Web3.utils.soliditySha3(quant_toBid + blindkey),
+                      Web3.utils.soliditySha3(blindkey)
+                    )
+                    .send({
+                      value: Bid * quant_toBid * 100000000000,
+                      from: blockchain.userAccount,
+                    });
+                  alert("Bidding for wheels successful");
+                } catch (error) {
+                  console.log(error);
+                  alert("Error bidding");
+                }
+              } else {
+                alert("Auction not running");
+                refresh();
+              }
+            }}
+          >
+            Submit
+          </button>
+          </form>
+        </div>
+        <div style={{display: "flex", flexDirection: "column",height: "100%",border: "1px solid black", width: "34%"}}>
+        <h2 style={{display: "flex", placeContent: "center"}}>Reveal Form</h2>
+        <form
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-around",
+          alignItems: "center",
+          height: "100%",
+         
+        }}>
+                
+                <div className="form-group">
+                  <lable>Reveal to supplier</lable>
+                  <input
+                    className="form-control"
+                    type="number"
+                    value={reveal_to_supplier}
+                    onChange={(e) => setRevealtoSupplier(e.target.value)}
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Bid Price</label>
+                  <input
+                    type="number"
+                    className="form-control"
+                    value={reveal_price}
+                    onChange={(e) => setRevealPrice(e.target.value)}
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Quantity</label>
+                  <input
+                    type="number"
+                    className="form-control"
+                    value={reveal_quantity}
+                    onChange={(e) => setRevealQuantity(e.target.value)}
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Blind key</label>
+                  <input
+                    className="form-control"
+                    type="number"
+                    value={reveal_blindkey}
+                    onChange={(e) => setRevealBlindkey(e.target.value)}
+                  />
+                </div>
+              
+              <button
+                type="button"
+                className="btn btn-primary"
+                onClick={async () => {
+                  if (
+                    wheel_sup_auction_state == "REVEALING" ||
+                    body_sup_auction_state == "REVEALING"
+                  ) {
+                    console.log("ID", ID);
+                    console.log("reveal_to_supplier", reveal_to_supplier);
+                    console.log("reveal_quantity", reveal_quantity);
+                    console.log("Revealed price", reveal_price);
+                    console.log("reveal_blindkey", reveal_blindkey);
+                    try {
+                      await blockchain.contract.methods
+                        .manufacturerRevealsBid(
+                          ID,
+                          reveal_to_supplier,
+                          reveal_price,
+                          reveal_quantity,
+                          reveal_blindkey
+                        )
+                        .send({ from: blockchain.userAccount });
+                    } catch (error) {
+                      console.log(error);
+                      alert("Something went wrong!");
+                    }
+                  } else {
+                    alert("Auction not running");
+                  }
+                }}
+              >
+                Reveal
+              </button>
+              </form>
+        </div>
+        <div style={{display: "flex", flexDirection: "column",height: "100%",border: "1px solid black", width: "33%"}}>
+        <h2 style={{display: "flex", placeContent: "center"}}>Supplier's Details</h2>
+        <table className="table table-striped">
+          <thead>
+            <tr>
+              <th>Tag</th>
+              <th>Part Type </th>
+              <th>Auction_state</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>{wheel_sup}</td>
+              <td>"Wheel"</td>
+              <td> {wheel_sup_auction_state}</td>
+            </tr>
+            <tr>
+              <td>{body_sup}</td>
+              <td>"Body"</td>
+              <td> {body_sup_auction_state}</td>
+            </tr>
+          </tbody>
+        </table>
+        <button
+                  type="button"
+                  className="btn btn-primary"
+                  onClick={async () => {
+                    window.location.reload();
+                  }}
+                >
+                  Refresh
+                </button>
+        </div>
+      </div>
+      
+      
   
-      <div style={{ display: "flex", height: "100%" }}>
+      {/* <div style={{ display: "flex", height: "100%" }}>
         <form
           style={{
             display: "flex",
@@ -317,7 +594,7 @@ export default function Manufacturer() {
             </tr>
           </tbody>
         </table>
-      </div>
+      </div> */}
     </div>
   );
 }

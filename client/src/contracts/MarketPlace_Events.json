@@ -1568,7 +1568,7 @@
                 }
               ]
             },
-            "name": "abi_encode_tuple_t_uint256_t_uint256_t_uint256_t_uint256_t_uint256_t_enum$_AuctionState_$4064_t_address_t_uint256_t_uint256_t_uint256__to_t_uint256_t_uint256_t_uint256_t_uint256_t_uint256_t_uint8_t_address_t_uint256_t_uint256_t_uint256__fromStack_reversed",
+            "name": "abi_encode_tuple_t_uint256_t_uint256_t_uint256_t_uint256_t_uint256_t_enum$_AuctionState_$4075_t_address_t_uint256_t_uint256_t_uint256__to_t_uint256_t_uint256_t_uint256_t_uint256_t_uint256_t_uint8_t_address_t_uint256_t_uint256_t_uint256__fromStack_reversed",
             "nodeType": "YulFunctionDefinition",
             "parameters": [
               {
@@ -2264,7 +2264,7 @@
                 }
               ]
             },
-            "name": "abi_encode_tuple_t_uint256_t_int256_t_uint256_t_enum$_AuctionState_$4064_t_address_t_uint256_t_uint256_t_uint256__to_t_uint256_t_int256_t_uint256_t_uint8_t_address_t_uint256_t_uint256_t_uint256__fromStack_reversed",
+            "name": "abi_encode_tuple_t_uint256_t_int256_t_uint256_t_enum$_AuctionState_$4075_t_address_t_uint256_t_uint256_t_uint256__to_t_uint256_t_int256_t_uint256_t_uint8_t_address_t_uint256_t_uint256_t_uint256__fromStack_reversed",
             "nodeType": "YulFunctionDefinition",
             "parameters": [
               {
@@ -2523,7 +2523,7 @@
           }
         ]
       },
-      "contents": "{\n    { }\n    function abi_encode_tuple_t_uint256__to_t_uint256__fromStack_reversed(headStart, value0) -> tail\n    {\n        tail := add(headStart, 32)\n        mstore(headStart, value0)\n    }\n    function abi_encode_tuple_t_address_payable__to_t_address_payable__fromStack_reversed(headStart, value0) -> tail\n    {\n        tail := add(headStart, 32)\n        mstore(headStart, and(value0, sub(shl(160, 1), 1)))\n    }\n    function abi_decode_tuple_t_uint256(headStart, dataEnd) -> value0\n    {\n        if slt(sub(dataEnd, headStart), 32) { revert(0, 0) }\n        value0 := calldataload(headStart)\n    }\n    function abi_encode_enum_AuctionState(value, pos)\n    {\n        if iszero(lt(value, 4))\n        {\n            mstore(0, shl(224, 0x4e487b71))\n            mstore(4, 0x21)\n            revert(0, 0x24)\n        }\n        mstore(pos, value)\n    }\n    function abi_encode_tuple_t_uint256_t_uint256_t_uint256_t_uint256_t_uint256_t_enum$_AuctionState_$4064_t_address_t_uint256_t_uint256_t_uint256__to_t_uint256_t_uint256_t_uint256_t_uint256_t_uint256_t_uint8_t_address_t_uint256_t_uint256_t_uint256__fromStack_reversed(headStart, value9, value8, value7, value6, value5, value4, value3, value2, value1, value0) -> tail\n    {\n        tail := add(headStart, 320)\n        mstore(headStart, value0)\n        mstore(add(headStart, 32), value1)\n        mstore(add(headStart, 64), value2)\n        mstore(add(headStart, 96), value3)\n        mstore(add(headStart, 128), value4)\n        abi_encode_enum_AuctionState(value5, add(headStart, 160))\n        mstore(add(headStart, 192), and(value6, sub(shl(160, 1), 1)))\n        mstore(add(headStart, 224), value7)\n        mstore(add(headStart, 256), value8)\n        mstore(add(headStart, 288), value9)\n    }\n    function abi_encode_tuple_t_uint256_t_address__to_t_uint256_t_address__fromStack_reversed(headStart, value1, value0) -> tail\n    {\n        tail := add(headStart, 64)\n        mstore(headStart, value0)\n        mstore(add(headStart, 32), and(value1, sub(shl(160, 1), 1)))\n    }\n    function abi_encode_tuple_t_uint256_t_int256_t_uint256_t_enum$_AuctionState_$4064_t_address_t_uint256_t_uint256_t_uint256__to_t_uint256_t_int256_t_uint256_t_uint8_t_address_t_uint256_t_uint256_t_uint256__fromStack_reversed(headStart, value7, value6, value5, value4, value3, value2, value1, value0) -> tail\n    {\n        tail := add(headStart, 256)\n        mstore(headStart, value0)\n        mstore(add(headStart, 32), value1)\n        mstore(add(headStart, 64), value2)\n        abi_encode_enum_AuctionState(value3, add(headStart, 96))\n        mstore(add(headStart, 128), and(value4, sub(shl(160, 1), 1)))\n        mstore(add(headStart, 160), value5)\n        mstore(add(headStart, 192), value6)\n        mstore(add(headStart, 224), value7)\n    }\n    function abi_decode_tuple_t_uint256t_uint256(headStart, dataEnd) -> value0, value1\n    {\n        if slt(sub(dataEnd, headStart), 64) { revert(0, 0) }\n        value0 := calldataload(headStart)\n        value1 := calldataload(add(headStart, 32))\n    }\n}",
+      "contents": "{\n    { }\n    function abi_encode_tuple_t_uint256__to_t_uint256__fromStack_reversed(headStart, value0) -> tail\n    {\n        tail := add(headStart, 32)\n        mstore(headStart, value0)\n    }\n    function abi_encode_tuple_t_address_payable__to_t_address_payable__fromStack_reversed(headStart, value0) -> tail\n    {\n        tail := add(headStart, 32)\n        mstore(headStart, and(value0, sub(shl(160, 1), 1)))\n    }\n    function abi_decode_tuple_t_uint256(headStart, dataEnd) -> value0\n    {\n        if slt(sub(dataEnd, headStart), 32) { revert(0, 0) }\n        value0 := calldataload(headStart)\n    }\n    function abi_encode_enum_AuctionState(value, pos)\n    {\n        if iszero(lt(value, 4))\n        {\n            mstore(0, shl(224, 0x4e487b71))\n            mstore(4, 0x21)\n            revert(0, 0x24)\n        }\n        mstore(pos, value)\n    }\n    function abi_encode_tuple_t_uint256_t_uint256_t_uint256_t_uint256_t_uint256_t_enum$_AuctionState_$4075_t_address_t_uint256_t_uint256_t_uint256__to_t_uint256_t_uint256_t_uint256_t_uint256_t_uint256_t_uint8_t_address_t_uint256_t_uint256_t_uint256__fromStack_reversed(headStart, value9, value8, value7, value6, value5, value4, value3, value2, value1, value0) -> tail\n    {\n        tail := add(headStart, 320)\n        mstore(headStart, value0)\n        mstore(add(headStart, 32), value1)\n        mstore(add(headStart, 64), value2)\n        mstore(add(headStart, 96), value3)\n        mstore(add(headStart, 128), value4)\n        abi_encode_enum_AuctionState(value5, add(headStart, 160))\n        mstore(add(headStart, 192), and(value6, sub(shl(160, 1), 1)))\n        mstore(add(headStart, 224), value7)\n        mstore(add(headStart, 256), value8)\n        mstore(add(headStart, 288), value9)\n    }\n    function abi_encode_tuple_t_uint256_t_address__to_t_uint256_t_address__fromStack_reversed(headStart, value1, value0) -> tail\n    {\n        tail := add(headStart, 64)\n        mstore(headStart, value0)\n        mstore(add(headStart, 32), and(value1, sub(shl(160, 1), 1)))\n    }\n    function abi_encode_tuple_t_uint256_t_int256_t_uint256_t_enum$_AuctionState_$4075_t_address_t_uint256_t_uint256_t_uint256__to_t_uint256_t_int256_t_uint256_t_uint8_t_address_t_uint256_t_uint256_t_uint256__fromStack_reversed(headStart, value7, value6, value5, value4, value3, value2, value1, value0) -> tail\n    {\n        tail := add(headStart, 256)\n        mstore(headStart, value0)\n        mstore(add(headStart, 32), value1)\n        mstore(add(headStart, 64), value2)\n        abi_encode_enum_AuctionState(value3, add(headStart, 96))\n        mstore(add(headStart, 128), and(value4, sub(shl(160, 1), 1)))\n        mstore(add(headStart, 160), value5)\n        mstore(add(headStart, 192), value6)\n        mstore(add(headStart, 224), value7)\n    }\n    function abi_decode_tuple_t_uint256t_uint256(headStart, dataEnd) -> value0, value1\n    {\n        if slt(sub(dataEnd, headStart), 64) { revert(0, 0) }\n        value0 := calldataload(headStart)\n        value1 := calldataload(add(headStart, 32))\n    }\n}",
       "id": 8,
       "language": "Yul",
       "name": "#utility.yul"
@@ -2532,22 +2532,22 @@
   "sourceMap": "91:3240:3:-:0;;;;;;;;;;;;;;;;;;;",
   "deployedSourceMap": "91:3240:3:-:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;191:31:4;;;;;;;;;160:25:8;;;148:2;133:18;191:31:4;;;;;;;;65:28:5;;;;;-1:-1:-1;;;;;65:28:5;;;;;;-1:-1:-1;;;;;376:32:8;;;358:51;;346:2;331:18;65:28:5;196:219:8;346:53:4;;;;;;:::i;:::-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;-1:-1:-1;;;;;346:53:4;;;;;;;;;;;;;;;;;;;;:::i;261:27::-;;;;;;405:45;;;;;;:::i;:::-;;;;;;;;;;;;;;;;;;-1:-1:-1;;;;;405:45:4;;;;;;;1915:25:8;;;-1:-1:-1;;;;;1976:32:8;;;1971:2;1956:18;;1949:60;1888:18;405:45:4;1741:274:8;295:45:4;;;;;;:::i;:::-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;-1:-1:-1;;;;;295:45:4;;;;;;;;;;;;;;;;;;;:::i;2377:107:5:-;;;;;;:::i;:::-;;:::i;228:27:4:-;;;;;;158;;;;;;2377:107:5;2437:7;2468:1;2463;:6;;:14;;2476:1;2463:14;;;2472:1;2463:14;2456:21;2377:107;-1:-1:-1;;;2377:107:5:o;420:180:8:-;479:6;532:2;520:9;511:7;507:23;503:32;500:52;;;548:1;545;538:12;500:52;-1:-1:-1;571:23:8;;420:180;-1:-1:-1;420:180:8:o;605:240::-;689:1;682:5;679:12;669:143;;734:10;729:3;725:20;722:1;715:31;769:4;766:1;759:15;797:4;794:1;787:15;669:143;821:18;;605:240::o;850:886::-;1209:4;1251:3;1240:9;1236:19;1228:27;;1282:6;1271:9;1264:25;1325:6;1320:2;1309:9;1305:18;1298:34;1368:6;1363:2;1352:9;1348:18;1341:34;1411:6;1406:2;1395:9;1391:18;1384:34;1455:6;1449:3;1438:9;1434:19;1427:35;1471:57;1523:3;1512:9;1508:19;1500:6;1471:57;:::i;:::-;-1:-1:-1;;;;;1565:32:8;;;;1559:3;1544:19;;1537:61;1629:3;1614:19;;1607:35;;;;1673:3;1658:19;;1651:35;;;;1717:3;1702:19;;;1695:35;850:886;;-1:-1:-1;;;;;;850:886:8:o;2020:740::-;2376:25;;;2432:2;2417:18;;2410:34;;;2475:2;2460:18;;2453:34;;;2363:3;2348:19;;2496:56;2548:2;2533:18;;2525:6;2496:56;:::i;:::-;-1:-1:-1;;;;;2589:32:8;;;;2583:3;2568:19;;2561:61;2609:3;2638:19;;2631:35;;;;2697:3;2682:19;;2675:35;;;;2741:3;2726:19;;;2719:35;2020:740;;-1:-1:-1;;;;2020:740:8:o;2765:248::-;2833:6;2841;2894:2;2882:9;2873:7;2869:23;2865:32;2862:52;;;2910:1;2907;2900:12;2862:52;-1:-1:-1;;2933:23:8;;;3003:2;2988:18;;;2975:32;;-1:-1:-1;2765:248:8:o",
   "source": "pragma solidity >=0.8.16;\n\nimport {MarketPlace_Storage} from \"./MarketPlace_Storage.sol\";\n\ncontract MarketPlace_Events is MarketPlace_Storage {\n    // @notice Triggered to start auction for a supplier\n    // @param supplierID Tag ID of the supplier\n    // @param startTime Blockheight when auction started\n    event StartSupplierAuction(uint256 supplierID, uint256 startTime);\n\n    // @notice Triggered to end auction for a supplier\n    // @param supplierID Tag ID of the supplier\n    // @param startTime Blockheight when auction ended\n    event EndSupplierAuction(uint256 supplierID, uint256 endTime);\n\n    // @notice Triggered to allocate resources from supplier to manufacturer\n    // @param supplierID Tag ID of the supplier\n    // @param manufacturerID Tag ID of the manufacturer\n    // @param quantity Quantities ordered\n    // @param price Price offered per unit\n    event AllocateFromSupplier(\n        uint256 supplierID,\n        uint256 manufacturerID,\n        uint256 quantity,\n        uint256 price\n    );\n\n    // @notice Triggered to end auction for a manufacturer\n    // @param manufacturerID Tag ID of the manufacturer\n    // @param startTime Blockheight when auction ended\n    event StartManufacturerAuction(uint256 manufacturerID, uint256 startTime);\n\n    // @notice Triggered to end auction for a manufacturer\n    // @param manufacturerID Tag ID of the manufacturer\n    // @param startTime Blockheight when auction ended\n    event EndManufacturerAuction(uint256 manufacturerID, uint256 endTime);\n\n    // @notice Triggered when a customer requests to buy cars from a manufacturer\n    // @param CustomerID Tag ID of the customer\n    // @param ManufacturerID Tag ID of the manufacturer\n    // @param Quantities Quantities requested\n    // @param Price Price offered\n    event CustomerRequest(\n        uint256 CustomerID,\n        uint256 ManufacturerID,\n        uint256 Quantity,\n        uint256 Price\n    );\n\n    // @notice Triggered to allocate cars from manufacturer to customer\n    // @dev Limited to buying only 100 cars at once\n    // @param manufacturerID Tag ID of the manufacturer\n    // @param customerID Tag ID of the customer\n    // @param quantity Quantities ordered\n    // @param price Price offered per unit\n    // @param carTag List of tags associated with the cars sold\n    event AllocateFromManufacturer(\n        uint256 manufacturerID,\n        uint256 customerID,\n        uint256 quantity,\n        uint256 price,\n        uint256[100] carTag\n    );\n\n    // @notice Manufacturer places a blind bid to the supplier\n    // @param manufacturerID Tag ID of the manufacturer\n    // @param supplierID Tag ID of the supplier\n    // @param blindBidPrice bidding price blinded using keccak256\n    // @param blindBidQuantity bidding quantity blinded using keccak256\n    event ManufacturerBids(\n        uint256 supplierID,\n        uint256 manufacturerID,\n        bytes32 blindBidPrice,\n        bytes32 blindBidQuantity\n    );\n\n    // @notice Manufacturer reveals it's bid to the supplier\n    // @param manufacturerID Tag ID of the manufacturer\n    // @param supplierID Tag ID of the supplier\n    // @param price bidding price\n    // @param quantity bidding quantity\n    event ManufacturerReveal(\n        uint256 supplierID,\n        uint256 manufacturerID,\n        uint256 price,\n        uint256 quantity\n    );\n}\n",
-  "sourcePath": "/home/prince/Course_M22/BLOCKCHAIN/Supply-Chain-Smartcontract/contracts/MarketPlace_Events.sol",
+  "sourcePath": "/home/kjain1810/Desktop/padhai/sem7/dtb/Supply-Chain-Smartcontract/contracts/MarketPlace_Events.sol",
   "ast": {
     "absolutePath": "project:/contracts/MarketPlace_Events.sol",
     "exportedSymbols": {
       "MarketPlace_Events": [
-        4001
+        4012
       ],
       "MarketPlace_Storage": [
-        4055
+        4066
       ]
     },
-    "id": 4002,
+    "id": 4013,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 3918,
+        "id": 3929,
         "literals": [
           "solidity",
           ">=",
@@ -2560,20 +2560,20 @@
       {
         "absolutePath": "project:/contracts/MarketPlace_Storage.sol",
         "file": "./MarketPlace_Storage.sol",
-        "id": 3920,
+        "id": 3931,
         "nameLocation": "-1:-1:-1",
         "nodeType": "ImportDirective",
-        "scope": 4002,
-        "sourceUnit": 4056,
+        "scope": 4013,
+        "sourceUnit": 4067,
         "src": "27:62:3",
         "symbolAliases": [
           {
             "foreign": {
-              "id": 3919,
+              "id": 3930,
               "name": "MarketPlace_Storage",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
-              "referencedDeclaration": 4055,
+              "referencedDeclaration": 4066,
               "src": "35:19:3",
               "typeDescriptions": {}
             },
@@ -2587,16 +2587,16 @@
         "baseContracts": [
           {
             "baseName": {
-              "id": 3921,
+              "id": 3932,
               "name": "MarketPlace_Storage",
               "nameLocations": [
                 "122:19:3"
               ],
               "nodeType": "IdentifierPath",
-              "referencedDeclaration": 4055,
+              "referencedDeclaration": 4066,
               "src": "122:19:3"
             },
-            "id": 3922,
+            "id": 3933,
             "nodeType": "InheritanceSpecifier",
             "src": "122:19:3"
           }
@@ -2605,11 +2605,11 @@
         "contractDependencies": [],
         "contractKind": "contract",
         "fullyImplemented": true,
-        "id": 4001,
+        "id": 4012,
         "linearizedBaseContracts": [
-          4001,
-          4055,
-          4177
+          4012,
+          4066,
+          4188
         ],
         "name": "MarketPlace_Events",
         "nameLocation": "100:18:3",
@@ -2618,23 +2618,23 @@
           {
             "anonymous": false,
             "eventSelector": "10449cff8425a2b933fdd57a667ad5bdad3da817ddd9179f125f5c7756582e17",
-            "id": 3928,
+            "id": 3939,
             "name": "StartSupplierAuction",
             "nameLocation": "316:20:3",
             "nodeType": "EventDefinition",
             "parameters": {
-              "id": 3927,
+              "id": 3938,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3924,
+                  "id": 3935,
                   "indexed": false,
                   "mutability": "mutable",
                   "name": "supplierID",
                   "nameLocation": "345:10:3",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3928,
+                  "scope": 3939,
                   "src": "337:18:3",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -2643,7 +2643,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 3923,
+                    "id": 3934,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "337:7:3",
@@ -2656,13 +2656,13 @@
                 },
                 {
                   "constant": false,
-                  "id": 3926,
+                  "id": 3937,
                   "indexed": false,
                   "mutability": "mutable",
                   "name": "startTime",
                   "nameLocation": "365:9:3",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3928,
+                  "scope": 3939,
                   "src": "357:17:3",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -2671,7 +2671,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 3925,
+                    "id": 3936,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "357:7:3",
@@ -2690,23 +2690,23 @@
           {
             "anonymous": false,
             "eventSelector": "0c368e4cdd0e23707857d20056076efe6f588f9ce71ab6ce676d331fdc035f5b",
-            "id": 3934,
+            "id": 3945,
             "name": "EndSupplierAuction",
             "nameLocation": "546:18:3",
             "nodeType": "EventDefinition",
             "parameters": {
-              "id": 3933,
+              "id": 3944,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3930,
+                  "id": 3941,
                   "indexed": false,
                   "mutability": "mutable",
                   "name": "supplierID",
                   "nameLocation": "573:10:3",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3934,
+                  "scope": 3945,
                   "src": "565:18:3",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -2715,7 +2715,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 3929,
+                    "id": 3940,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "565:7:3",
@@ -2728,13 +2728,13 @@
                 },
                 {
                   "constant": false,
-                  "id": 3932,
+                  "id": 3943,
                   "indexed": false,
                   "mutability": "mutable",
                   "name": "endTime",
                   "nameLocation": "593:7:3",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3934,
+                  "scope": 3945,
                   "src": "585:15:3",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -2743,7 +2743,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 3931,
+                    "id": 3942,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "585:7:3",
@@ -2762,23 +2762,23 @@
           {
             "anonymous": false,
             "eventSelector": "389cc4d2b135e7b676a809ad7bacdde1b644b0bbe73afdd545a176ea73b95517",
-            "id": 3944,
+            "id": 3955,
             "name": "AllocateFromSupplier",
             "nameLocation": "880:20:3",
             "nodeType": "EventDefinition",
             "parameters": {
-              "id": 3943,
+              "id": 3954,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3936,
+                  "id": 3947,
                   "indexed": false,
                   "mutability": "mutable",
                   "name": "supplierID",
                   "nameLocation": "918:10:3",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3944,
+                  "scope": 3955,
                   "src": "910:18:3",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -2787,7 +2787,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 3935,
+                    "id": 3946,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "910:7:3",
@@ -2800,13 +2800,13 @@
                 },
                 {
                   "constant": false,
-                  "id": 3938,
+                  "id": 3949,
                   "indexed": false,
                   "mutability": "mutable",
                   "name": "manufacturerID",
                   "nameLocation": "946:14:3",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3944,
+                  "scope": 3955,
                   "src": "938:22:3",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -2815,7 +2815,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 3937,
+                    "id": 3948,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "938:7:3",
@@ -2828,13 +2828,13 @@
                 },
                 {
                   "constant": false,
-                  "id": 3940,
+                  "id": 3951,
                   "indexed": false,
                   "mutability": "mutable",
                   "name": "quantity",
                   "nameLocation": "978:8:3",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3944,
+                  "scope": 3955,
                   "src": "970:16:3",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -2843,7 +2843,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 3939,
+                    "id": 3950,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "970:7:3",
@@ -2856,13 +2856,13 @@
                 },
                 {
                   "constant": false,
-                  "id": 3942,
+                  "id": 3953,
                   "indexed": false,
                   "mutability": "mutable",
                   "name": "price",
                   "nameLocation": "1004:5:3",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3944,
+                  "scope": 3955,
                   "src": "996:13:3",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -2871,7 +2871,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 3941,
+                    "id": 3952,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "996:7:3",
@@ -2890,23 +2890,23 @@
           {
             "anonymous": false,
             "eventSelector": "023579f2a14b009b92b8d8e8355ebfa1dac7b56226747dada2b9aa0671150757",
-            "id": 3950,
+            "id": 3961,
             "name": "StartManufacturerAuction",
             "nameLocation": "1198:24:3",
             "nodeType": "EventDefinition",
             "parameters": {
-              "id": 3949,
+              "id": 3960,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3946,
+                  "id": 3957,
                   "indexed": false,
                   "mutability": "mutable",
                   "name": "manufacturerID",
                   "nameLocation": "1231:14:3",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3950,
+                  "scope": 3961,
                   "src": "1223:22:3",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -2915,7 +2915,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 3945,
+                    "id": 3956,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "1223:7:3",
@@ -2928,13 +2928,13 @@
                 },
                 {
                   "constant": false,
-                  "id": 3948,
+                  "id": 3959,
                   "indexed": false,
                   "mutability": "mutable",
                   "name": "startTime",
                   "nameLocation": "1255:9:3",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3950,
+                  "scope": 3961,
                   "src": "1247:17:3",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -2943,7 +2943,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 3947,
+                    "id": 3958,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "1247:7:3",
@@ -2962,23 +2962,23 @@
           {
             "anonymous": false,
             "eventSelector": "d7dc8a62a24d1e90a3c74aa1117214fe8c055e8b02b4cb52b45f2dfbc3cb5a14",
-            "id": 3956,
+            "id": 3967,
             "name": "EndManufacturerAuction",
             "nameLocation": "1448:22:3",
             "nodeType": "EventDefinition",
             "parameters": {
-              "id": 3955,
+              "id": 3966,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3952,
+                  "id": 3963,
                   "indexed": false,
                   "mutability": "mutable",
                   "name": "manufacturerID",
                   "nameLocation": "1479:14:3",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3956,
+                  "scope": 3967,
                   "src": "1471:22:3",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -2987,7 +2987,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 3951,
+                    "id": 3962,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "1471:7:3",
@@ -3000,13 +3000,13 @@
                 },
                 {
                   "constant": false,
-                  "id": 3954,
+                  "id": 3965,
                   "indexed": false,
                   "mutability": "mutable",
                   "name": "endTime",
                   "nameLocation": "1503:7:3",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3956,
+                  "scope": 3967,
                   "src": "1495:15:3",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -3015,7 +3015,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 3953,
+                    "id": 3964,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "1495:7:3",
@@ -3034,23 +3034,23 @@
           {
             "anonymous": false,
             "eventSelector": "fee408fb277c265efa7c7adea166e7ebe6ce1e4bf153cc84a610be9a46d4ba82",
-            "id": 3966,
+            "id": 3977,
             "name": "CustomerRequest",
             "nameLocation": "1790:15:3",
             "nodeType": "EventDefinition",
             "parameters": {
-              "id": 3965,
+              "id": 3976,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3958,
+                  "id": 3969,
                   "indexed": false,
                   "mutability": "mutable",
                   "name": "CustomerID",
                   "nameLocation": "1823:10:3",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3966,
+                  "scope": 3977,
                   "src": "1815:18:3",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -3059,7 +3059,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 3957,
+                    "id": 3968,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "1815:7:3",
@@ -3072,13 +3072,13 @@
                 },
                 {
                   "constant": false,
-                  "id": 3960,
+                  "id": 3971,
                   "indexed": false,
                   "mutability": "mutable",
                   "name": "ManufacturerID",
                   "nameLocation": "1851:14:3",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3966,
+                  "scope": 3977,
                   "src": "1843:22:3",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -3087,7 +3087,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 3959,
+                    "id": 3970,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "1843:7:3",
@@ -3100,13 +3100,13 @@
                 },
                 {
                   "constant": false,
-                  "id": 3962,
+                  "id": 3973,
                   "indexed": false,
                   "mutability": "mutable",
                   "name": "Quantity",
                   "nameLocation": "1883:8:3",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3966,
+                  "scope": 3977,
                   "src": "1875:16:3",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -3115,7 +3115,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 3961,
+                    "id": 3972,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "1875:7:3",
@@ -3128,13 +3128,13 @@
                 },
                 {
                   "constant": false,
-                  "id": 3964,
+                  "id": 3975,
                   "indexed": false,
                   "mutability": "mutable",
                   "name": "Price",
                   "nameLocation": "1909:5:3",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3966,
+                  "scope": 3977,
                   "src": "1901:13:3",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -3143,7 +3143,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 3963,
+                    "id": 3974,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "1901:7:3",
@@ -3162,23 +3162,23 @@
           {
             "anonymous": false,
             "eventSelector": "1aff87a36f8ab51e6d00c79e403e67535da25af06a6dc7b9cac3fc96a25cbfb3",
-            "id": 3980,
+            "id": 3991,
             "name": "AllocateFromManufacturer",
             "nameLocation": "2310:24:3",
             "nodeType": "EventDefinition",
             "parameters": {
-              "id": 3979,
+              "id": 3990,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3968,
+                  "id": 3979,
                   "indexed": false,
                   "mutability": "mutable",
                   "name": "manufacturerID",
                   "nameLocation": "2352:14:3",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3980,
+                  "scope": 3991,
                   "src": "2344:22:3",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -3187,7 +3187,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 3967,
+                    "id": 3978,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "2344:7:3",
@@ -3200,13 +3200,13 @@
                 },
                 {
                   "constant": false,
-                  "id": 3970,
+                  "id": 3981,
                   "indexed": false,
                   "mutability": "mutable",
                   "name": "customerID",
                   "nameLocation": "2384:10:3",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3980,
+                  "scope": 3991,
                   "src": "2376:18:3",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -3215,7 +3215,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 3969,
+                    "id": 3980,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "2376:7:3",
@@ -3228,13 +3228,13 @@
                 },
                 {
                   "constant": false,
-                  "id": 3972,
+                  "id": 3983,
                   "indexed": false,
                   "mutability": "mutable",
                   "name": "quantity",
                   "nameLocation": "2412:8:3",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3980,
+                  "scope": 3991,
                   "src": "2404:16:3",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -3243,7 +3243,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 3971,
+                    "id": 3982,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "2404:7:3",
@@ -3256,13 +3256,13 @@
                 },
                 {
                   "constant": false,
-                  "id": 3974,
+                  "id": 3985,
                   "indexed": false,
                   "mutability": "mutable",
                   "name": "price",
                   "nameLocation": "2438:5:3",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3980,
+                  "scope": 3991,
                   "src": "2430:13:3",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -3271,7 +3271,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 3973,
+                    "id": 3984,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "2430:7:3",
@@ -3284,13 +3284,13 @@
                 },
                 {
                   "constant": false,
-                  "id": 3978,
+                  "id": 3989,
                   "indexed": false,
                   "mutability": "mutable",
                   "name": "carTag",
                   "nameLocation": "2466:6:3",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3980,
+                  "scope": 3991,
                   "src": "2453:19:3",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -3300,7 +3300,7 @@
                   },
                   "typeName": {
                     "baseType": {
-                      "id": 3975,
+                      "id": 3986,
                       "name": "uint256",
                       "nodeType": "ElementaryTypeName",
                       "src": "2453:7:3",
@@ -3309,10 +3309,10 @@
                         "typeString": "uint256"
                       }
                     },
-                    "id": 3977,
+                    "id": 3988,
                     "length": {
                       "hexValue": "313030",
-                      "id": 3976,
+                      "id": 3987,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": true,
@@ -3343,23 +3343,23 @@
           {
             "anonymous": false,
             "eventSelector": "dbd4ed8ca35fd076d8fdc3ddae80bf4fac4fc55dd918d5868cf2b92f82d2de53",
-            "id": 3990,
+            "id": 4001,
             "name": "ManufacturerBids",
             "nameLocation": "2796:16:3",
             "nodeType": "EventDefinition",
             "parameters": {
-              "id": 3989,
+              "id": 4000,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3982,
+                  "id": 3993,
                   "indexed": false,
                   "mutability": "mutable",
                   "name": "supplierID",
                   "nameLocation": "2830:10:3",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3990,
+                  "scope": 4001,
                   "src": "2822:18:3",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -3368,7 +3368,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 3981,
+                    "id": 3992,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "2822:7:3",
@@ -3381,13 +3381,13 @@
                 },
                 {
                   "constant": false,
-                  "id": 3984,
+                  "id": 3995,
                   "indexed": false,
                   "mutability": "mutable",
                   "name": "manufacturerID",
                   "nameLocation": "2858:14:3",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3990,
+                  "scope": 4001,
                   "src": "2850:22:3",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -3396,7 +3396,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 3983,
+                    "id": 3994,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "2850:7:3",
@@ -3409,13 +3409,13 @@
                 },
                 {
                   "constant": false,
-                  "id": 3986,
+                  "id": 3997,
                   "indexed": false,
                   "mutability": "mutable",
                   "name": "blindBidPrice",
                   "nameLocation": "2890:13:3",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3990,
+                  "scope": 4001,
                   "src": "2882:21:3",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -3424,7 +3424,7 @@
                     "typeString": "bytes32"
                   },
                   "typeName": {
-                    "id": 3985,
+                    "id": 3996,
                     "name": "bytes32",
                     "nodeType": "ElementaryTypeName",
                     "src": "2882:7:3",
@@ -3437,13 +3437,13 @@
                 },
                 {
                   "constant": false,
-                  "id": 3988,
+                  "id": 3999,
                   "indexed": false,
                   "mutability": "mutable",
                   "name": "blindBidQuantity",
                   "nameLocation": "2921:16:3",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3990,
+                  "scope": 4001,
                   "src": "2913:24:3",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -3452,7 +3452,7 @@
                     "typeString": "bytes32"
                   },
                   "typeName": {
-                    "id": 3987,
+                    "id": 3998,
                     "name": "bytes32",
                     "nodeType": "ElementaryTypeName",
                     "src": "2913:7:3",
@@ -3471,23 +3471,23 @@
           {
             "anonymous": false,
             "eventSelector": "ee291b467c1ae7dd29ffc047df3454190c09d3730496830a392209c7bc38f5ca",
-            "id": 4000,
+            "id": 4011,
             "name": "ManufacturerReveal",
             "nameLocation": "3195:18:3",
             "nodeType": "EventDefinition",
             "parameters": {
-              "id": 3999,
+              "id": 4010,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3992,
+                  "id": 4003,
                   "indexed": false,
                   "mutability": "mutable",
                   "name": "supplierID",
                   "nameLocation": "3231:10:3",
                   "nodeType": "VariableDeclaration",
-                  "scope": 4000,
+                  "scope": 4011,
                   "src": "3223:18:3",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -3496,7 +3496,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 3991,
+                    "id": 4002,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "3223:7:3",
@@ -3509,13 +3509,13 @@
                 },
                 {
                   "constant": false,
-                  "id": 3994,
+                  "id": 4005,
                   "indexed": false,
                   "mutability": "mutable",
                   "name": "manufacturerID",
                   "nameLocation": "3259:14:3",
                   "nodeType": "VariableDeclaration",
-                  "scope": 4000,
+                  "scope": 4011,
                   "src": "3251:22:3",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -3524,7 +3524,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 3993,
+                    "id": 4004,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "3251:7:3",
@@ -3537,13 +3537,13 @@
                 },
                 {
                   "constant": false,
-                  "id": 3996,
+                  "id": 4007,
                   "indexed": false,
                   "mutability": "mutable",
                   "name": "price",
                   "nameLocation": "3291:5:3",
                   "nodeType": "VariableDeclaration",
-                  "scope": 4000,
+                  "scope": 4011,
                   "src": "3283:13:3",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -3552,7 +3552,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 3995,
+                    "id": 4006,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "3283:7:3",
@@ -3565,13 +3565,13 @@
                 },
                 {
                   "constant": false,
-                  "id": 3998,
+                  "id": 4009,
                   "indexed": false,
                   "mutability": "mutable",
                   "name": "quantity",
                   "nameLocation": "3314:8:3",
                   "nodeType": "VariableDeclaration",
-                  "scope": 4000,
+                  "scope": 4011,
                   "src": "3306:16:3",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -3580,7 +3580,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 3997,
+                    "id": 4008,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "3306:7:3",
@@ -3597,7 +3597,7 @@
             "src": "3189:140:3"
           }
         ],
-        "scope": 4002,
+        "scope": 4013,
         "src": "91:3240:3",
         "usedErrors": []
       }
@@ -3609,8 +3609,8 @@
     "version": "0.8.16+commit.07a7930e.Emscripten.clang"
   },
   "networks": {},
-  "schemaVersion": "3.4.8",
-  "updatedAt": "2022-09-16T14:59:37.953Z",
+  "schemaVersion": "3.4.9",
+  "updatedAt": "2022-09-16T18:31:15.528Z",
   "devdoc": {
     "kind": "dev",
     "methods": {},
